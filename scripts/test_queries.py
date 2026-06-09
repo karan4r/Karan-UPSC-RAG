@@ -51,6 +51,14 @@ TEST_CASES = [
         "must_contain": ["Parliament"],
         "must_not_contain": [],
     },
+    {
+        "name": "Academic - Revolt of 1857 (web search)",
+        "query": "Explain the causes of revolt of 1857",
+        "expect_intent": "notes_or_explain_topic",
+        "expect_mode": "web",
+        "must_contain": ["1857"],
+        "must_not_contain": ["not in the provided knowledge base", "not in the knowledge base", "Parliament of India"],
+    },
 ]
 
 
@@ -74,6 +82,9 @@ def run_tests():
 
         if intent != case["expect_intent"]:
             errors.append(f"Intent: expected {case['expect_intent']}, got {intent}")
+
+        if case.get("expect_mode") and result["mode"] != case["expect_mode"]:
+            errors.append(f"Mode: expected {case['expect_mode']}, got {result['mode']}")
 
         for text in case["must_contain"]:
             if text.lower() not in answer.lower():

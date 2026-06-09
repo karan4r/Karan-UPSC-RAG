@@ -102,6 +102,8 @@ ACADEMIC_PATTERNS = [
     r"what is",
     r"what are",
     r"significance of",
+    r"causes of",
+    r"reasons for",
     r"describe",
     r"syllabus",
     r"topic",
@@ -109,6 +111,10 @@ ACADEMIC_PATTERNS = [
     r"fundamental",
     r"parliament",
     r"rbi grade",
+    r"revolt",
+    r"movement",
+    r"reform",
+    r"act of \d",
 ]
 
 

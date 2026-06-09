@@ -5,7 +5,7 @@ from generation.rag_chain import RAGChatbot
 st.set_page_config(page_title="UPSC RAG Mentor", page_icon="📚", layout="centered")
 
 st.title("UPSC RAG Mentor")
-st.caption("Course guidance · Backup plans · Mental health support · Academic notes")
+st.caption("Course guidance · Backup plans · Mental health support · Academic notes (web-augmented)")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
