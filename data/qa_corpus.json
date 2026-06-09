@@ -1,0 +1,124 @@
+[
+  {
+    "id": "qa_course_fresh_grad_only",
+    "category": "course_recommendation",
+    "intent": "suggest_course_fresh_graduate_only",
+    "priority": 80,
+    "eligibility": {
+      "required_signals": ["fresh_graduate", "course_request"],
+      "exclude_signals": ["working_professional", "still_in_college", "repeat_attempt"]
+    },
+    "question": "I just passed college and I want to prepare for UPSC and give my attempt next year. Suggest a course for me.",
+    "question_variants": [
+      "I completed my graduation. How should I start UPSC prep for next year's attempt?",
+      "Fresh graduate, want to attempt UPSC next year — which course should I join?",
+      "Just finished college, planning UPSC CSE next year. What course do you suggest?",
+      "I'm new to UPSC and have one year after college. Recommend a full syllabus course."
+    ],
+    "answer_template": "Since you have **just completed college**, you need a **comprehensive 1-year course** that covers **all major aspects of the UPSC syllabus** — foundation (NCERT + core GS), Prelims (GS + CSAT), Mains-oriented coverage, current affairs, tests, and revision.\n\n**Recommended course:** PW OnlyIAS comprehensive foundation batch:\n\nhttps://www.pw.live/study-v2/batches/6a1a72e589d72a57936e540b/batch-overview?show_screen=loading&came_from=batch_listing#Description_1\n\nThis is designed for **beginners** with **~12 months** of structured preparation before your attempt. Review batch dates, medium, and inclusions on the course page before enrolling.",
+    "metadata": {
+      "tags": ["beginner", "course", "fresh-graduate", "1-year"],
+      "batch_url": "https://www.pw.live/study-v2/batches/6a1a72e589d72a57936e540b/batch-overview?show_screen=loading&came_from=batch_listing#Description_1"
+    }
+  },
+  {
+    "id": "qa_backup_plan_upsc_skilling",
+    "category": "career_guidance",
+    "intent": "backup_plan_while_upsc",
+    "priority": 70,
+    "eligibility": {
+      "required_signals": ["upsc_context", "backup_plan"]
+    },
+    "question": "I am preparing for UPSC but want a backup plan. What should I do?",
+    "question_variants": [
+      "What other exams can I prepare for along with UPSC?",
+      "UPSC is my dream but I need a Plan B — suggestions?",
+      "Should I also prepare for RBI or State PSC while doing UPSC?",
+      "Backup options if UPSC doesn't work out while I'm preparing?"
+    ],
+    "answer_template": "Preparing for UPSC is a long journey, and having a **backup plan** is sensible — it reduces pressure and keeps options open.\n\n**Parallel exam options (while you continue UPSC prep):**\n- **RBI** — e.g. RBI Grade B; strong option if you're comfortable with finance/economy-heavy papers\n- **State PSC** — state civil services; syllabus overlap with UPSC (GS, polity, history) can make dual prep efficient\n\nPick 1–2 backups based on your state, optional overlap, and timeline — avoid spreading too thin.\n\n**Job-market skilling (alongside exams):**\nExam prep alone doesn't always translate to immediate employability. Build **practical skills** for the job market in parallel.\n\n**For structured skilling:** https://nextleap.app — fellowship-style programs in Product Management, UX/Product Design, Data Analytics, Business Analytics, and Software Engineering.\n\n**Practical approach:** Keep UPSC as primary; add **one** backup exam with high syllabus overlap + **part-time skilling** so you're not fully dependent on a single outcome.",
+    "metadata": {
+      "tags": ["backup", "rbi", "state-psc", "skilling"],
+      "skilling_url": "https://nextleap.app"
+    }
+  },
+  {
+    "id": "qa_mental_health_upsc_failure",
+    "category": "wellbeing",
+    "intent": "mental_health_upsc_distress",
+    "priority": 100,
+    "eligibility": {
+      "required_signals": ["mental_health", "upsc_context"]
+    },
+    "question": "I failed UPSC and I'm feeling depressed / stressed / anxious. What should I do?",
+    "question_variants": [
+      "UPSC failure has broken me mentally.",
+      "I can't handle the stress of UPSC preparation anymore.",
+      "Anxiety and depression because of civil services exam — help.",
+      "How do I cope with UPSC exam failure emotionally?",
+      "Feeling hopeless after UPSC result."
+    ],
+    "answer_template": "What you're feeling after a UPSC setback is **valid**. Many aspirants go through this — you're not alone, and it doesn't mean you're weak.\n\n**Feel the emotion; don't resist it.**\nTrying to push sadness, anxiety, or anger away often makes it heavier. Allow yourself to feel what you feel — naming it is the first step toward healing.\n\n**Emotional Intelligence** is about **understanding**, **reasoning**, and **managing** emotions — not suppressing them. Understanding *what* you feel, reasoning about *why* (failure, expectations, comparison, exhaustion), and learning healthy ways to respond helps you recover with clarity rather than shame.\n\n**Professional support helps.**\nPlease reach out to **Tele MANAS**, the national tele-mental health helpline:\n\n**Tele MANAS helpline: 1-800-891-4416**\n\nYou can call when you feel overwhelmed, anxious, or low. If you or someone you know is in immediate danger, contact local emergency services as well.\n\nUPSC is one chapter, not your whole identity. Taking care of your mental health is as important as any exam strategy.",
+    "metadata": {
+      "tags": ["mental-health", "stress", "anxiety", "depression", "failure"],
+      "helpline": "1-800-891-4416"
+    }
+  },
+  {
+    "id": "qa_academic_fundamental_duties",
+    "category": "academic",
+    "intent": "notes_or_explain_topic",
+    "priority": 50,
+    "question": "Explain Fundamental Duties for UPSC",
+    "question_variants": [
+      "Provide notes on Fundamental Duties",
+      "What are Fundamental Duties under the Indian Constitution?",
+      "Fundamental Duties Article 51A notes for prelims and mains"
+    ],
+    "answer_content": "Fundamental Duties are moral obligations of citizens under Part IVA of the Constitution. Added by the 42nd Constitutional Amendment Act, 1976 (Swaran Singh Committee recommendation). Originally 10 duties; 11th duty (parent/educator duty for 6-14 education) added by 86th Amendment, 2002. Inspired by USSR Constitution. Not enforceable by writs; no direct legal sanction except via specific laws (e.g. Prevention of Insults to National Honour Act). Significance: balance with Fundamental Rights; promote civic responsibility; Verma Committee linked FDs to environment and forest protection laws. Compare: FRs are justiciable; FDs are non-justiciable. Prelims traps: which is NOT a duty; 42nd vs 86th amendment; 11 duties list. Mains: intro on civic responsibility + link to nationalism and rights-duties balance.",
+    "metadata": {
+      "subject": "Polity",
+      "paper": "GS II",
+      "syllabus_topic": "Fundamental Duties",
+      "topic_type": "factual"
+    }
+  },
+  {
+    "id": "qa_academic_rbi_grade_b",
+    "category": "academic",
+    "intent": "notes_or_explain_topic",
+    "priority": 50,
+    "question": "Explain RBI Grade B exam structure for backup planning",
+    "question_variants": [
+      "What is RBI Grade B exam pattern?",
+      "RBI Grade B syllabus overview",
+      "Notes on RBI Grade B officer exam"
+    ],
+    "answer_content": "RBI Grade B is a national-level recruitment for officers in Reserve Bank of India. Phases: Phase I (online objective — General Awareness, English, Quant, Reasoning); Phase II (descriptive + objective — ESI Economics & Social Issues, English writing, Finance & Management for general profile); Interview. Eligibility: age limit (general 21-30 with relaxations), graduation minimum. Overlap with UPSC: economy, current affairs, governance, financial awareness. Good backup for UPSC aspirants strong in economy/GS. Prelims focus: schemes, banking terms, RBI functions, monetary policy. Mains: structured answers on economic issues, inclusive growth, financial inclusion.",
+    "metadata": {
+      "subject": "Economy",
+      "paper": "Backup Exam",
+      "syllabus_topic": "RBI Grade B",
+      "topic_type": "process"
+    }
+  },
+  {
+    "id": "qa_academic_parliament",
+    "category": "academic",
+    "intent": "notes_or_explain_topic",
+    "priority": 50,
+    "question": "Explain the Parliament of India for UPSC",
+    "question_variants": [
+      "Notes on Indian Parliament",
+      "Explain Lok Sabha and Rajya Sabha for UPSC prelims",
+      "What are the powers of Parliament?"
+    ],
+    "answer_content": "Parliament is supreme legislative body of Union (Article 79): President + Lok Sabha + Rajya Sabha. Lok Sabha: max 552 members, 5-year term, money bills originate here, Council of Ministers responsible to LS. Rajya Sabha: max 250, permanent body (1/3 retire every 2 years), represents states, cannot reject money bill (14-day return). Powers: legislative, financial (budget), executive (question hour, no-confidence), constitutional amendment (varies by type), electoral (President, VP), judicial (impeachment, breach of privilege). Sessions: Budget, Monsoon, Winter; gap between sessions not > 6 months. Prelims: money bill vs finance bill, joint sitting (Art 108), quorum. Mains: parliamentary sovereignty vs judicial review; decline of parliamentary oversight debates.",
+    "metadata": {
+      "subject": "Polity",
+      "paper": "GS II",
+      "syllabus_topic": "Parliament",
+      "topic_type": "process"
+    }
+  }
+]
