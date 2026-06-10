@@ -20,10 +20,20 @@ from retrieval.relevance import is_kb_relevant
 from retrieval.web_search import format_web_context, search_upsc_topic
 
 
+import json
+from pathlib import Path
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 class RAGChatbot:
     def __init__(self, index: Optional[VectorIndex] = None):
         self.index = index or load_index()
         self.client = get_groq_client()
+        self.pyq_path = Path(__file__).resolve().parent.parent / "data" / "modern_history_pyqs.json"
+        self.pyqs = []
+        if self.pyq_path.exists():
+            with open(self.pyq_path, encoding="utf-8") as f:
+                self.pyqs = json.load(f)
 
     def _llm_complete(self, user_message: str) -> str:
         response = self.client.chat.completions.create(
@@ -36,6 +46,29 @@ class RAGChatbot:
             max_tokens=2000,
         )
         return response.choices[0].message.content or ""
+
+    def _find_relevant_pyqs(self, query: str, top_k: int = 1) -> list[dict]:
+        if not self.pyqs:
+            return []
+        
+        texts = []
+        for pyq in self.pyqs:
+            texts.append(f"{pyq.get('question', '')} {pyq.get('explanation', '')}")
+            
+        vectorizer = TfidfVectorizer(stop_words="english")
+        try:
+            matrix = vectorizer.fit_transform(texts)
+            query_vec = vectorizer.transform([query])
+            scores = cosine_similarity(query_vec, matrix).flatten()
+            
+            ranked = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+            results = []
+            for idx, score in ranked[:top_k]:
+                if score >= 0.15:
+                    results.append(self.pyqs[idx])
+            return results
+        except Exception:
+            return []
 
     def _template_response(self, record: dict) -> dict[str, Any]:
         return {
@@ -109,6 +142,20 @@ class RAGChatbot:
             confidence = "medium"
 
         answer = self._llm_complete(user_msg)
+
+        pyqs = self._find_relevant_pyqs(query)
+        if pyqs:
+            pyq_sections = []
+            for pyq in pyqs:
+                pyq_sections.append(
+                    f"\n\n---\n### Sourced from [pwonlyias.com (Modern History Prelims PYQs)](https://pwonlyias.com/prelims-previous-years-paper/modern-history/)\n\n"
+                    f"**Related Previous Year Question ({pyq['year']}, Question {pyq['number']}):**\n"
+                    f"{pyq['question']}\n\n"
+                    f"* **Correct Answer:** {pyq['answer'].upper()}\n"
+                    f"* **Explanation:** {pyq['explanation']}"
+                )
+            answer += "".join(pyq_sections)
+
         return {
             "answer": answer,
             "intent": "notes_or_explain_topic",
@@ -130,6 +177,14 @@ class RAGChatbot:
     def chat(self, query: str) -> dict[str, Any]:
         intent_result: IntentResult = classify_intent(query)
         intent = intent_result.intent
+
+        # If it matches a modern history PYQ, it is an academic query
+        pyqs = self._find_relevant_pyqs(query)
+        if pyqs and intent == "general":
+            intent = "notes_or_explain_topic"
+            intent_result.intent = "notes_or_explain_topic"
+            if "academic" not in intent_result.signals:
+                intent_result.signals.append("academic")
 
         clarification = get_clarification_message(intent)
         if clarification:
