@@ -21,7 +21,7 @@ TEST_CASES = [
         "query": "I'm working full-time and want to prepare for UPSC. Suggest a course for me.",
         "expect_intent": "course_clarification_needed",
         "must_contain": ["just finished college"],
-        "must_not_contain": ["pw.live/study-v2/batches/6a1a72e589d72a57936e540b"],
+        "must_not_contain": ["pw.live/study-v2/batches/69d89162a9ca13ace4c56a2b"],
     },
     {
         "name": "Backup plan while UPSC",

@@ -43,11 +43,11 @@ REPEAT_ATTEMPT_PATTERNS = [
 ]
 
 COURSE_PATTERNS = [
-    r"suggest (?:a )?course",
-    r"recommend (?:a )?(?:course|batch)",
-    r"which course",
-    r"what course",
-    r"join (?:a )?(?:course|batch)",
+    r"suggest\b.*?\b(?:course|batch)",
+    r"recommend\b.*?\b(?:course|batch)",
+    r"which\b.*?\b(?:course|batch)",
+    r"what\b.*?\b(?:course|batch)",
+    r"join\b.*?\b(?:course|batch)",
 ]
 
 BACKUP_PATTERNS = [
