@@ -301,6 +301,20 @@ st.markdown("<br>", unsafe_allow_html=True)
 # VIEW 1: 🤖 AI MENTOR CHAT
 # ==========================================
 if nav_mode == "🤖 AI Mentor Chat":
+    # PROMINENT HIGH-VISIBILITY TOP QUERY BOX ABOVE TITLE & CHAT
+    with st.form("top_query_form", clear_on_submit=True):
+        st.markdown("<div style='font-size: 1.1rem; font-weight: 800; color: #1D4ED8; margin-bottom: 8px;'>💬 ASK UPSC AI RAG MENTOR:</div>", unsafe_allow_html=True)
+        t_col1, t_col2 = st.columns([0.82, 0.18])
+        with t_col1:
+            top_query_val = st.text_input(
+                "",
+                placeholder="Type your UPSC query, syllabus question, or career backup question here...",
+                key="top_mentor_query_input",
+                label_visibility="collapsed"
+            )
+        with t_col2:
+            top_submit = st.form_submit_button("🚀 Ask Mentor", use_container_width=True)
+
     st.markdown("<h3 style='color: #0F172A;'>🤖 UPSC AI RAG Mentor Copilot</h3>", unsafe_allow_html=True)
     st.markdown("<p style='color: #475569;'>Ask anything regarding GS Mains syllabus topics, PYQs, backup plans, or mental wellbeing.</p>", unsafe_allow_html=True)
     
@@ -334,12 +348,13 @@ if nav_mode == "🤖 AI Mentor Chat":
             else:
                 st.markdown(msg["content"])
 
-    # Prominent Chat Input Bar
-    st.markdown("<div style='margin-top: 10px; margin-bottom: 4px;'><strong style='color: #2563EB; font-size: 1rem;'>💬 Ask UPSC AI RAG Mentor:</strong></div>", unsafe_allow_html=True)
+    # Bottom Chat Input Bar
     prompt_to_process = None
     if st.session_state.pending_prompt:
         prompt_to_process = st.session_state.pending_prompt
         st.session_state.pending_prompt = None
+    elif top_submit and top_query_val.strip():
+        prompt_to_process = top_query_val.strip()
     else:
         prompt_to_process = st.chat_input("Type your UPSC query, syllabus question, or career backup question here...")
 
@@ -414,7 +429,7 @@ elif nav_mode == "📋 Syllabus Navigator":
         selected_paper = st.selectbox(
             "Filter by GS Paper:",
             ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4"],
-            key="dash_paper_select_f"
+            key="dash_paper_select_fs"
         )
     
     syllabus = load_syllabus_data()
@@ -424,11 +439,11 @@ elif nav_mode == "📋 Syllabus Navigator":
         selected_subject = st.selectbox(
             "Filter by Subject:",
             ["All Subjects"] + paper_subjects,
-            key="dash_subj_select_f"
+            key="dash_subj_select_fs"
         )
     with f_col3:
         st.markdown("<div style='margin-bottom: -6px;'><strong style='color: #2563EB;'>🔍 Search Microtopics / Keywords:</strong></div>", unsafe_allow_html=True)
-        search_query = st.text_input("", placeholder="e.g. Fundamental Rights, Music, Economy...", key="dash_search_input_f", label_visibility="collapsed").lower().strip()
+        search_query = st.text_input("", placeholder="e.g. Fundamental Rights, Music, Economy...", key="dash_search_input_fs", label_visibility="collapsed").lower().strip()
 
     st.markdown("---")
     
@@ -463,7 +478,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                         for m_text, m_id, is_comp in filtered_micros:
                             c_col1, c_col2 = st.columns([0.82, 0.18])
                             with c_col1:
-                                checked = st.checkbox(m_text, value=is_comp, key=f"chk_f_{m_id}")
+                                checked = st.checkbox(m_text, value=is_comp, key=f"chk_fs_{m_id}")
                                 if checked != is_comp:
                                     if checked and m_id not in st.session_state.progress["completed"]:
                                         st.session_state.progress["completed"].append(m_id)
@@ -472,7 +487,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     save_user_progress(st.session_state.progress)
                                     st.rerun()
                             with c_col2:
-                                if st.button("💡 Explainer", key=f"ask_f_{m_id}", use_container_width=True):
+                                if st.button("💡 Explainer", key=f"ask_fs_{m_id}", use_container_width=True):
                                     st.session_state.pending_prompt = f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions."
                                     st.session_state.nav_mode = "🤖 AI Mentor Chat"
                                     st.rerun()

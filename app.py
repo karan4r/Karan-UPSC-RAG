@@ -301,6 +301,20 @@ st.markdown("<br>", unsafe_allow_html=True)
 # VIEW 1: 🤖 AI MENTOR CHAT
 # ==========================================
 if nav_mode == "🤖 AI Mentor Chat":
+    # PROMINENT HIGH-VISIBILITY TOP QUERY BOX ABOVE TITLE & CHAT
+    with st.form("top_query_form", clear_on_submit=True):
+        st.markdown("<div style='font-size: 1.1rem; font-weight: 800; color: #1D4ED8; margin-bottom: 8px;'>💬 ASK UPSC AI RAG MENTOR:</div>", unsafe_allow_html=True)
+        t_col1, t_col2 = st.columns([0.82, 0.18])
+        with t_col1:
+            top_query_val = st.text_input(
+                "",
+                placeholder="Type your UPSC query, syllabus question, or career backup question here...",
+                key="top_mentor_query_input",
+                label_visibility="collapsed"
+            )
+        with t_col2:
+            top_submit = st.form_submit_button("🚀 Ask Mentor", use_container_width=True)
+
     st.markdown("<h3 style='color: #0F172A;'>🤖 UPSC AI RAG Mentor Copilot</h3>", unsafe_allow_html=True)
     st.markdown("<p style='color: #475569;'>Ask anything regarding GS Mains syllabus topics, PYQs, backup plans, or mental wellbeing.</p>", unsafe_allow_html=True)
     
@@ -334,12 +348,13 @@ if nav_mode == "🤖 AI Mentor Chat":
             else:
                 st.markdown(msg["content"])
 
-    # Prominent Chat Input Bar
-    st.markdown("<div style='margin-top: 10px; margin-bottom: 4px;'><strong style='color: #2563EB; font-size: 1rem;'>💬 Ask UPSC AI RAG Mentor:</strong></div>", unsafe_allow_html=True)
+    # Bottom Chat Input Bar
     prompt_to_process = None
     if st.session_state.pending_prompt:
         prompt_to_process = st.session_state.pending_prompt
         st.session_state.pending_prompt = None
+    elif top_submit and top_query_val.strip():
+        prompt_to_process = top_query_val.strip()
     else:
         prompt_to_process = st.chat_input("Type your UPSC query, syllabus question, or career backup question here...")
 

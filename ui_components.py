@@ -200,6 +200,32 @@ def inject_custom_css():
         color: #FFFFFF !important;
     }
 
+    /* HIGH-VISIBILITY PROMINENT TOP QUERY CONTAINER FORM */
+    form[key="top_query_form"], div[data-testid="stForm"] {
+        background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%) !important;
+        border: 2.5px solid #2563EB !important;
+        border-radius: 18px !important;
+        padding: 18px 24px !important;
+        margin-bottom: 22px !important;
+        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2), 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+    }
+
+    form[key="top_query_form"] input, div[data-testid="stForm"] input {
+        border: 2px solid #2563EB !important;
+        background: #FFFFFF !important;
+        color: #0F172A !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        border-radius: 14px !important;
+        padding: 12px 18px !important;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12) !important;
+    }
+
+    form[key="top_query_form"] input:focus, div[data-testid="stForm"] input:focus {
+        border-color: #1D4ED8 !important;
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3) !important;
+    }
+
     /* PROMINENT ULTRA-VISIBLE CHAT INPUT BAR */
     div[data-testid="stChatInput"] {
         padding: 8px !important;
