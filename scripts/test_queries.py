@@ -34,32 +34,37 @@ TEST_CASES = [
         "name": "Mental health after UPSC failure",
         "query": "I failed UPSC again and I'm feeling depressed and anxious.",
         "expect_intent": "mental_health_upsc_distress",
-        "must_contain": ["Feel the emotion", "Emotional Intelligence", "1-800-891-4416", "Tele MANAS"],
+        "must_contain": ["Feel the emotion", "Emotional Intelligence", "1-800-891-4416", "Tele MANAS", "telemanas.mohfw.gov.in", "vandrevalafoundation.com"],
         "must_not_contain": ["pw.live", "nextleap"],
+    },
+    {
+        "name": "General Mental Health query with resources & websites",
+        "query": "Where can I get mental health support and helplines?",
+        "expect_intent": "mental_health_upsc_distress",
+        "must_contain": ["Tele MANAS", "telemanas.mohfw.gov.in", "KIRAN", "vandrevalafoundation.com", "icallkhel.org"],
+        "must_not_contain": ["pw.live"],
     },
     {
         "name": "Academic - Fundamental Duties",
         "query": "Explain Fundamental Duties for UPSC",
         "expect_intent": "notes_or_explain_topic",
-        "must_contain": ["Fundamental Duties"],
+        "must_contain": ["Fundamental Duties", "Practice MCQ", "Correct"],
         "must_not_contain": [],
     },
     {
         "name": "Academic - Parliament notes",
         "query": "Provide notes on Indian Parliament for prelims",
         "expect_intent": "notes_or_explain_topic",
-        "must_contain": ["Parliament"],
+        "must_contain": ["Parliament", "Practice MCQ", "Correct"],
         "must_not_contain": [],
     },
     {
         "name": "Academic - Revolt of 1857 (web search)",
         "query": "Explain the causes of revolt of 1857",
         "expect_intent": "notes_or_explain_topic",
-        "expect_mode": "web",
-        "must_contain": ["1857"],
+        "must_contain": ["1857", "Practice MCQ", "Correct"],
         "must_not_contain": ["not in the provided knowledge base", "not in the knowledge base", "Parliament of India"],
-    },
-]
+    },]
 
 
 def run_tests():

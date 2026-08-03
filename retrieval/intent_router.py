@@ -152,13 +152,8 @@ def classify_intent(query: str) -> IntentResult:
     signals = _collect_signals(text)
 
     # Priority: mental health > fresh grad course > backup > academic
-    if "mental_health" in signals and "upsc_context" in signals:
+    if "mental_health" in signals:
         return IntentResult("mental_health_upsc_distress", 0.95, signals)
-
-    if "mental_health" in signals and (
-        "exam_failure" in signals or "upsc_context" in signals
-    ):
-        return IntentResult("mental_health_upsc_distress", 0.9, signals)
 
     if (
         "fresh_graduate" in signals

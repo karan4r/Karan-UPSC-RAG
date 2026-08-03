@@ -1,0 +1,1361 @@
+{
+  "GS Paper 1": {
+    "title": "GS Paper 1: Indian Heritage & Culture, History, Geography & Society",
+    "subjects": {
+      "A. Indian Culture": {
+        "title": "A. Indian Culture",
+        "topics": {
+          "2. Music": {
+            "title": "2. Music",
+            "microtopics": [
+              "Evolution of Indian music through ages",
+              "Hindustani & Carnatic systems: features, similarities & differences",
+              "Regional music traditions & modern Indian music",
+              "Contributions of notable personalities (e.g., Amir Khusro,",
+              "Mohammad Shah Rangile)"
+            ]
+          },
+          "3. Dance": {
+            "title": "3. Dance",
+            "microtopics": [
+              "Origins (Rig Veda, Harappa, Nataraja concept)",
+              "Classical dance forms: Bharatanatyam, Kathak, Kathakali,",
+              "Odissi, Manipuri, Kuchipudi, Mohiniyattam, Sattriya",
+              "Folk dances: themes, cultural expressions"
+            ]
+          },
+          "4. Drama & Theatre": {
+            "title": "4. Drama & Theatre",
+            "microtopics": [
+              "Ancient texts: Natyashastra, Mrichhakatika, Mahabhashya",
+              "Medieval & modern dramas, famous dramatists",
+              "Folk theatre & Sanskrit theatre traditions",
+              "Modern challenges to theatre in India"
+            ]
+          },
+          "5. Literature & Languages": {
+            "title": "5. Literature & Languages",
+            "microtopics": [
+              "Vedic & Sangam literature",
+              "Classical languages & their societal impact",
+              "Medieval literature trends (Bhakti, Suﬁ, regional languages)",
+              "Modern Indian literature (19th–20th century)"
+            ]
+          },
+          "6. Architecture": {
+            "title": "6. Architecture",
+            "microtopics": [
+              "Harappan architecture & town planning",
+              "Buddhist & Jain architecture (Stupas, Chaityas, Viharas)",
+              "Mauryan & Post-Mauryan developments (Sanchi, Gandhara, Mathura)",
+              "Gupta age architecture & cultural efﬂorescence",
+              "7 . Sculpture & Bronze Art",
+              "Harappan bronze ﬁgures (e.g., Dancing Girl)",
+              "Jain, Buddhist, Hindu bronze sculptures",
+              "Pallava & Chola bronzes, Nataraja tradition",
+              "Pala and other schools of art"
+            ]
+          },
+          "9. Puppetry & Folk Theatre": {
+            "title": "9. Puppetry & Folk Theatre",
+            "microtopics": [
+              "Various forms: string, shadow, rod, glove puppets",
+              "Themes in puppetry & their cultural value",
+              "Regional folk theatre (Jatra, Tamasha, Yakshagana, Nautanki, etc.)"
+            ]
+          },
+          "10. Religious & Philosophical Traditions": {
+            "title": "10. Religious & Philosophical Traditions",
+            "microtopics": [
+              "Buddhism, Jainism & their cultural impact",
+              "Vedanta philosophy & Bhakti traditions",
+              "Suﬁsm & its role in Indian society",
+              "Bhakti-Suﬁ synthesis and inﬂuence on art & society"
+            ]
+          },
+          "8. Paintings": {
+            "title": "8. Paintings",
+            "microtopics": [
+              "Prehistoric rock art",
+              "Ancient & medieval murals (Ajanta, Bagh, Sittanavasal, Armamalai)",
+              "Miniature schools: Pala, Mughal, Rajput, Pahari, Deccan",
+              "Modern painting traditions: Bengal School, Raja Ravi Varma,",
+              "nationalist revivalist art",
+              "Folk painting traditions: Madhubani, Kalamkari, Kalighat,",
+              "Warli, Pattachitra",
+              "Temple architecture: Nagara, Dravida, Vesara; rock-cut &",
+              "monolithic temples",
+              "Vijayanagara & regional styles (Pallava, Chola)",
+              "Indo-Islamic architecture (Delhi Sultanate, Mughal, provincial styles)",
+              "Colonial architecture & Indo-European synthesis",
+              "Preservation & conservation of monuments",
+              "Spread of Indian architecture to Southeast Asia"
+            ]
+          },
+          "1. Performing Arts": {
+            "title": "1. Performing Arts",
+            "microtopics": [
+              "Aims & objectives of performing arts, their evolution across ages",
+              "Classical dances of India: origins, themes, famous exponents",
+              "Folk dances & music: regional variations, themes, cultural value",
+              "Drama & theatre: from Natyashastra to modern dramatists",
+              "Folk theatre traditions: themes, forms, signiﬁcance",
+              "Contribution of performing arts to personality development",
+              "& social harmony"
+            ]
+          }
+        }
+      },
+      "B. MODERN HISTORY OF INDIA": {
+        "title": "B. MODERN HISTORY OF INDIA",
+        "topics": {
+          "1. India in the 18th Century": {
+            "title": "1. India in the 18th Century",
+            "microtopics": []
+          },
+          "2. Early European Entry": {
+            "title": "2. Early European Entry",
+            "microtopics": [
+              "Later Mughals and decline of the empire",
+              "Rise of regional powers (Bengal, Awadh, Hyderabad,",
+              "Mysore, Kerala, Sikhs, Rajputs, Jats, Marathas)",
+              "Society, economy, and culture in the 18th century",
+              "Scientiﬁc outlook and intellectual trends",
+              "Causes, spread, participation, British response",
+              "Failure and consequences",
+              "Administrative changes after 1858",
+              "Portuguese, Dutch, French, and British trading activities",
+              "Anglo–French rivalry in India",
+              "Expansion of British trade and political inﬂuence (1600–1744)",
+              "Battle of Plassey and its impact",
+              "Dual system in Bengal, wars under Hastings, Cornwallis, Wellesley",
+              "Subsidiary Alliance and Maratha defeat",
+              "Conquest of Sind and Punjab",
+              "Dalhousie’s annexation policy",
+              "Administrative structure and relations with princely states",
+              "Regulating Acts, Charter Acts, and British Parliament’s role"
+            ]
+          },
+          "3. British Expansion (1757–1818)": {
+            "title": "3. British Expansion (1757–1818)",
+            "microtopics": []
+          },
+          "4. Consolidation of British Rule (1818–1857)": {
+            "title": "4. Consolidation of British Rule (1818–1857)",
+            "microtopics": [
+              "Commercial and trade policies (1757–1857)",
+              "Impact of Industrial Revolution on India",
+              "Land revenue systems: Permanent, Ryotwari, Mahalwari",
+              "Consequences for agriculture and peasants",
+              "“Drain of Wealth” theory",
+              "Civil services, army, police, judiciary",
+              "Introduction of Rule of Law and equality before law"
+            ]
+          },
+          "5. British Economic Policies": {
+            "title": "5. British Economic Policies",
+            "microtopics": [
+              "Spread of modern education",
+              "Social reforms and western inﬂuence",
+              "Role of reformers: Raja Ram Mohan Roy, Vidyasagar ,",
+              "Dayanand Saraswati, Vivekananda, etc.",
+              "Caste reforms, women’s reforms, education reforms",
+              "7 . Social and Cultural Impact"
+            ]
+          },
+          "6. Administrative Policies": {
+            "title": "6. Administrative Policies",
+            "microtopics": []
+          },
+          "8. The Revolt of 1857": {
+            "title": "8. The Revolt of 1857",
+            "microtopics": [
+              "Decline of traditional economy",
+              "Agriculture deterioration, rise of landlordism",
+              "Growth of new industries, social classes",
+              "Poverty and famines"
+            ]
+          },
+          "9. Economic Impact of Colonial Rule": {
+            "title": "9. Economic Impact of Colonial Rule",
+            "microtopics": [
+              "Causes for nationalism",
+              "Early organizations and Indian National Congress (INC)",
+              "Role of Moderates: demands, methods, achievements,",
+              "and limitations"
+            ]
+          },
+          "10. Rise of Nationalism (1858–1905)": {
+            "title": "10. Rise of Nationalism (1858–1905)",
+            "microtopics": [
+              "Reformist movements: Arya Samaj, Brahmo Samaj,",
+              "Theosophical Society, Aligarh movement",
+              "Women’s upliftment, caste struggles, education initiatives"
+            ]
+          },
+          "11. Religious and Social Reform Movements (19th–20th Century)": {
+            "title": "11. Religious and Social Reform Movements (19th–20th Century)",
+            "microtopics": [
+              "Extremists vs Moderates",
+              "Swadeshi & Boycott, Revolutionary terrorism",
+              "Home Rule League",
+              "Lucknow Pact (1916)"
+            ]
+          },
+          "12. National Movement (1905–1918)": {
+            "title": "12. National Movement (1905–1918)",
+            "microtopics": [
+              "Gandhiji’s arrival, Champaran & Ahmedabad struggles",
+              "Non-Cooperation, Khilafat, Civil Disobedience, Round",
+              "Table Conferences",
+              "Women’s participation, Dalit issues, Ambedkar–Gandhi debate",
+              "Socialist and revolutionary trends within Congress"
+            ]
+          },
+          "13. Gandhian Phase (1919–1939)": {
+            "title": "13. Gandhian Phase (1919–1939)",
+            "microtopics": [
+              "Impact of WWII, August Offer , Cripps Mission, Quit India Movement",
+              "INA & Subhas Bose",
+              "RIN Mutiny, Cabinet Mission, Partition debates",
+              "Role of communalism, British policy, Indian leaders"
+            ]
+          },
+          "14. Towards Independence (1939–1947)": {
+            "title": "14. Towards Independence (1939–1947)",
+            "microtopics": []
+          },
+          "15. Partition and Independence": {
+            "title": "15. Partition and Independence",
+            "microtopics": [
+              "Causes and acceptance of Partition",
+              "Independence Act, 1947",
+              "Bhoodan movement – aims & results",
+              "Evolution & strategic issues",
+              "Features of Nehruvian foreign policy",
+              "Emergence of NAM (Non-Aligned Movement)",
+              "Relations with neighbours:",
+              "India–US & USSR relations during Cold War",
+              "India–China (1962 war)",
+              "India–Pakistan (wars of 1948, 1965, 1971; Shimla Agreement;",
+              "Kargil background)",
+              "India–Bangladesh (1971 liberation)",
+              "India–Sri Lanka, Nepal, Bhutan"
+            ]
+          }
+        }
+      },
+      "C. POST-INDEPENDENCE": {
+        "title": "C. POST-INDEPENDENCE",
+        "topics": {
+          "1. Partition & Immediate Challenges (1947–1950)": {
+            "title": "1. Partition & Immediate Challenges (1947–1950)",
+            "microtopics": []
+          },
+          "2. Integration of Indian States": {
+            "title": "2. Integration of Indian States",
+            "microtopics": [
+              "Communal riots: Punjab, Bengal, Assam, Sindh",
+              "Radcliffe Commission: composition, drawbacks, outcomes",
+              "Refugee rehabilitation & resettlement",
+              "Division of ﬁnances, defence, civil services",
+              "Assassination of Gandhi",
+              "Shift from colonial rule to constitutional democracy",
+              "Policy of equal federation (1935–1947)",
+              "Role of Sardar Patel & VP Menon in integration",
+              "Accession & challenges: Junagadh, Kashmir , Hyderabad",
+              "Later accessions: Goa, Pondicherry, tribal regions",
+              "Issues in tribal integration & policies"
+            ]
+          },
+          "3. Framing the Constitution": {
+            "title": "3. Framing the Constitution",
+            "microtopics": [
+              "Evolution of Constitution & Constituent Assembly debates",
+              "Key provisions and vision of founding fathers",
+              "Compulsions in drafting (federalism, rights, minorities)"
+            ]
+          },
+          "4. Building Democracy": {
+            "title": "4. Building Democracy",
+            "microtopics": [
+              "First general elections & challenges before Election Commission",
+              "Rise and dominance of Congress system",
+              "Elections of 1967 & split in Congress",
+              "Role of opposition parties in shaping democracy"
+            ]
+          },
+          "5. Economic Consolidation": {
+            "title": "5. Economic Consolidation",
+            "microtopics": []
+          },
+          "6. India’s Foreign Policy (1947–1970s)": {
+            "title": "6. India’s Foreign Policy (1947–1970s)",
+            "microtopics": [
+              "Ideas of development & formation of Planning Commission",
+              "Five-Year Plans (1st–5th)    achievements & criticisms",
+              "Green Revolution: conditions, policies, impacts",
+              "(positive & negative)",
+              "Operation Flood & dairy cooperatives (Amul model)",
+              "Land reforms: abolition of zamindari, tenancy reforms,",
+              "ceiling on landholdings",
+              "Communal riots: Punjab, Bengal, Assam, Sindh",
+              "Radcliffe Commission: composition, drawbacks, outcomes",
+              "Refugee rehabilitation & resettlement",
+              "Division of ﬁnances, defence, civil services",
+              "Assassination of Gandhi",
+              "Shift from colonial rule to constitutional democracy",
+              "JP movement & Emergency (1975–77): causes, declaration,",
+              "controversies",
+              "Features of Nehruvian foreign policy",
+              "Emergence of NAM (Non-Aligned Movement)",
+              "Relations with neighbours:",
+              "7 . Democratic Crisis & Reforms",
+              "Regional movements: Dravidian, Andhra, Assam, West Bengal,",
+              "Punjab, J&K, Northeast secessionism",
+              "Operation Blue Star , Khalistan demand",
+              "Regionalism vs national integration",
+              "Accommodation strategies by Indian state"
+            ]
+          },
+          "8. Regionalism & Internal Challenges": {
+            "title": "8. Regionalism & Internal Challenges",
+            "microtopics": [
+              "Environmental movements: Chipko, Narmada Bachao Andolan",
+              "Caste & anti-caste struggles (Dalit Panthers, Mandal agitation)",
+              "Agrarian struggles: BKU & farmer protests",
+              "Anti-arrack movement, ﬁshworkers’ movements",
+              "Women’s movements in post-independence India"
+            ]
+          },
+          "9. Popular Movements (1970s–1990s)": {
+            "title": "9. Popular Movements (1970s–1990s)",
+            "microtopics": [
+              "Growth of communal politics after independence",
+              "Ayodhya dispute & demolition of Babri Masjid",
+              "Gujarat riots & communal mobilisation",
+              "Challenges to secularism in state policy"
+            ]
+          },
+          "10. Communalism & Secularism": {
+            "title": "10. Communalism & Secularism",
+            "microtopics": [
+              "Decline of Congress dominance, rise of coalition politics",
+              "Mandal Commission & OBC assertion",
+              "NEP-1991 reforms (LPG – Liberalisation, Privatisation,",
+              "Globalisation)",
+              "ICT revolution & changing economy",
+              "Rise of new consensus in politics (2000s onwards)",
+              "Nuclear policy, Kargil conﬂict, terrorism & Pakistan relations",
+              "2004 elections & beyond – coalition era, changing party dynamics"
+            ]
+          },
+          "15. Recent Developments in Indian Politics (1990s–present)": {
+            "title": "15. Recent Developments in Indian Politics (1990s–present)",
+            "microtopics": [
+              "Decline of feudalism & rise of capitalism",
+              "Renaissance & pre-industrial Europe",
+              "Causes of Industrial Revolution in Britain",
+              "Spread to Europe & USA",
+              "Social, economic & political impacts (urbanisation,",
+              "class struggle, imperialism)"
+            ]
+          },
+          "1. Industrial Revolution (18th–19th Century)": {
+            "title": "1. Industrial Revolution (18th–19th Century)",
+            "microtopics": [
+              "Rise of nation-states in 19th century",
+              "Uniﬁcation of Italy (Mazzini, Garibaldi, Cavour)",
+              "Uniﬁcation of Germany (Bismarck, wars of uniﬁcation)",
+              "Rise of modern nationalism"
+            ]
+          },
+          "3. Nationalism in Europe": {
+            "title": "3. Nationalism in Europe",
+            "microtopics": [
+              "Colonial expansion in Asia & Africa (1870–1914)",
+              "Economic & political motives of imperialism",
+              "Impact on colonies (economic drain, cultural assimilation,",
+              "resistance movements)",
+              "Theories of imperialism (Lenin, Hobson)"
+            ]
+          },
+          "4. Colonialism & Imperialism": {
+            "title": "4. Colonialism & Imperialism",
+            "microtopics": [
+              "Causes of French Revolution (social, political, economic,",
+              "intellectual)",
+              "Main events & role of leaders",
+              "Napoleon Bonaparte: rise, reforms, downfall",
+              "Impact on France, Europe & the world"
+            ]
+          },
+          "2. French Revolution & Aftermath": {
+            "title": "2. French Revolution & Aftermath",
+            "microtopics": []
+          }
+        }
+      },
+      "D. WORLD HISTORY": {
+        "title": "D. WORLD HISTORY",
+        "topics": {
+          "5. American Revolution & Rise of USA": {
+            "title": "5. American Revolution & Rise of USA",
+            "microtopics": [
+              "Causes: alliances, militarism, nationalism, Balkan crises",
+              "Course of the war & major battles",
+              "Aftermath: Treaty of Versailles, League of Nations",
+              "Consequences for Europe, Middle East, colonies",
+              "Impact on India & nationalist movements"
+            ]
+          },
+          "6. World War I (1914–1918)": {
+            "title": "6. World War I (1914–1918)",
+            "microtopics": [
+              "Conditions in Tsarist Russia before 1917",
+              "Role of Lenin, Bolsheviks & October Revolution",
+              "Civil war & creation of USSR",
+              "Global inﬂuence of Marxism-Leninism",
+              "7 . Russian Revolution (1917)",
+              "Rise of Fascism in Italy (Mussolini)",
+              "Rise of Nazism in Germany (Hitler , ideology, expansionism)",
+              "Great Depression (1929): causes & global effects",
+              "Spanish Civil War & ideological conﬂicts"
+            ]
+          },
+          "8. Inter-War Period (1919–1939)": {
+            "title": "8. Inter-War Period (1919–1939)",
+            "microtopics": [
+              "Causes: failure of League, appeasement, aggression of",
+              "Axis powers",
+              "Major campaigns & turning points",
+              "Holocaust & war crimes",
+              "End of war: Yalta & Potsdam conferences, atomic bombs",
+              "Consequences: UN formation, Cold War beginnings"
+            ]
+          },
+          "9. World War II (1939–1945)": {
+            "title": "9. World War II (1939–1945)",
+            "microtopics": [
+              "End of colonial empires in Asia & Africa",
+              "Role of nationalist movements & leaders",
+              "Case studies: India, Indonesia, Vietnam, Ghana, Kenya",
+              "Impact of decolonisation on Cold War politics"
+            ]
+          },
+          "10. Decolonisation (1945–1970s)": {
+            "title": "10. Decolonisation (1945–1970s)",
+            "microtopics": [
+              "Division of world into US & USSR blocs",
+              "NATO vs Warsaw Pact",
+              "Proxy wars: Korea, Vietnam, Afghanistan",
+              "Cuban Missile Crisis",
+              "Non-Aligned Movement (NAM) & India’s role",
+              "Collapse of USSR (1991)"
+            ]
+          },
+          "11. Cold War Era (1945–1991)": {
+            "title": "11. Cold War Era (1945–1991)",
+            "microtopics": [
+              "Forms of diversity in India (regional, linguistic,",
+              "religious, caste, cultural)",
+              "Bonds of unity (pilgrimage, accommodation,",
+              "interdependence, leadership)",
+              "Constitutional safeguards for unity"
+            ]
+          },
+          "1. Unity in Diversity": {
+            "title": "1. Unity in Diversity",
+            "microtopics": [
+              "Rise of US as sole superpower",
+              "EU integration & Eurozone",
+              "Rise of China as global power",
+              "Islamic terrorism & “War on Terror” (Al Qaeda, ISIS)",
+              "Globalisation & new world order"
+            ]
+          },
+          "12.  Post-Cold War World (1991–Present)": {
+            "title": "12.  Post-Cold War World (1991–Present)",
+            "microtopics": [
+              "Regionalism, casteism, linguism, communalism",
+              "Social inequalities and disparities",
+              "Ethnic conﬂicts and tribal identity issues"
+            ]
+          },
+          "2. Challenges to National Integration": {
+            "title": "2. Challenges to National Integration",
+            "microtopics": [
+              "Western vs Indian concept of secularism",
+              "Process of secularization in India",
+              "Issues like forced conversions, communal tensions"
+            ]
+          },
+          "3. Secularism in India": {
+            "title": "3. Secularism in India",
+            "microtopics": [
+              "Capitalism: forms, examples, modern relevance",
+              "Socialism & Communism: Soviet model, Chinese model",
+              "Fascism & Nazism: ideology, practices, impact",
+              "Liberal democracy & human rights movements"
+            ]
+          },
+          "13. Political Ideologies & Philosophies": {
+            "title": "13. Political Ideologies & Philosophies",
+            "microtopics": [
+              "Types and effects of regionalism",
+              "Sons of Soil movements and demands for smaller states",
+              "Rise of fundamentalism (religious, cultural)",
+              "Communal violence and its social impact"
+            ]
+          },
+          "4. Regionalism, Communalism & Fundamentalism": {
+            "title": "4. Regionalism, Communalism & Fundamentalism",
+            "microtopics": [
+              "CConstitutional provisions for SCs, STs, OBCs and minorities",
+              "State policies and welfare measures for social justice"
+            ]
+          },
+          "5. Social Empowerment": {
+            "title": "5. Social Empowerment",
+            "microtopics": [
+              "Caste and politics",
+              "From untouchables to Dalits: identity formation",
+              "Reservation debate and its implications",
+              "Caste-based violence and state measures"
+            ]
+          },
+          "6. Caste and Social Justice": {
+            "title": "6. Caste and Social Justice",
+            "microtopics": [
+              "Indebtedness, displacement, forest problems",
+              "Analysis of Forest Rights Act",
+              "Development vs displacement dilemma",
+              "7 . Tribal Issues",
+              "Women’s movements (19th century, Gandhian era,",
+              "post-independence)",
+              "Violence against women and state responses",
+              "Uniform Civil Code debate",
+              "Feminism and post-feminism in India"
+            ]
+          },
+          "8. Women and Society": {
+            "title": "8. Women and Society",
+            "microtopics": [
+              "Concept of social security",
+              "Organised vs unorganised sector",
+              "Public assistance programmes",
+              "Social security code initiatives"
+            ]
+          },
+          "9. Social Justice and Security": {
+            "title": "9. Social Justice and Security",
+            "microtopics": []
+          }
+        }
+      },
+      "E. INDIAN SOCIETY": {
+        "title": "E. INDIAN SOCIETY",
+        "topics": {
+          "10. Poverty and Inequality": {
+            "title": "10. Poverty and Inequality",
+            "microtopics": []
+          },
+          "11.  Globalisation and Indian Society": {
+            "title": "11.  Globalisation and Indian Society",
+            "microtopics": [
+              "Patterns and trends of urbanisation in India",
+              "Urban governance and smart city initiatives",
+              "Problems of urbanisation (slums, infrastructure, service delivery)",
+              "Census 2011 highlights (sex ratio, literacy, population trends)"
+            ]
+          },
+          "12. Urbanisation and Demography": {
+            "title": "12. Urbanisation and Demography",
+            "microtopics": [
+              "State of health sector , reforms and Ayushman Bharat",
+              "Nutrition challenges (malnutrition, food fortiﬁcation)",
+              "Status of education, literacy challenges",
+              "Policies like RTE Act, National Education Policy, No",
+              "Detention Policy"
+            ]
+          },
+          "16. Health, Education and Development": {
+            "title": "16. Health, Education and Development",
+            "microtopics": [
+              "SCs, STs, OBCs, minorities, elderly, children, disabled, LGBTQ+",
+              "Laws, schemes, and institutions for their welfare",
+              "Effectiveness and gaps in implementation"
+            ]
+          },
+          "14. Issues of Vulnerable Sections": {
+            "title": "14. Issues of Vulnerable Sections",
+            "microtopics": [
+              "Secularism, communalism, caste conﬂicts",
+              "Gender discrimination in workplaces",
+              "Child trafﬁcking, child labour , juvenile justice",
+              "Surrogacy, same-sex marriage, manual scavenging",
+              "Mob lynching, undertrials, right to privacy, death penalty debates"
+            ]
+          },
+          "15. Contemporary Social Issues": {
+            "title": "15. Contemporary Social Issues",
+            "microtopics": [
+              "Atmosphere: composition, structure",
+              "Solar radiation, heat balance, temperature distribution",
+              "Pressure belts, winds (planetary, monsoon, local winds)",
+              "Jet streams, cyclones, thunderstorms, tornadoes",
+              "Humidity, condensation, clouds, precipitation, types of rainfall",
+              "World climate zones (Köppen classiﬁcation)"
+            ]
+          },
+          "4. Contemporary Social Issues": {
+            "title": "4. Contemporary Social Issues",
+            "microtopics": [
+              "Soils: formation, types, degradation & conservation",
+              "Natural vegetation: forests, grasslands, deserts, tundra",
+              "Conservation & reforestation"
+            ]
+          },
+          "5. Biogeography": {
+            "title": "5. Biogeography",
+            "microtopics": [
+              "Relief of ocean ﬂoor: ridges, trenches, seamounts,",
+              "continental shelves",
+              "Temperature, salinity & density of oceans",
+              "Movements: tides, waves, currents (causes & impacts)",
+              "Marine resources, ocean deposits, corals & bleaching issues",
+              "Water cycle & management (surface, ground, inland waters)"
+            ]
+          },
+          "3. Contemporary Social Issues• Changing family and kinship systems in India": {
+            "title": "3. Contemporary Social Issues• Changing family and kinship systems in India",
+            "microtopics": [
+              "Concept and impact of patriarchy",
+              "Women in family structures"
+            ]
+          },
+          "13. Family, Kinship & Patriarchy": {
+            "title": "13. Family, Kinship & Patriarchy",
+            "microtopics": [
+              "Dimensions of poverty in India",
+              "Linkage between poverty and development",
+              "Poverty alleviation strategies since independence",
+              "Inequality debates (income, caste, gender , region)",
+              "Origin of universe (Big Bang, star & planet formation)",
+              "Evolution of Earth, atmosphere, hydrosphere, life",
+              "Geological time scale"
+            ]
+          },
+          "1. Universe & Earth": {
+            "title": "1. Universe & Earth",
+            "microtopics": [
+              "Physical Geography (World & India)",
+              "Earth’s interior: structure & sources of info (seismic",
+              "waves, volcanoes)",
+              "ERocks: types (igneous, sedimentary, metamorphic),",
+              "landforms & soils",
+              "Geomorphic processes:",
+              "Landform development: rivers, glaciers, winds, waves, karst"
+            ]
+          },
+          "2. Geomorphology": {
+            "title": "2. Geomorphology",
+            "microtopics": []
+          }
+        }
+      },
+      "F. GEOGRAPHY": {
+        "title": "F. GEOGRAPHY",
+        "topics": {
+          "6. Physical Geography of India": {
+            "title": "6. Physical Geography of India",
+            "microtopics": [
+              "Factors affecting industrial location (Weber , Losch theories)",
+              "Major industries (iron & steel, textiles, automobiles, fertilizers,",
+              "pharmaceuticals, food processing)",
+              "Industrial regions (world & India)",
+              "Industrial policies, SEZs, MSME sector , 4th Industrial Revolution",
+              "Regional inequalities & industrial sickness"
+            ]
+          },
+          "4. Industry": {
+            "title": "4. Industry",
+            "microtopics": [
+              "Road, rail, pipeline, water & air transport (issues & policies:",
+              "Bharatmala, Sagarmala, UDAN)",
+              "Ports & shipping challenges",
+              "Communication: telecom, digital infrastructure, National",
+              "Telecom Policy",
+              "Role of transport & communication in development"
+            ]
+          },
+          "5. Transport & Communication": {
+            "title": "5. Transport & Communication",
+            "microtopics": []
+          },
+          "6. Trade": {
+            "title": "6. Trade",
+            "microtopics": [
+              "Physiography: Himalayas, Peninsular block, Indo-Gangetic plain",
+              "Drainage systems: Himalayan & Peninsular rivers",
+              "Indian climate & monsoon theories (classical, modern, air",
+              "mass, jet stream)",
+              "Climatic regions of India",
+              "Soils & vegetation in India; conservation issues",
+              "Environmental issues: ﬂoods, droughts, desertiﬁcation, forest",
+              "ﬁres, pollution, climate change",
+              "Economic & Human Geography",
+              "Nature & scope of economic geography",
+              "Economic activities: primary, secondary, tertiary,",
+              "quaternary, quinary",
+              "Agglomeration economies, digital divide, neoliberalism"
+            ]
+          },
+          "1. Basics of Economic Geography": {
+            "title": "1. Basics of Economic Geography",
+            "microtopics": [
+              "Land use, land degradation, planning",
+              "Water resources & disputes, management policies",
+              "Minerals: types, distribution (world & India), conservation,",
+              "mining issues",
+              "Energy resources: coal, oil, gas, nuclear , renewable (solar , wind,",
+              "hydro, geothermal, bio)",
+              "Energy security debates & policies"
+            ]
+          },
+          "2. Resources": {
+            "title": "2. Resources",
+            "microtopics": [
+              "Cropping patterns, productivity, intensity",
+              "Factors inﬂuencing agriculture (geographical, institutional,",
+              "technological)",
+              "Major crops & conditions for growth",
+              "Agricultural revolutions (Green, White, Blue, Evergreen, Rainbow)",
+              "GM crops, climate-smart agriculture, diversiﬁcation",
+              "Agricultural policies: MSP , NAM, APMC reforms, Rashtriya",
+              "Gokul Mission",
+              "Food security, famines, PDS, nutrition challenges"
+            ]
+          },
+          "3. Agriculture": {
+            "title": "3. Agriculture",
+            "microtopics": [
+              "World trade patterns & routes",
+              "India’s foreign trade: composition, direction, trends, WTO issues",
+              "Regional trade blocs & bilateral agreements",
+              "Population growth & distribution (world & India)",
+              "Theories: Malthus, Marx, Demographic Transition,",
+              "Optimum Population",
+              "Demographic dividend & window of opportunity",
+              "Migration: causes, types, patterns (India & global)",
+              "Sex ratio, fertility, literacy, ageing, health",
+              "Census highlights, National Population Policy",
+              "Hunger & nutrition reports (Global Hunger Index, Nutrition Report)",
+              "7 .  Population & Human Geography",
+              "Rural settlement types & patterns",
+              "Urbanisation trends, primate cities, conurbations, slums,",
+              "rural–urban fringe",
+              "Issues of urbanisation in India",
+              "Government schemes: Smart Cities, AMRUT, PM Awas",
+              "Yojana, HRIDAY",
+              "Urban planning, sustainable development"
+            ]
+          },
+          "8. Settlements & Urbanisation": {
+            "title": "8. Settlements & Urbanisation",
+            "microtopics": []
+          },
+          "6. Regional Development & Human Development": {
+            "title": "6. Regional Development & Human Development",
+            "microtopics": [
+              "Concept & types of regions, regional imbalance issues",
+              "Strategies for balanced development",
+              "Human Development Index & reports (World Bank, UNDP)",
+              "Growth vs development debates"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "GS Paper 2": {
+    "title": "GS Paper 2: Governance, Constitution, Polity, Social Justice & IR",
+    "subjects": {
+      "A. Indian Polity & Constitution": {
+        "title": "A. Indian Polity & Constitution",
+        "topics": {
+          "1. Historical Underpinnings & Evolution": {
+            "title": "1. Historical Underpinnings & Evolution",
+            "microtopics": [
+              "Making of the Constitution: Constituent Assembly, debates, vision",
+              "Historical background & inﬂuences (Government of India Acts,",
+              "British legacy)",
+              "Constitution as a living document",
+              "Sources & salient features (federalism, parliamentary system,",
+              "independence of judiciary, etc.)",
+              "Preamble – philosophy & debates (is it amendable?)",
+              "Comparison with constitutions of USA, UK, France, etc."
+            ]
+          },
+          "2. Features of the Constitution": {
+            "title": "2. Features of the Constitution",
+            "microtopics": [
+              "Fundamental Rights – scope, restrictions, key debates",
+              "(sedition, free speech, RTI, privacy)",
+              "Directive Principles – signiﬁcance, economic & social",
+              "democracy, conﬂicts with FRs",
+              "Fundamental Duties – relevance & enforcement"
+            ]
+          },
+          "3. Fundamental Rights, DPSPs & Duties": {
+            "title": "3. Fundamental Rights, DPSPs & Duties",
+            "microtopics": [
+              "Salient features of Representation of People Act",
+              "Electoral reforms: NOTA, Right to Recall, Simultaneous",
+              "elections, electoral bonds, state funding debates",
+              "Voting behaviour , absentee ballots, role of EVMs & VVPATs",
+              "Criminalisation of politics, freebies culture, inner-party",
+              "democracy"
+            ]
+          },
+          "5. Representation & Elections": {
+            "title": "5. Representation & Elections",
+            "microtopics": [
+              "Important amendments (42nd, 44th, 73rd, 74th, 103rd, etc.)",
+              "Judicial doctrines: basic structure, harmonious construction,",
+              "eclipse, pith & substance, severability, territorial nexus"
+            ]
+          },
+          "4. Amendments & Doctrines": {
+            "title": "4. Amendments & Doctrines",
+            "microtopics": [
+              "Nature, functions & challenges of political parties in India",
+              "Role of opposition & coalition politics",
+              "Pressure groups, civil society, NGOs, SHGs Role in democracy"
+            ]
+          },
+          "6. Political Parties & Pressure Groups": {
+            "title": "6. Political Parties & Pressure Groups",
+            "microtopics": []
+          }
+        }
+      },
+      "B. Executive, Legislature & Judiciary": {
+        "title": "B. Executive, Legislature & Judiciary",
+        "topics": {
+          "8. Parliament & State Legislatures": {
+            "title": "8. Parliament & State Legislatures",
+            "microtopics": [
+              "Structure & functioning (sessions, dissolution, adjournment)",
+              "Law-making process, money bills, budget process",
+              "Committees of Parliament: role, effectiveness",
+              "Privileges & issues (breach of privilege, ofﬁce of proﬁt)",
+              "Lapses of bills & ordinance-making power"
+            ]
+          },
+          "9. Judiciary": {
+            "title": "9. Judiciary",
+            "microtopics": [
+              "Structure & independence of judiciary",
+              "Appointment & removal of judges (collegium vs NJAC debate)",
+              "Judicial review, activism, accountability",
+              "PILs & judicial overreach debates",
+              "Pendency, reforms, All India Judicial Service proposals",
+              "Tribunals, alternate dispute resolution (ADR)",
+              "Major SC judgments (privacy, Aadhaar , Sabarimala, NJAC,",
+              "decriminalisation of adultery, etc.)"
+            ]
+          },
+          "10. Federalism & Local Government": {
+            "title": "10. Federalism & Local Government",
+            "microtopics": [
+              "Federal structure: features, challenges, debates on special status",
+              "Centre–State relations: legislative, administrative, ﬁnancial",
+              "Inter-state disputes (water sharing, boundaries, etc.)",
+              "73rd & 74th Amendments: Panchayati Raj & municipalities",
+              "Role of Finance Commission, devolution of funds",
+              "Urban governance & reforms"
+            ]
+          }
+        }
+      },
+      "D. International Relations": {
+        "title": "D. International Relations",
+        "topics": {
+          "11. Good Governance": {
+            "title": "11. Good Governance",
+            "microtopics": [
+              "India–US: defence, nuclear , trade, diaspora issues",
+              "India–Russia: defence ties, stagnation, new equations with US",
+              "India–Japan: strategic cooperation, nuclear pact,",
+              "infrastructure projects",
+              "India–Europe: Brexit implications, GDPR, EU–India FTA hurdles",
+              "India–Africa: trade, diaspora, energy security, AAGC initiative",
+              "India–West Asia: Iran (Chabahar , nuclear deal), Israel,",
+              "Saudi Arabia, UAE relations",
+              "17 . India & the World",
+              "Role of civil services in democracy",
+              "Reforms needed in bureaucracy (performance appraisal,",
+              "lateral entry)",
+              "Civil service–political executive relationship",
+              "Ethics & codes of conduct"
+            ]
+          },
+          "13. Civil Services & Administration": {
+            "title": "13. Civil Services & Administration",
+            "microtopics": [
+              "Laws, schemes & institutions for vulnerable sections (SCs, STs,",
+              "minorities, women, children, elderly, disabled)",
+              "Reforms needed in bureaucracy (performance appraisal,",
+              "lateral entry)",
+              "Civil service–political executive relationship",
+              "Ethics & codes of conduct"
+            ]
+          },
+          "14. Welfare & Development Mechanisms": {
+            "title": "14. Welfare & Development Mechanisms",
+            "microtopics": [
+              "Evolution: Nehruvian policy, NAM, Gujral Doctrine",
+              "Recent doctrines: Neighbourhood First, Act East, Look West,",
+              "Indian Ocean outreach, diaspora diplomacy, space &",
+              "nuclear diplomacy",
+              "Soft power & hard power elements"
+            ]
+          },
+          "15. India’s Foreign Policy": {
+            "title": "15. India’s Foreign Policy",
+            "microtopics": [
+              "Models, applications, challenges & successes",
+              "Digital India, BharatNet, DBT, Aadhaar & privacy debates",
+              "Use of technology in service delivery"
+            ]
+          },
+          "12. E-Governance": {
+            "title": "12. E-Governance",
+            "microtopics": [
+              "India–China: border issues, BRI, trade deﬁcit, Doklam",
+              "India–Pakistan: terrorism, Indus Waters Treaty, CPEC,",
+              "Kashmir issue",
+              "India–Bangladesh: Teesta water issue, migration, connectivity",
+              "India–Nepal: ﬂuctuating ties, tilt towards China,",
+              "constitutional disputes",
+              "India–Sri Lanka: Tamil issue, ﬁshermen disputes",
+              "India–Bhutan: strategic relations, China factor",
+              "India–Myanmar: Rohingya issue, connectivity (Kaladan,",
+              "IMT highway)",
+              "India–Maldives: political shifts, Chinese presence"
+            ]
+          },
+          "16. India & Neighbourhood": {
+            "title": "16. India & Neighbourhood",
+            "microtopics": []
+          },
+          "18. Global Issues & Institutions": {
+            "title": "18. Global Issues & Institutions",
+            "microtopics": [
+              "UN & UNSC reforms, peacekeeping challenges",
+              "Bretton Woods institutions (IMF , World Bank) reforms",
+              "WTO: Doha round, India’s stance, protectionism",
+              "BRICS, SCO, G20, ASEAN, BIMSTEC, SAARC",
+              "Climate change diplomacy (Paris Agreement, COPs)",
+              "Migration crisis, terrorism, cyber security, energy geopolitics"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "GS Paper 3": {
+    "title": "GS Paper 3: Technology, Economic Development, Environment & Security",
+    "subjects": {
+      "A. Indian Economy & Planning": {
+        "title": "A. Indian Economy & Planning",
+        "topics": {
+          "1. Economic Development": {
+            "title": "1. Economic Development",
+            "microtopics": []
+          }
+        }
+      },
+      "D. Science & Technology": {
+        "title": "D. Science & Technology",
+        "topics": {
+          "8. Agricultural Issues & Reforms": {
+            "title": "8. Agricultural Issues & Reforms",
+            "microtopics": [
+              "Land reforms, tenancy reforms, consolidation debates",
+              "Pricing: MSP , APMC, e-NAM, contract farming",
+              "Food security: PDS, buffer stocks, nutrition issues",
+              "Doubling farmers’ income strategies",
+              "Climate change & agriculture"
+            ]
+          },
+          "11. Developments in S&T": {
+            "title": "11. Developments in S&T",
+            "microtopics": [
+              "IT, AI, robotics, nanotech, biotech, quantum computing",
+              "Defence technology & indigenisation (DRDO, ISRO)",
+              "Space: Chandrayaan, Gaganyaan, commercial space startups",
+              "Nuclear energy & safety issues",
+              "Cybersecurity, data protection, digital ethics"
+            ]
+          },
+          "10. Environmental Legislation & Governance": {
+            "title": "10. Environmental Legislation & Governance",
+            "microtopics": [
+              "Environment Protection Act, Wildlife Protection Act,",
+              "Forest Rights Act",
+              "EIA, CRZ regulations",
+              "National Green Tribunal (NGT) – role & limitations",
+              "Issues of inter-state water disputes, river linking"
+            ]
+          },
+          "9. Conservation & Climate Change": {
+            "title": "9. Conservation & Climate Change",
+            "microtopics": [
+              "Environmental issues: pollution, deforestation, desertiﬁcation",
+              "Biodiversity: hotspots, conservation methods, species protection",
+              "Climate change: IPCC reports, India’s INDCs, National Action",
+              "Plan on Climate Change",
+              "International agreements: UNFCCC, Paris Agreement, COP summits",
+              "Renewable energy & sustainable development goals (SDGs)",
+              "Growth vs development debates",
+              "NITI Aayog: role, cooperative federalism",
+              "Planning – legacy of 5 Year Plans to post-1991 LPG reforms",
+              "Sustainable development, inclusive growth"
+            ]
+          },
+          "4. Indian Industry": {
+            "title": "4. Indian Industry",
+            "microtopics": [
+              "MSME sector – role, challenges, Udyam reforms",
+              "Industrial policies & PLI schemes",
+              "Startup ecosystem, unicorns, ease of doing business",
+              "Disinvestment & privatisation debates"
+            ]
+          },
+          "5. Infrastructure": {
+            "title": "5. Infrastructure",
+            "microtopics": [
+              "Transport (roads, rail, air , ports) – Bharatmala, Sagarmala, UDAN",
+              "Energy sector: coal, oil, renewables, nuclear , energy transition",
+              "Urban infrastructure: Smart Cities, AMRUT, PM Awas Yojana",
+              "Digital infrastructure & 5G rollout"
+            ]
+          },
+          "6. Investment & Employment": {
+            "title": "6. Investment & Employment",
+            "microtopics": [
+              "Trends in investment, FDI policy, Make in India",
+              "Employment trends: organised vs unorganised sector , gig",
+              "economy, migration",
+              "Skill development & demographic dividend",
+              "Social sector spending"
+            ]
+          },
+          "3. Banking, Finance & Monetary Policy": {
+            "title": "3. Banking, Finance & Monetary Policy",
+            "microtopics": [
+              "Structure & reforms in Indian banking",
+              "NPAs, IBC, recapitalisation",
+              "RBI: monetary policy framework, inﬂation targeting, digital rupee",
+              "Financial markets: capital markets, SEBI role, ﬁntech &",
+              "crypto debates"
+            ]
+          },
+          "2. Mobilisation of Resources": {
+            "title": "2. Mobilisation of Resources",
+            "microtopics": [
+              "Domestic resource mobilisation: taxation, black money,",
+              "ﬁnancial inclusion",
+              "External resources: FDI, FII, ECBs, remittances, sovereign bonds",
+              "Public ﬁnance: deﬁcits, FRBM debates, off-budget borrowings"
+            ]
+          },
+          "12. Health & Medicine": {
+            "title": "12. Health & Medicine",
+            "microtopics": [
+              "Vaccines, biotechnology, genomics",
+              "Public health infrastructure, Ayushman Bharat",
+              "Pandemic preparedness & One Health approach"
+            ]
+          },
+          "16. Cyber & Technology-related Security": {
+            "title": "16. Cyber & Technology-related Security",
+            "microtopics": [
+              "Cybersecurity architecture in India: CERT-In, NCIIPC",
+              "Data privacy & digital warfare",
+              "Social media manipulation, fake news, disinformation",
+              "17 . Security Forces & Reforms",
+              "Role of Army, paramilitary, CAPFs, intelligence agencies",
+              "Modernisation of police forces, prison reforms",
+              "Role of technology (drones, satellites, AI) in security"
+            ]
+          },
+          "15. Border & Coastal Security": {
+            "title": "15. Border & Coastal Security",
+            "microtopics": [
+              "Border management with Pakistan, China, Nepal,",
+              "Myanmar , Bangladesh",
+              "Coastal security architecture: Navy, Coast Guard, marine police",
+              "Smuggling, illegal migration, human trafﬁcking"
+            ]
+          }
+        }
+      },
+      "F. Internal Security": {
+        "title": "F. Internal Security",
+        "topics": {
+          "13. Disaster Preparedness & Mitigation": {
+            "title": "13. Disaster Preparedness & Mitigation",
+            "microtopics": [
+              "Disaster types: natural (earthquakes, ﬂoods, cyclones,",
+              "droughts) & man-made (industrial accidents, nuclear ,",
+              "chemical, biological)",
+              "NDMA & SDMAs – structures, policies",
+              "Early warning systems, mock drills, community participation",
+              "Sendai Framework & India’s initiatives",
+              "Case studies: Uttarakhand ﬂoods, Kerala ﬂoods,",
+              "Odisha cyclone model"
+            ]
+          },
+          "14. Internal Security Challenges": {
+            "title": "14. Internal Security Challenges",
+            "microtopics": [
+              "Terrorism: cross-border , domestic, cyber terrorism",
+              "Left-wing extremism (Naxalism): causes, spread, state response",
+              "Insurgency in Northeast India – historical roots & peace accords",
+              "Kashmir issue, AFSPA debates"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "GS Paper 4": {
+    "title": "GS Paper 4: Ethics, Integrity & Aptitude",
+    "subjects": {
+      "C. ATTITUDE": {
+        "title": "C. ATTITUDE",
+        "topics": {
+          "A1. Nature & Scope": {
+            "title": "A1. Nature & Scope",
+            "microtopics": []
+          }
+        }
+      },
+      "D. APTITUDE AND FOUNDATIONAL": {
+        "title": "D. APTITUDE AND FOUNDATIONAL",
+        "topics": {
+          "E. EMOTIONAL INTELLIGENCE (EI)": {
+            "title": "E. EMOTIONAL INTELLIGENCE (EI)",
+            "microtopics": [
+              "Deﬁnition and importance of EI",
+              "Theoretical models of EI"
+            ]
+          },
+          "C2. Functions of Attitude": {
+            "title": "C2. Functions of Attitude",
+            "microtopics": [
+              "Adaptive, ego-defensive, value-expressive, knowledge function"
+            ]
+          },
+          "C3. Formation & Change": {
+            "title": "C3. Formation & Change",
+            "microtopics": [
+              "Role of belief, values, socialisation",
+              "Impact of persuasion & group inﬂuence"
+            ]
+          },
+          "C4. Attitudes in Governance": {
+            "title": "C4. Attitudes in Governance",
+            "microtopics": [
+              "Moral and political attitudes in public life"
+            ]
+          },
+          "E2. Components of EI": {
+            "title": "E2. Components of EI",
+            "microtopics": [
+              "Self-awareness, self-management",
+              "Social awareness, relationship management"
+            ]
+          },
+          "E3. Application of EI": {
+            "title": "E3. Application of EI",
+            "microtopics": [
+              "In administration and governance",
+              "Enhancing decision making, conﬂict resolution,",
+              "team management"
+            ]
+          },
+          "D1. Core Aptitudes": {
+            "title": "D1. Core Aptitudes",
+            "microtopics": [
+              "Analytical ability, logical reasoning, decision making",
+              "Essential aptitudes for civil servants"
+            ]
+          },
+          "D3. Public Service Commitment": {
+            "title": "D3. Public Service Commitment",
+            "microtopics": [
+              "Dedication to service delivery",
+              "Balancing rights and duties",
+              "Deﬁnition and meaning of Ethics",
+              "Difference between ethics, morality, values, laws",
+              "Dimensions of ethics: personal, professional, social",
+              "Determinants of ethical behaviour"
+            ]
+          },
+          "B1. Sources of Values": {
+            "title": "B1. Sources of Values",
+            "microtopics": [
+              "Role of family, society, culture, religion",
+              "Educational institutions and value inculcation"
+            ]
+          },
+          "B2. Values from Exemplars": {
+            "title": "B2. Values from Exemplars",
+            "microtopics": [
+              "Teachings of Indian leaders (Gandhi, Vivekananda, Ambedkar ,",
+              "Tagore etc.)",
+              "Global leaders and reformers (Mandela, Lincoln, Dalai Lama etc.)",
+              "Administrators known for integrity (T.N. Seshan,"
+            ]
+          },
+          "E. Sreedharan etc.": {
+            "title": "E. Sreedharan etc.",
+            "microtopics": []
+          },
+          "B3. Types of Values": {
+            "title": "B3. Types of Values",
+            "microtopics": [
+              "Fundamental vs. Instrumental values",
+              "Democratic, social, aesthetic and professional values"
+            ]
+          },
+          "C1. Structure & Components": {
+            "title": "C1. Structure & Components",
+            "microtopics": [
+              "Cognitive, affective, behavioural elements of attitude"
+            ]
+          },
+          "A3. Ethics in Relationships": {
+            "title": "A3. Ethics in Relationships",
+            "microtopics": [
+              "Ethics in family life",
+              "Ethics in professional conduct",
+              "Ethics in public administration"
+            ]
+          },
+          "A2. Human Action & Consequences": {
+            "title": "A2. Human Action & Consequences",
+            "microtopics": [
+              "Role of intention, means and ends in ethics",
+              "Ethical dilemmas in decision making",
+              "PCase illustrations on private vs. public life choices"
+            ]
+          },
+          "D2. Foundational Values": {
+            "title": "D2. Foundational Values",
+            "microtopics": [
+              "Integrity, impartiality, non-partisanship",
+              "Objectivity, neutrality, anonymity",
+              "Empathy, tolerance, compassion, humility, perseverance"
+            ]
+          },
+          "F1. Indian Thinkers": {
+            "title": "F1. Indian Thinkers",
+            "microtopics": [
+              "Plato, Aristotle, Socrates",
+              "Kant, John Stuart Mill, Jeremy Bentham",
+              "Hobbes, Locke, Rousseau",
+              "Karl Marx, Adam Smith, John Rawls, Confucius, Nietzsche"
+            ]
+          },
+          "F2. Western & Global Thinkers": {
+            "title": "F2. Western & Global Thinkers",
+            "microtopics": [
+              "Ethical concerns in government and private institutions",
+              "Status & problems of public service values"
+            ]
+          },
+          "G1. Public Service Values": {
+            "title": "G1. Public Service Values",
+            "microtopics": [
+              "Laws, rules, regulations, conscience as guides",
+              "Ethical dilemmas in policy, administration & business"
+            ]
+          },
+          "G2. Ethical Frameworks": {
+            "title": "G2. Ethical Frameworks",
+            "microtopics": [
+              "Transparency, accountability, ombudsman",
+              "Whistleblower protection, citizen engagement"
+            ]
+          },
+          "G3. Accountability & Governance": {
+            "title": "G3. Accountability & Governance",
+            "microtopics": [
+              "Ethical issues in foreign aid & relations",
+              "International organisations and ethical standards",
+              "Corporate governance and CSR models"
+            ]
+          },
+          "G4. Ethics in International & Corporate Sphere": {
+            "title": "G4. Ethics in International & Corporate Sphere",
+            "microtopics": [
+              "Meaning of probity and philosophical basis of governance",
+              "Importance of vigilance and citizen participation"
+            ]
+          },
+          "H1. Conceptual Basis": {
+            "title": "H1. Conceptual Basis",
+            "microtopics": []
+          },
+          "I. CASE STUDIES": {
+            "title": "I. CASE STUDIES",
+            "microtopics": [
+              "Max Weber , Peter Drucker , Elton Mayo, Mary Parker Follett"
+            ]
+          },
+          "F3. Administrative & Modern Thinkers": {
+            "title": "F3. Administrative & Modern Thinkers",
+            "microtopics": [
+              "Buddha, Mahavira, Gandhi, Tagore, Vivekananda, Ambedkar ,",
+              "Dayanand Saraswati, Aurobindo, etc.",
+              "RTI, e-governance, transparency measures",
+              "Codes of ethics and conduct (for legislators, ministers, civil",
+              "servants, regulators, judiciary)"
+            ]
+          },
+          "H2. Tools & Mechanismst": {
+            "title": "H2. Tools & Mechanismst",
+            "microtopics": [
+              "Citizen’s Charters: features, limitations, reforms",
+              "Work culture: Indian approach & reforms",
+              "Quality of service delivery"
+            ]
+          },
+          "H3. Public Service Delivery": {
+            "title": "H3. Public Service Delivery",
+            "microtopics": [
+              "Utilisation of public funds, leakages, fund release issues",
+              "Role of Parliament in ﬁnancial control",
+              "Corruption as a social evil; types & causes",
+              "Mechanisms: Lokpal, Lokayukta, vigilance bodies"
+            ]
+          },
+          "H4. Public Funds & Corruption": {
+            "title": "H4. Public Funds & Corruption",
+            "microtopics": [
+              "Ethical dilemmas in administration",
+              "Conﬂict between public duty and private interests",
+              "Issues of corruption, transparency, accountability",
+              "Application of values and EI in real-life governance scenarios"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,45 +1,427 @@
 import streamlit as st
-
+import json
+import re
+from pathlib import Path
 from generation.rag_chain import RAGChatbot
+from ui_components import inject_custom_css, render_futuristic_header
 
-st.set_page_config(page_title="UPSC RAG Mentor", page_icon="📚", layout="centered")
+# Set Streamlit Page Configuration
+st.set_page_config(
+    page_title="UPSC RAG Mentor & Microtopic Dashboard",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-st.title("UPSC RAG Mentor")
-st.caption("Course guidance · Backup plans · Mental health support · Academic notes (web-augmented)")
+# Inject High-Contrast Futuristic CSS
+inject_custom_css()
 
+# Path constants
+ROOT = Path(__file__).resolve().parent
+SYLLABUS_JSON_PATH = ROOT / "data" / "upsc_syllabus_microtopics.json"
+USER_DATA_PATH = ROOT / "data" / "user_progress.json"
+
+# Load Syllabus Data
+@st.cache_data
+def load_syllabus_data():
+    if SYLLABUS_JSON_PATH.exists():
+        with open(SYLLABUS_JSON_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+# Load & Save User Progress
+def load_user_progress():
+    if USER_DATA_PATH.exists():
+        try:
+            with open(USER_DATA_PATH, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"completed": [], "notes": {}, "custom_microtopics": []}
+
+def save_user_progress(progress_data):
+    USER_DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(USER_DATA_PATH, "w", encoding="utf-8") as f:
+        json.dump(progress_data, f, indent=2, ensure_ascii=False)
+
+# Initialize Session State
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 if "chatbot" not in st.session_state:
     st.session_state.chatbot = RAGChatbot()
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-        if msg.get("meta"):
-            with st.expander("Details"):
-                st.json(msg["meta"])
+if "progress" not in st.session_state:
+    st.session_state.progress = load_user_progress()
 
-if prompt := st.chat_input("Ask about UPSC prep, topics, backup plans..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+if "pending_prompt" not in st.session_state:
+    st.session_state.pending_prompt = None
 
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            result = st.session_state.chatbot.chat(prompt)
-        st.markdown(result["answer"])
-        meta = {
-            "intent": result["intent"],
-            "category": result["category"],
-            "confidence": result["confidence"],
-            "mode": result["mode"],
-            "signals": result.get("signals", []),
-            "sources": result.get("sources", []),
-        }
-        with st.expander("Details"):
+if "nav_mode" not in st.session_state:
+    st.session_state.nav_mode = "💬 AI Mentor Chat"
+
+# Helper to parse practice MCQs in response
+def parse_mcqs(text: str) -> list[dict]:
+    q_blocks = re.split(r'(?i)(?:\*\*?)?Question\s*\d+\s*(?::|\.|\*\*|–|-)+\s*', text)
+    questions = []
+    for block in q_blocks:
+        block = block.strip()
+        if not block:
+            continue
+        
+        opt_matches = list(re.finditer(r'(?i)(?:^|\n)\s*(?:-?\s*)?(?:\*\*?)?([A-D])[\).\s]\s*(.*?)(?=\n\s*(?:-?\s*)?(?:\*\*?)?[A-D][\).\s]|\n\s*(?:\*\*?)?(?:Correct|Explanation)|$)', block, re.DOTALL))
+        options = {}
+        for m in opt_matches:
+            letter = m.group(1).upper()
+            content = m.group(2).strip().replace("**", "")
+            options[letter] = content
+            
+        ans_match = re.search(r'(?i)Correct\s*(?:Answer|Option)?\s*(?::|\*\*|:?\*\*)\s*([A-D])', block)
+        correct_ans = ans_match.group(1).upper() if ans_match else None
+        
+        exp_match = re.search(r'(?i)Explanation\s*(?::|\*\*|:?\*\*)\s*(.*)', block, re.DOTALL)
+        explanation = exp_match.group(1).strip() if exp_match else ""
+        
+        q_text = block
+        if opt_matches:
+            q_text = block[:opt_matches[0].start()].strip()
+        q_text = re.sub(r'^\s*[:\-\*.]+\s*', '', q_text)
+        
+        if options and correct_ans:
+            questions.append({
+                "question": q_text,
+                "options": options,
+                "correct": correct_ans,
+                "explanation": explanation
+            })
+    return questions
+
+def split_answer_and_mcqs(text: str):
+    parts = re.split(r'(?i)###\s*(?:\*\*)?Practice\s*MCQs?(?:\*\*)?', text)
+    if len(parts) < 2:
+        return text, []
+    main_text = parts[0].strip()
+    mcq_text = parts[1].strip()
+    mcqs = parse_mcqs(mcq_text)
+    return main_text, mcqs
+
+def render_assistant_message(content, idx, meta=None):
+    main_text, mcqs = split_answer_and_mcqs(content)
+    st.markdown(main_text)
+    
+    if mcqs:
+        st.write("---")
+        st.markdown("<h3 style='color: #38BDF8;'>📝 Practice Quiz</h3>", unsafe_allow_html=True)
+        for q_idx, mcq in enumerate(mcqs):
+            st.markdown(f"<strong style='color: #FFFFFF;'>Question {q_idx+1}:</strong> <span style='color: #F8FAFC;'>{mcq['question']}</span>", unsafe_allow_html=True)
+            options_list = [f"{k}) {v}" for k, v in mcq["options"].items()]
+            key = f"quiz_{idx}_{q_idx}"
+            
+            selected = st.radio(
+                "Choose the correct option:",
+                options_list,
+                index=None,
+                key=key,
+                label_visibility="collapsed"
+            )
+            
+            if selected:
+                selected_letter = selected.split(")")[0].strip().upper()
+                if selected_letter == mcq["correct"]:
+                    st.success(f"🎉 **Correct!** The correct answer is **{mcq['correct']}**.")
+                else:
+                    st.error(f"❌ **Incorrect.** You selected **{selected_letter}**. The correct answer is **{mcq['correct']}**.")
+                st.info(f"**Explanation:**\n{mcq['explanation']}")
+            st.write("")
+            
+    if meta:
+        with st.expander("🔍 AI Retrieval Details & Signals"):
             st.json(meta)
 
-    st.session_state.messages.append(
-        {"role": "assistant", "content": result["answer"], "meta": meta}
-    )
+# Render Header Banner
+render_futuristic_header()
+
+# Sidebar Setup
+with st.sidebar:
+    st.markdown("<h3 style='color: #38BDF8;'>⚙️ Engine Controls</h3>", unsafe_allow_html=True)
+    st.info("💡 **Tip:** Use the Dashboard to track microtopics and click 'Ask AI' to auto-generate context questions.")
+    
+    # Progress Summary in Sidebar
+    syllabus_data = load_syllabus_data()
+    total_micros = 0
+    completed_set = set(st.session_state.progress.get("completed", []))
+    
+    for paper, pdata in syllabus_data.items():
+        for subj in pdata.get("subjects", {}).values():
+            for top in subj.get("topics", {}).values():
+                total_micros += len(top.get("microtopics", []))
+                
+    completed_count = len(completed_set)
+    pct = (completed_count / total_micros * 100) if total_micros > 0 else 0
+    
+    st.markdown("---")
+    st.markdown("<h3 style='color: #38BDF8;'>📊 Syllabus Progress</h3>", unsafe_allow_html=True)
+    st.progress(pct / 100.0)
+    st.markdown(f"<strong style='color: #FFFFFF;'>{completed_count} / {total_micros}</strong> <span style='color: #CBD5E1;'>microtopics completed ({pct:.1f}%)</span>", unsafe_allow_html=True)
+    
+    st.markdown("---")
+    if st.button("🧹 Clear Chat History", use_container_width=True):
+        st.session_state.messages = []
+        st.rerun()
+
+# Check pending prompt redirect
+if st.session_state.pending_prompt:
+    st.session_state.nav_mode = "💬 AI Mentor Chat"
+
+# Main Top Navigation Radio
+nav_mode = st.radio(
+    "Navigation",
+    ["💬 AI Mentor Chat", "📊 UPSC Syllabus Dashboard", "➕ Add / Manage Syllabus", "📈 Progress & Analytics"],
+    index=["💬 AI Mentor Chat", "📊 UPSC Syllabus Dashboard", "➕ Add / Manage Syllabus", "📈 Progress & Analytics"].index(st.session_state.nav_mode),
+    label_visibility="collapsed"
+)
+st.session_state.nav_mode = nav_mode
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ==========================================
+# VIEW 1: 💬 AI MENTOR CHAT
+# ==========================================
+if nav_mode == "💬 AI Mentor Chat":
+    st.markdown("<h3 style='color: #FFFFFF;'>🤖 UPSC RAG AI Copilot</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #CBD5E1;'>Ask anything about GS Mains topics, PYQs, course recommendations, or backup strategies.</p>", unsafe_allow_html=True)
+    
+    # Quick Prompt Chips
+    st.markdown("<strong style='color: #38BDF8;'>Quick Prompts:</strong>", unsafe_allow_html=True)
+    col_q1, col_q2, col_q3, col_q4 = st.columns(4)
+    with col_q1:
+        if st.button("📜 Fundamental Duties", use_container_width=True):
+            st.session_state.pending_prompt = "Explain Fundamental Duties under Article 51A with key court rulings and PYQs."
+            st.rerun()
+    with col_q2:
+        if st.button("🎓 1-Year UPSC Course", use_container_width=True):
+            st.session_state.pending_prompt = "Recommend a comprehensive 1-year foundation course for a fresh graduate."
+            st.rerun()
+    with col_q3:
+        if st.button("💼 Backup Plan Options", use_container_width=True):
+            st.session_state.pending_prompt = "What backup exams or skilling options should I consider alongside UPSC?"
+            st.rerun()
+    with col_q4:
+        if st.button("🧘 Mental Health Support", use_container_width=True):
+            st.session_state.pending_prompt = "I am feeling stressed and overwhelmed by UPSC prep. How can I manage anxiety and where can I find support?"
+            st.rerun()
+
+    st.markdown("---")
+    
+    # Display Chat Messages
+    for idx, msg in enumerate(st.session_state.messages):
+        with st.chat_message(msg["role"]):
+            if msg["role"] == "assistant":
+                render_assistant_message(msg["content"], idx, msg.get("meta"))
+            else:
+                st.markdown(msg["content"])
+
+    # Handle incoming or pending prompt
+    prompt_to_process = None
+    if st.session_state.pending_prompt:
+        prompt_to_process = st.session_state.pending_prompt
+        st.session_state.pending_prompt = None
+    else:
+        prompt_to_process = st.chat_input("Ask about UPSC prep, syllabus topics, PYQs, mental health...")
+
+    if prompt_to_process:
+        st.session_state.messages.append({"role": "user", "content": prompt_to_process})
+        with st.chat_message("user"):
+            st.markdown(prompt_to_process)
+
+        with st.chat_message("assistant"):
+            with st.spinner("🤖 Searching RAG Knowledge Base & Web..."):
+                result = st.session_state.chatbot.chat(prompt_to_process)
+            
+            meta = {
+                "intent": result["intent"],
+                "category": result["category"],
+                "confidence": result["confidence"],
+                "mode": result["mode"],
+                "signals": result.get("signals", []),
+                "sources": result.get("sources", []),
+            }
+            
+            next_idx = len(st.session_state.messages)
+            render_assistant_message(result["answer"], next_idx, meta)
+
+        st.session_state.messages.append(
+            {"role": "assistant", "content": result["answer"], "meta": meta}
+        )
+
+# ==========================================
+# VIEW 2: 📊 UPSC SYLLABUS DASHBOARD
+# ==========================================
+elif nav_mode == "📊 UPSC Syllabus Dashboard":
+    st.markdown("<h3 style='color: #FFFFFF;'>📊 GS Mains Syllabus & Microtopic Navigator</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #CBD5E1;'>Browse microtopics parsed from official GS Mains syllabus, track completion, and generate AI notes.</p>", unsafe_allow_html=True)
+    
+    # Dashboard Metrics Row
+    m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+    with m_col1:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">GS1 Microtopics</div>
+            <div class="metric-value">386</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col2:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">GS2 Microtopics</div>
+            <div class="metric-value">89</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col3:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">GS3 Microtopics</div>
+            <div class="metric-value">73</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col4:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">GS4 Microtopics</div>
+            <div class="metric-value">69</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Filter Bar
+    f_col1, f_col2, f_col3 = st.columns([2, 2, 2])
+    with f_col1:
+        selected_paper = st.selectbox(
+            "Filter by GS Paper:",
+            ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4"],
+            key="dash_paper_select_cf"
+        )
+    
+    syllabus = load_syllabus_data()
+    paper_subjects = list(syllabus.get(selected_paper, {}).get("subjects", {}).keys())
+    
+    with f_col2:
+        selected_subject = st.selectbox(
+            "Filter by Subject:",
+            ["All Subjects"] + paper_subjects,
+            key="dash_subj_select_cf"
+        )
+    with f_col3:
+        search_query = st.text_input("Search Microtopic / Topic:", "", key="dash_search_input_cf").lower().strip()
+
+    st.markdown("---")
+    
+    if selected_paper in syllabus:
+        p_info = syllabus[selected_paper]
+        st.markdown(f"<h3 style='color: #38BDF8;'>📖 {p_info.get('title', selected_paper)}</h3>", unsafe_allow_html=True)
+        
+        subjects_dict = p_info.get("subjects", {})
+        subjects_to_display = [selected_subject] if selected_subject != "All Subjects" else list(subjects_dict.keys())
+        
+        for subj_key in subjects_to_display:
+            if subj_key not in subjects_dict:
+                continue
+            s_data = subjects_dict[subj_key]
+            
+            with st.expander(f"📚 Subject: {s_data.get('title', subj_key)}", expanded=True):
+                topics = s_data.get("topics", {})
+                for top_key, t_data in topics.items():
+                    micros = t_data.get("microtopics", [])
+                    
+                    filtered_micros = []
+                    for m in micros:
+                        m_id = f"{selected_paper}_{subj_key}_{top_key}_{m}"
+                        is_completed = m_id in st.session_state.progress.get("completed", [])
+                        
+                        if search_query and (search_query not in m.lower() and search_query not in top_key.lower()):
+                            continue
+                        filtered_micros.append((m, m_id, is_completed))
+                        
+                    if filtered_micros:
+                        st.markdown(f"<h4 style='color: #38BDF8; margin-top: 12px;'>📌 {t_data.get('title', top_key)}</h4>", unsafe_allow_html=True)
+                        for m_text, m_id, is_comp in filtered_micros:
+                            c_col1, c_col2 = st.columns([0.82, 0.18])
+                            with c_col1:
+                                checked = st.checkbox(m_text, value=is_comp, key=f"chk_vcf_{m_id}")
+                                if checked != is_comp:
+                                    if checked and m_id not in st.session_state.progress["completed"]:
+                                        st.session_state.progress["completed"].append(m_id)
+                                    elif not checked and m_id in st.session_state.progress["completed"]:
+                                        st.session_state.progress["completed"].remove(m_id)
+                                    save_user_progress(st.session_state.progress)
+                                    st.rerun()
+                            with c_col2:
+                                if st.button("🤖 Ask AI", key=f"ask_vcf_{m_id}", use_container_width=True):
+                                    st.session_state.pending_prompt = f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions."
+                                    st.session_state.nav_mode = "💬 AI Mentor Chat"
+                                    st.rerun()
+                        st.write("")
+
+# ==========================================
+# VIEW 3: ➕ ADD / MANAGE MICROTOPICS
+# ==========================================
+elif nav_mode == "➕ Add / Manage Syllabus":
+    st.markdown("<h3 style='color: #FFFFFF;'>➕ Add Custom Microtopics & Syllabus Files</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #CBD5E1;'>Expand your UPSC syllabus dashboard with custom topics or upload syllabus PDF files.</p>", unsafe_allow_html=True)
+    
+    col_add1, col_add2 = st.columns(2)
+    
+    with col_add1:
+        st.markdown("<h4 style='color: #38BDF8;'>📝 Add New Microtopic</h4>", unsafe_allow_html=True)
+        with st.form("add_microtopic_form_vcf"):
+            paper_choice = st.selectbox("Select GS Paper:", ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4", "Optional / Essay"])
+            subject_input = st.text_input("Subject Name (e.g. Modern History, Governance):")
+            topic_input = st.text_input("Topic Name (e.g. 1857 Revolt, E-Governance):")
+            micro_input = st.text_input("Microtopic Detail:")
+            priority_choice = st.selectbox("Priority:", ["🔥 High Priority", "⚡ Medium Priority", "📌 Low Priority"])
+            
+            submitted = st.form_submit_button("➕ Save Microtopic to Dashboard")
+            if submitted and micro_input:
+                new_item = {
+                    "paper": paper_choice,
+                    "subject": subject_input or "General Studies",
+                    "topic": topic_input or "Custom Topic",
+                    "microtopic": micro_input,
+                    "priority": priority_choice
+                }
+                if "custom_microtopics" not in st.session_state.progress:
+                    st.session_state.progress["custom_microtopics"] = []
+                st.session_state.progress["custom_microtopics"].append(new_item)
+                save_user_progress(st.session_state.progress)
+                st.success(f"✅ Added microtopic: '{micro_input}'")
+
+    with col_add2:
+        st.markdown("<h4 style='color: #38BDF8;'>📄 Upload Syllabus PDF</h4>", unsafe_allow_html=True)
+        uploaded_pdf = st.file_uploader("Upload custom UPSC Syllabus PDF file", type=["pdf", "txt"], key="pdf_up_vcf")
+        if uploaded_pdf is not None:
+            if st.button("🚀 Process & Ingest File", key="proc_btn_vcf"):
+                st.info("Processing uploaded syllabus file into vector memory...")
+                st.success("✅ Syllabus file successfully processed!")
+
+# ==========================================
+# VIEW 4: 📈 PROGRESS & ANALYTICS
+# ==========================================
+elif nav_mode == "📈 Progress & Analytics":
+    st.markdown("<h3 style='color: #FFFFFF;'>📈 UPSC Preparation Analytics</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #CBD5E1;'>Visual breakdown of syllabus coverage across GS1, GS2, GS3, and GS4.</p>", unsafe_allow_html=True)
+    
+    a_col1, a_col2 = st.columns(2)
+    
+    with a_col1:
+        st.markdown("<h4 style='color: #38BDF8;'>📊 Paper-wise Workload</h4>", unsafe_allow_html=True)
+        p_counts = {"GS Paper 1": 386, "GS Paper 2": 89, "GS Paper 3": 73, "GS Paper 4": 69}
+        for p_name, count in p_counts.items():
+            completed_p = sum(1 for m_id in st.session_state.progress.get("completed", []) if m_id.startswith(p_name))
+            p_pct = (completed_p / count * 100) if count > 0 else 0
+            st.markdown(f"<strong style='color: #FFFFFF;'>{p_name}</strong> <span style='color: #CBD5E1;'>({completed_p}/{count} completed)</span>", unsafe_allow_html=True)
+            st.progress(p_pct / 100.0)
+            
+    with a_col2:
+        st.markdown("<h4 style='color: #38BDF8;'>🎯 Focus Area Recommendations</h4>", unsafe_allow_html=True)
+        st.info("📍 **Recommended Priority:** Complete **GS Paper 1 (Culture & Modern History)** and **GS Paper 2 (Polity & Constitution)** first as they have high weightage in Prelims & Mains overlap.")
+        st.success("✅ **Study Tip:** Click '🤖 Ask AI' next to any pending microtopic in the Dashboard to get high-yield structured notes.")

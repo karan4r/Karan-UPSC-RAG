@@ -48,7 +48,7 @@
     "intent": "mental_health_upsc_distress",
     "priority": 100,
     "eligibility": {
-      "required_signals": ["mental_health", "upsc_context"]
+      "required_signals": ["mental_health"]
     },
     "question": "I failed UPSC and I'm feeling depressed / stressed / anxious. What should I do?",
     "question_variants": [
@@ -56,12 +56,20 @@
       "I can't handle the stress of UPSC preparation anymore.",
       "Anxiety and depression because of civil services exam — help.",
       "How do I cope with UPSC exam failure emotionally?",
-      "Feeling hopeless after UPSC result."
+      "Feeling hopeless after UPSC result.",
+      "Where can I get mental health help and services?",
+      "Mental health support helplines and websites."
     ],
-    "answer_template": "What you're feeling after a UPSC setback is **valid**. Many aspirants go through this — you're not alone, and it doesn't mean you're weak.\n\n**Feel the emotion; don't resist it.**\nTrying to push sadness, anxiety, or anger away often makes it heavier. Allow yourself to feel what you feel — naming it is the first step toward healing.\n\n**Emotional Intelligence** is about **understanding**, **reasoning**, and **managing** emotions — not suppressing them. Understanding *what* you feel, reasoning about *why* (failure, expectations, comparison, exhaustion), and learning healthy ways to respond helps you recover with clarity rather than shame.\n\n**Professional support helps.**\nPlease reach out to **Tele MANAS**, the national tele-mental health helpline:\n\n**Tele MANAS helpline: 1-800-891-4416**\n\nYou can call when you feel overwhelmed, anxious, or low. If you or someone you know is in immediate danger, contact local emergency services as well.\n\nUPSC is one chapter, not your whole identity. Taking care of your mental health is as important as any exam strategy.",
+    "answer_template": "What you're feeling is **valid**. High-pressure preparation and exam setbacks can take a toll — you're not alone, and taking care of your mental wellbeing is essential.\n\n**Feel the emotion; don't resist it.**\nTrying to push sadness, anxiety, or anger away often makes it heavier. Allow yourself to feel what you feel — naming it is the first step toward healing.\n\n**Emotional Intelligence** is about **understanding**, **reasoning**, and **managing** emotions — not suppressing them. Understanding *what* you feel, reasoning about *why* (failure, expectations, comparison, exhaustion), and learning healthy ways to respond helps you recover with clarity rather than shame.\n\n### Official Mental Health Services & Resources:\n\n1. **Tele MANAS (Ministry of Health & Family Welfare)**\n   - **Website:** https://telemanas.mohfw.gov.in/\n   - **Toll-Free Helpline:** `1-800-891-4416` / `14416` (24x7 support in multiple Indian languages)\n\n2. **KIRAN Helpline (Ministry of Social Justice and Empowerment)**\n   - **Toll-Free Helpline:** `1800-599-0019` (24/7 Mental Health Rehabilitation Helpline)\n\n3. **Vandrevala Foundation**\n   - **Website:** https://www.vandrevalafoundation.com/\n   - **Helpline:** `+91 9999 666 555` (24/7 free counseling & crisis support)\n\n4. **iCALL (TISS - Tata Institute of Social Sciences)**\n   - **Website:** https://icallkhel.org/\n   - **Helpline:** `+91 9152987821` (Mon-Sat, 10 AM to 8 PM)\n\n5. **NIMHANS (National Institute of Mental Health & Neurosciences)**\n   - **Website:** https://nimhans.ac.in/\n\nIf you or someone you know is in immediate crisis, please reach out to these emergency services or helplines right away. Taking care of your mental health is as important as any exam strategy.",
     "metadata": {
-      "tags": ["mental-health", "stress", "anxiety", "depression", "failure"],
-      "helpline": "1-800-891-4416"
+      "tags": ["mental-health", "stress", "anxiety", "depression", "failure", "helplines", "websites"],
+      "helpline": "1-800-891-4416",
+      "resources": [
+        "https://telemanas.mohfw.gov.in/",
+        "https://www.vandrevalafoundation.com/",
+        "https://icallkhel.org/",
+        "https://nimhans.ac.in/"
+      ]
     }
   },
   {

@@ -1,6 +1,5 @@
 .env
 .streamlit/secrets.toml
-data/vector_index.pkl
 __pycache__/
 *.py[cod]
 .venv/

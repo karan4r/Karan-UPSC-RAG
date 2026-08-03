@@ -35,6 +35,41 @@ class VectorIndex:
         with open(corpus_path, encoding="utf-8") as f:
             self.records = json.load(f)
 
+        # Ingest syllabus microtopics if available
+        syllabus_path = ROOT / "data" / "upsc_syllabus_microtopics.json"
+        if syllabus_path.exists():
+            try:
+                with open(syllabus_path, encoding="utf-8") as sf:
+                    s_data = json.load(sf)
+                for paper, pdata in s_data.items():
+                    for subj_key, sdata in pdata.get("subjects", {}).items():
+                        for top_key, tdata in sdata.get("topics", {}).items():
+                            topic_name = tdata.get("title", top_key)
+                            for micro in tdata.get("microtopics", []):
+                                record_id = f"sys_{paper}_{subj_key}_{topic_name}_{micro[:15]}".lower().replace(" ", "_")
+                                self.records.append({
+                                    "id": record_id,
+                                    "category": "academic",
+                                    "intent": "notes_or_explain_topic",
+                                    "priority": 40,
+                                    "question": f"Explain UPSC syllabus topic {micro} under {topic_name}",
+                                    "question_variants": [
+                                        micro,
+                                        f"Notes on {micro}",
+                                        f"What is {micro} in UPSC {paper}?",
+                                        f"Explain {micro} ({sdata.get('title', subj_key)})"
+                                    ],
+                                    "answer_content": f"UPSC GS Mains Syllabus Microtopic: {micro}. Topic: {topic_name}. Subject: {sdata.get('title', subj_key)}. Paper: {paper}.",
+                                    "metadata": {
+                                        "subject": sdata.get("title", subj_key),
+                                        "paper": paper,
+                                        "syllabus_topic": topic_name,
+                                        "microtopic": micro
+                                    }
+                                })
+            except Exception:
+                pass
+
         self.documents = [self._record_text(r) for r in self.records]
         self.vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english")
         self.matrix = self.vectorizer.fit_transform(self.documents)
