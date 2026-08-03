@@ -57,8 +57,17 @@ if "progress" not in st.session_state:
 if "pending_prompt" not in st.session_state:
     st.session_state.pending_prompt = None
 
-if "nav_mode" not in st.session_state:
-    st.session_state.nav_mode = "🤖 AI Mentor Chat"
+def count_previous_mental_health_turns(messages: list[dict]) -> int:
+    count = 0
+    mh_words = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
+    for msg in reversed(messages):
+        if msg.get("role") == "user":
+            content = msg.get("content", "").lower()
+            if any(w in content for w in mh_words):
+                count += 1
+            else:
+                break
+    return count
 
 # Pre-processor to format any inline MCQs into clean markdown with options on separate lines
 def format_mcq_markdown(text: str) -> str:
@@ -348,13 +357,14 @@ if nav_mode == "🤖 AI Mentor Chat":
         prompt_to_process = bottom_card_val.strip()
 
     if prompt_to_process:
+        mh_count = count_previous_mental_health_turns(st.session_state.messages)
         st.session_state.messages.append({"role": "user", "content": prompt_to_process})
         with st.chat_message("user"):
             st.markdown(prompt_to_process)
 
         with st.chat_message("assistant"):
-            with st.spinner("✨ Searching UPSC RAG Knowledge Core & Web..."):
-                result = st.session_state.chatbot.chat(prompt_to_process)
+            with st.spinner("✨ Consulting Professional Psychologist & Knowledge Core..."):
+                result = st.session_state.chatbot.chat(prompt_to_process, mh_count=mh_count)
             
             meta = {
                 "intent": result["intent"],

@@ -21,6 +21,7 @@ from retrieval.relevance import is_kb_relevant
 from retrieval.web_search import format_web_context, search_upsc_topic
 
 import json
+import re
 from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -198,6 +199,65 @@ class RAGChatbot:
                 "signals": intent_result.signals,
             }
 
+    def _postprocess_mental_health_answer(self, answer: str, mh_count: int) -> str:
+        # Strictly remove any inadvertent PW Skills references in mental health queries
+        lines = [line for line in answer.splitlines() if "pwskills" not in line.lower() and "pw skills" not in line.lower()]
+        answer = "\n".join(lines)
+        
+        helpline_pattern = r'(?s)---\s*\n### 📞 \*\*24/7 Confidential Professional Support Lines.*?(?=---\s*\n🤗|\Z)'
+        
+        # If mh_count > 0, remove standard helpline section so it doesn't repeat
+        if mh_count > 0:
+            answer = re.sub(helpline_pattern, '', answer)
+            
+        # If 3 continuous queries (mh_count >= 2), append Professional Psychologist Referral Card
+        if mh_count >= 2:
+            card_block = (
+                "\n\n---\n\n"
+                "🤝 **Professional Psychologist Direct Referral Notice**\n\n"
+                "*I recognize that you are navigating persistent emotional distress across multiple queries. While digital psychological coping techniques are helpful for daily stress, ongoing emotional challenges deserve dedicated 1-on-1 consultation with a licensed human psychologist. I am connecting you with professional clinical counseling support below:*\n\n"
+                "💳 **Professional Psychologist Contact Card**\n\n"
+                "🩺 **Tele MANAS Clinical Psychology Desk (Ministry of Health & Family Welfare)**\n"
+                "- **Toll-Free Helpline:** `1-800-891-4416` or `14416` (24/7 Free Tele-Psychology Consultation)\n"
+                "- **Official Portal:** [https://telemanas.mohfw.gov.in/](https://telemanas.mohfw.gov.in/)\n\n"
+                "👩‍⚕️ **KIRAN Mental Health Rehabilitation Desk**\n"
+                "- **Toll-Free Helpline:** `1800-599-0019` (24/7 Multi-lingual Psychological Support)\n\n"
+                "🧠 **Vandrevala Clinical Psychological Care**\n"
+                "- **Direct Phone:** `+91 9999 666 555`\n"
+                "- **Official Portal:** [https://www.vandrevalafoundation.com/](https://www.vandrevalafoundation.com/)\n"
+            )
+            answer = answer.strip() + card_block
+            
+        return answer
+
+    def chat(self, query: str, mh_count: int = 0) -> dict[str, Any]:
+        intent_result: IntentResult = classify_intent(query)
+        intent = intent_result.intent
+
+        # Detect if query is mental/emotional health related
+        mh_keywords = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
+        is_mh_query = (intent == "mental_health_upsc_distress") or any(w in query.lower() for w in mh_keywords)
+
+        # If it matches a modern history PYQ, it is an academic query
+        pyqs = self._find_relevant_pyqs(query)
+        if pyqs and intent == "general" and not is_mh_query:
+            intent = "notes_or_explain_topic"
+            intent_result.intent = "notes_or_explain_topic"
+            if "academic" not in intent_result.signals:
+                intent_result.signals.append("academic")
+
+        clarification = get_clarification_message(intent)
+        if clarification and not is_mh_query:
+            return {
+                "answer": clarification,
+                "intent": intent,
+                "category": "non_academic",
+                "confidence": "medium",
+                "sources": [],
+                "mode": "clarification",
+                "signals": intent_result.signals,
+            }
+
         template_intents = {
             "mental_health_upsc_distress": "qa_mental_health_upsc_failure",
             "suggest_course_fresh_graduate_only": "qa_course_fresh_grad_only",
@@ -212,7 +272,23 @@ class RAGChatbot:
             if record:
                 result = self._template_response(record)
                 result["signals"] = intent_result.signals
+                if is_mh_query:
+                    result["answer"] = self._postprocess_mental_health_answer(result["answer"], mh_count)
                 return result
+
+        if is_mh_query:
+            fallback_msg = f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills."
+            answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
+            processed_answer = self._postprocess_mental_health_answer(answer, mh_count)
+            return {
+                "answer": processed_answer,
+                "intent": "mental_health_upsc_distress",
+                "category": "non_academic",
+                "confidence": "high",
+                "sources": [],
+                "mode": "psychologist",
+                "signals": intent_result.signals,
+            }
 
         if intent == "notes_or_explain_topic":
             return self._handle_academic(query, intent_result)
