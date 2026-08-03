@@ -297,24 +297,26 @@ nav_mode = st.radio(
 st.session_state.nav_mode = nav_mode
 st.markdown("<br>", unsafe_allow_html=True)
 
+# Function to render High-Visibility Query Form
+def render_query_card(box_key: str):
+    with st.form(f"query_form_{box_key}", clear_on_submit=True):
+        st.markdown("<div style='font-size: 1.1rem; font-weight: 800; color: #1D4ED8; margin-bottom: 8px;'>💬 ASK UPSC AI RAG MENTOR:</div>", unsafe_allow_html=True)
+        t_col1, t_col2 = st.columns([0.82, 0.18])
+        with t_col1:
+            q_val = st.text_input(
+                "",
+                placeholder="Type your UPSC query, syllabus question, or career backup question here...",
+                key=f"mentor_query_input_{box_key}",
+                label_visibility="collapsed"
+            )
+        with t_col2:
+            submitted = st.form_submit_button("🚀 Ask Mentor", use_container_width=True)
+    return submitted, q_val
+
 # ==========================================
 # VIEW 1: 🤖 AI MENTOR CHAT
 # ==========================================
 if nav_mode == "🤖 AI Mentor Chat":
-    # PROMINENT HIGH-VISIBILITY TOP QUERY BOX ABOVE TITLE & CHAT
-    with st.form("top_query_form", clear_on_submit=True):
-        st.markdown("<div style='font-size: 1.1rem; font-weight: 800; color: #1D4ED8; margin-bottom: 8px;'>💬 ASK UPSC AI RAG MENTOR:</div>", unsafe_allow_html=True)
-        t_col1, t_col2 = st.columns([0.82, 0.18])
-        with t_col1:
-            top_query_val = st.text_input(
-                "",
-                placeholder="Type your UPSC query, syllabus question, or career backup question here...",
-                key="top_mentor_query_input",
-                label_visibility="collapsed"
-            )
-        with t_col2:
-            top_submit = st.form_submit_button("🚀 Ask Mentor", use_container_width=True)
-
     st.markdown("<h3 style='color: #0F172A;'>🤖 UPSC AI RAG Mentor Copilot</h3>", unsafe_allow_html=True)
     st.markdown("<p style='color: #475569;'>Ask anything regarding GS Mains syllabus topics, PYQs, backup plans, or mental wellbeing.</p>", unsafe_allow_html=True)
     
@@ -339,6 +341,12 @@ if nav_mode == "🤖 AI Mentor Chat":
             st.rerun()
 
     st.markdown("---")
+
+    # If NO messages yet: Render prominent Query Box at the top
+    top_sub, top_val = False, ""
+    if not st.session_state.messages:
+        top_sub, top_val = render_query_card("top")
+        st.markdown("<br>", unsafe_allow_html=True)
     
     # Display Chat Messages
     for idx, msg in enumerate(st.session_state.messages):
@@ -348,15 +356,26 @@ if nav_mode == "🤖 AI Mentor Chat":
             else:
                 st.markdown(msg["content"])
 
-    # Bottom Chat Input Bar
+    # If messages exist: Render Query Box directly BELOW the latest response output!
+    bottom_card_sub, bottom_card_val = False, ""
+    if st.session_state.messages:
+        st.markdown("<br>", unsafe_allow_html=True)
+        bottom_card_sub, bottom_card_val = render_query_card(f"below_output_{len(st.session_state.messages)}")
+
+    # Fixed bottom chat input as auxiliary fallback
+    bottom_chat_val = st.chat_input("Type your UPSC query, syllabus question, or career backup question here...")
+
+    # Determine prompt to process
     prompt_to_process = None
     if st.session_state.pending_prompt:
         prompt_to_process = st.session_state.pending_prompt
         st.session_state.pending_prompt = None
-    elif top_submit and top_query_val.strip():
-        prompt_to_process = top_query_val.strip()
-    else:
-        prompt_to_process = st.chat_input("Type your UPSC query, syllabus question, or career backup question here...")
+    elif top_sub and top_val.strip():
+        prompt_to_process = top_val.strip()
+    elif bottom_card_sub and bottom_card_val.strip():
+        prompt_to_process = bottom_card_val.strip()
+    elif bottom_chat_val:
+        prompt_to_process = bottom_chat_val.strip()
 
     if prompt_to_process:
         st.session_state.messages.append({"role": "user", "content": prompt_to_process})
@@ -382,6 +401,7 @@ if nav_mode == "🤖 AI Mentor Chat":
         st.session_state.messages.append(
             {"role": "assistant", "content": result["answer"], "meta": meta}
         )
+        st.rerun()
 
 # ==========================================
 # VIEW 2: 📋 SYLLABUS NAVIGATOR
