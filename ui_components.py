@@ -7,21 +7,24 @@ def inject_custom_css():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-    /* Global Light Alabaster Background */
+    /* Global Next-Gen Dark Cyber Background */
     .stApp {
-        background-color: #F8FAFC !important;
+        background-color: #060812 !important;
+        background-image: 
+            radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
+            radial-gradient(at 85% 85%, rgba(139, 92, 246, 0.08) 0px, transparent 50%) !important;
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
-        color: #0F172A !important;
+        color: #F8FAFC !important;
     }
 
-    /* Force all text elements to clean, high-contrast dark charcoal */
+    /* Force text elements to high-contrast clear white/light gray */
     html, body, p, span, div, li, label, .stMarkdown, .stMarkdown p, .stMarkdown span {
-        color: #0F172A !important;
+        color: #CBD5E1 !important;
     }
 
-    /* Headings styling - Futuristic & Expensive */
+    /* Headings styling - Cyber Neon */
     h1, h2, h3, h4, h5, h6 {
-        color: #0F172A !important;
+        color: #F8FAFC !important;
         font-family: 'Outfit', sans-serif !important;
         font-weight: 700 !important;
         letter-spacing: -0.3px !important;
@@ -29,27 +32,38 @@ def inject_custom_css():
 
     /* Form & Input Labels */
     label, div[data-testid="stWidgetLabel"] p, div[data-testid="stWidgetLabel"] span {
-        color: #1E293B !important;
+        color: #38BDF8 !important;
         font-weight: 700 !important;
         font-size: 0.95rem !important;
-        letter-spacing: 0.2px !important;
+        letter-spacing: 0.3px !important;
+        font-family: 'JetBrains Mono', monospace !important;
     }
 
     /* Main Container Layout */
     .block-container {
-        padding-top: 1.8rem !important;
+        padding-top: 1.5rem !important;
         padding-bottom: 3.5rem !important;
-        max-width: 1240px !important;
+        max-width: 1280px !important;
     }
 
-    /* Futuristic Header Banner */
+    /* Sidebar Dark Glass Style */
+    section[data-testid="stSidebar"] {
+        background-color: #070916 !important;
+        border-right: 1px solid rgba(56, 189, 248, 0.2) !important;
+    }
+
+    section[data-testid="stSidebar"] * {
+        color: #CBD5E1 !important;
+    }
+
+    /* Futuristic Cyber Header Banner */
     .futuristic-header {
-        background: #FFFFFF;
-        border: 1.5px solid #CBD5E1;
-        border-radius: 18px;
-        padding: 26px 34px;
+        background: linear-gradient(135deg, rgba(13, 17, 32, 0.9) 0%, rgba(8, 11, 23, 0.95) 100%);
+        border: 1.5px solid rgba(56, 189, 248, 0.3);
+        border-radius: 20px;
+        padding: 28px 34px;
         margin-bottom: 24px;
-        box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.15);
         position: relative;
         overflow: hidden;
     }
@@ -60,15 +74,15 @@ def inject_custom_css():
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #2563EB, #6366F1, #8B5CF6, #10B981, #F59E0B);
+        height: 3px;
+        background: linear-gradient(90deg, #38BDF8, #8B5CF6, #EC4899, #10B981);
     }
 
     .header-title {
         font-family: 'Outfit', sans-serif;
-        font-size: 2.2rem;
+        font-size: 2.3rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #0F172A 0%, #1D4ED8 50%, #6D28D9 100%);
+        background: linear-gradient(90deg, #FFFFFF 0%, #38BDF8 50%, #C084FC 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         letter-spacing: -0.5px;
@@ -77,18 +91,18 @@ def inject_custom_css():
 
     .header-subtitle {
         font-size: 0.95rem;
-        color: #475569 !important;
+        color: #94A3B8 !important;
         margin-top: 6px;
         font-weight: 600;
         letter-spacing: 0.2px;
     }
 
-    /* Status Badges - Refined Executive Chips */
+    /* Cyber HUD Status Badges */
     .status-badge-container {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
-        margin-top: 16px;
+        margin-top: 18px;
     }
 
     .status-badge {
@@ -98,287 +112,200 @@ def inject_custom_css():
         border-radius: 20px;
         font-weight: 700;
         letter-spacing: 0.3px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
     }
 
-    .badge-cyan {
-        background: #EFF6FF;
-        border: 1px solid #BFDBFE;
-        color: #1D4ED8 !important;
+    .badge-primary {
+        background: rgba(14, 165, 233, 0.12);
+        color: #38BDF8 !important;
+        border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
-    .badge-violet {
-        background: #F5F3FF;
-        border: 1px solid #DDD6FE;
-        color: #6D28D9 !important;
+    .badge-success {
+        background: rgba(16, 185, 129, 0.12);
+        color: #34D399 !important;
+        border: 1px solid rgba(52, 211, 153, 0.3);
     }
 
-    .badge-emerald {
-        background: #ECFDF5;
-        border: 1px solid #A7F3D0;
-        color: #047857 !important;
+    .badge-purple {
+        background: rgba(139, 92, 246, 0.12);
+        color: #C084FC !important;
+        border: 1px solid rgba(192, 132, 252, 0.3);
     }
 
-    .badge-amber {
-        background: #FFFBEB;
-        border: 1px solid #FDE68A;
-        color: #B45309 !important;
+    /* High Visibility Glowing Cyber Query Box Container */
+    form[key="top_query_form"], form[key^="query_form_"], div[data-testid="stForm"] {
+        background: linear-gradient(135deg, rgba(13, 17, 32, 0.95) 0%, rgba(8, 11, 23, 0.98) 100%) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 18px !important;
+        padding: 22px 26px !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.18) !important;
+        margin-bottom: 24px !important;
     }
 
-    /* Minimalist Metric Cards */
-    .metric-card {
-        background: #FFFFFF;
-        border: 1.5px solid #E2E8F0;
-        border-radius: 16px;
-        padding: 20px 24px;
-        box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
-        transition: all 0.2s ease;
+    form[key^="query_form_"] input, div[data-testid="stForm"] input {
+        border: 1px solid rgba(56, 189, 248, 0.4) !important;
+        background: #090D1A !important;
+        color: #FFFFFF !important;
+        font-size: 1.05rem !important;
+        font-weight: 500 !important;
+        border-radius: 12px !important;
+        padding: 12px 18px !important;
     }
 
-    .metric-card:hover {
-        border-color: #2563EB;
-        transform: translateY(-2px);
+    form[key^="query_form_"] input:focus, div[data-testid="stForm"] input:focus {
+        border-color: #38BDF8 !important;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.5) !important;
     }
 
-    .metric-label {
-        font-size: 0.82rem;
-        color: #2563EB !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 700;
+    /* Cyber Neon Buttons */
+    .stButton>button {
+        border-radius: 12px !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-weight: 700 !important;
+        background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%) !important;
+        border: none !important;
+        color: #FFFFFF !important;
+        padding: 12px 24px !important;
+        box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4) !important;
+        transition: all 0.25s ease !important;
     }
 
-    .metric-value {
-        font-family: 'Outfit', sans-serif;
-        font-size: 2.1rem;
-        font-weight: 800;
-        color: #0F172A !important;
-        margin-top: 4px;
+    .stButton>button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 30px rgba(56, 189, 248, 0.6) !important;
+        opacity: 0.95 !important;
     }
 
-    /* Top Segmented Navigation Pills */
+    /* Radio Tabs / Navigation Bar Styling */
     div[data-testid="stRadio"] > div {
         flex-direction: row !important;
-        gap: 10px !important;
-        background: #FFFFFF !important;
-        padding: 8px 12px !important;
-        border-radius: 16px !important;
-        border: 1.5px solid #CBD5E1 !important;
-        box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05) !important;
+        gap: 8px !important;
+        background: rgba(13, 17, 32, 0.8) !important;
+        padding: 6px !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
     }
 
     div[data-testid="stRadio"] label {
-        background: #F8FAFC !important;
+        background: transparent !important;
         border-radius: 10px !important;
-        padding: 10px 22px !important;
+        padding: 10px 18px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-size: 0.95rem !important;
-        font-weight: 700 !important;
-        color: #475569 !important;
+        font-size: 0.92rem !important;
+        font-weight: 600 !important;
+        color: #94A3B8 !important;
         cursor: pointer !important;
-        border: 1px solid #E2E8F0 !important;
         transition: all 0.2s ease !important;
+        border: 1px solid transparent !important;
     }
 
     div[data-testid="stRadio"] label:hover {
-        color: #1D4ED8 !important;
-        background: #EFF6FF !important;
-        border-color: #BFDBFE !important;
+        color: #FFFFFF !important;
+        background: rgba(56, 189, 248, 0.1) !important;
     }
 
     div[data-testid="stRadio"] label[data-checked="true"] {
-        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important;
+        background: linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%) !important;
         color: #FFFFFF !important;
-        border: 1px solid #0F172A !important;
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2) !important;
+        border: 1px solid #38BDF8 !important;
+        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3) !important;
     }
 
     div[data-testid="stRadio"] label[data-checked="true"] p,
     div[data-testid="stRadio"] label[data-checked="true"] span {
         color: #FFFFFF !important;
-    }
-
-    /* HIGH-VISIBILITY PROMINENT TOP QUERY CONTAINER FORM */
-    form[key="top_query_form"], div[data-testid="stForm"] {
-        background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%) !important;
-        border: 2.5px solid #2563EB !important;
-        border-radius: 18px !important;
-        padding: 18px 24px !important;
-        margin-bottom: 22px !important;
-        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2), 0 2px 8px rgba(15, 23, 42, 0.05) !important;
-    }
-
-    form[key="top_query_form"] input, div[data-testid="stForm"] input {
-        border: 2px solid #2563EB !important;
-        background: #FFFFFF !important;
-        color: #0F172A !important;
-        font-size: 1.05rem !important;
-        font-weight: 600 !important;
-        border-radius: 14px !important;
-        padding: 12px 18px !important;
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12) !important;
-    }
-
-    form[key="top_query_form"] input:focus, div[data-testid="stForm"] input:focus {
-        border-color: #1D4ED8 !important;
-        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3) !important;
-    }
-
-    /* PROMINENT ULTRA-VISIBLE CHAT INPUT BAR */
-    div[data-testid="stChatInput"] {
-        padding: 8px !important;
-    }
-
-    div[data-testid="stChatInput"] input {
-        border: 2px solid #2563EB !important;
-        background: #FFFFFF !important;
-        color: #0F172A !important;
-        font-size: 1.05rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 6px 24px rgba(37, 99, 235, 0.2), 0 0 0 1px #3B82F6 !important;
-        border-radius: 16px !important;
-        padding: 16px 22px !important;
-    }
-
-    div[data-testid="stChatInput"] input:focus {
-        border-color: #1D4ED8 !important;
-        box-shadow: 0 8px 30px rgba(37, 99, 235, 0.35) !important;
-    }
-
-    /* PROMINENT SEARCH INPUT BAR IN DASHBOARD */
-    div[data-baseweb="input"] {
-        background-color: #FFFFFF !important;
-        border: 2px solid #2563EB !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12) !important;
-    }
-
-    div[data-baseweb="input"] input {
-        color: #0F172A !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-    }
-
-    /* Selectboxes & Dropdowns */
-    div[data-baseweb="select"] {
-        background-color: #FFFFFF !important;
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 12px !important;
-    }
-
-    div[data-baseweb="select"] * {
-        color: #0F172A !important;
-        font-weight: 600 !important;
-    }
-
-    div[data-baseweb="popover"], div[data-baseweb="menu"] {
-        background-color: #FFFFFF !important;
-        border: 1.5px solid #2563EB !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    div[data-baseweb="option"] {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
-    }
-
-    div[data-baseweb="option"]:hover {
-        background-color: #EFF6FF !important;
-        color: #1D4ED8 !important;
-    }
-
-    /* Expanders styling */
-    div[data-testid="stExpander"] {
-        background: #FFFFFF !important;
-        border: 1.5px solid #E2E8F0 !important;
-        border-radius: 14px !important;
-        margin-bottom: 16px !important;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03) !important;
-    }
-
-    div[data-testid="stExpander"] summary {
-        color: #0F172A !important;
         font-weight: 700 !important;
-        font-size: 1.05rem !important;
     }
 
-    div[data-testid="stExpander"] p, div[data-testid="stExpander"] span, div[data-testid="stExpander"] li {
-        color: #1E293B !important;
-    }
-
-    /* Chat Messages styling */
+    /* Chat Message Bubbles in Cyber Dark Theme */
     div[data-testid="stChatMessage"] {
-        background: #FFFFFF !important;
-        border: 1.5px solid #E2E8F0 !important;
+        background: rgba(13, 17, 32, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
         border-radius: 18px !important;
-        padding: 20px 24px !important;
-        margin-bottom: 16px !important;
-        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+        padding: 22px 26px !important;
+        margin-bottom: 18px !important;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4) !important;
     }
 
     div[data-testid="stChatMessage"] p, div[data-testid="stChatMessage"] span, div[data-testid="stChatMessage"] li {
-        color: #0F172A !important;
+        color: #E2E8F0 !important;
         font-size: 0.98rem !important;
         line-height: 1.65 !important;
     }
 
     div[data-testid="stChatMessage"]:has(div[aria-label="Chat message from user"]) {
-        background: #EFF6FF !important;
-        border: 1.5px solid #BFDBFE !important;
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(13, 17, 32, 0.9) 100%) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
     }
 
-    /* Executive Buttons */
-    .stButton>button {
-        border-radius: 12px !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    /* Expanders styling */
+    div[data-testid="stExpander"] {
+        background: rgba(9, 13, 26, 0.85) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        border-radius: 14px !important;
+        margin-bottom: 16px !important;
+    }
+
+    div[data-testid="stExpander"] summary {
+        color: #38BDF8 !important;
         font-weight: 700 !important;
-        background: #FFFFFF !important;
-        border: 1.5px solid #CBD5E1 !important;
-        color: #0F172A !important;
-        padding: 9px 20px !important;
-        transition: all 0.2s ease !important;
     }
 
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+    /* Metric Cards */
+    .metric-card {
+        background: rgba(13, 17, 32, 0.75) !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        border-radius: 16px !important;
+        padding: 20px 24px !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .metric-value {
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 2.2rem !important;
+        font-weight: 800 !important;
         color: #FFFFFF !important;
-        border-color: #2563EB !important;
-        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3) !important;
     }
 
-    /* PW Skills Card styling */
+    .metric-label {
+        font-size: 0.82rem !important;
+        color: #94A3B8 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* PW Skills Cards */
     .pwskills-card {
-        background: #FFFFFF;
-        border: 1.5px solid #E2E8F0;
-        border-radius: 16px;
-        padding: 20px 22px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
-        transition: all 0.2s ease;
+        background: rgba(13, 17, 32, 0.75) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.25) !important;
+        border-radius: 16px !important;
+        padding: 22px !important;
+        margin-bottom: 16px !important;
+        transition: all 0.25s ease !important;
     }
 
     .pwskills-card:hover {
-        border-color: #2563EB;
-        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+        border-color: #38BDF8 !important;
+        box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25) !important;
     }
 
     .pwskills-title {
         font-family: 'Outfit', sans-serif;
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: #0F172A;
+        color: #FFFFFF !important;
     }
 
     .pwskills-desc {
-        font-size: 0.9rem;
-        color: #475569;
+        font-size: 0.92rem;
+        color: #CBD5E1 !important;
         margin-top: 6px;
+        line-height: 1.5;
     }
 
     .pwskills-link {
-        color: #2563EB;
+        color: #38BDF8 !important;
         font-weight: 700;
         text-decoration: none;
     }
@@ -386,40 +313,28 @@ def inject_custom_css():
     .pwskills-link:hover {
         text-decoration: underline;
     }
-
-    /* Progress bar custom styling */
-    .stProgress > div > div > div > div {
-        background-image: linear-gradient(90deg, #2563EB 0%, #6366F1 50%, #10B981 100%) !important;
-    }
-
-    /* Alert Boxes */
-    div[data-testid="stAlert"] {
-        background-color: #F8FAFC !important;
-        color: #0F172A !important;
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 14px !important;
-    }
-
-    div[data-testid="stAlert"] p, div[data-testid="stAlert"] span {
-        color: #0F172A !important;
-    }
     </style>
     """, unsafe_allow_html=True)
 
 def render_futuristic_header():
     st.markdown("""
     <div class="futuristic-header">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-                <h1 class="header-title">⚡ UPSC AI RAG MENTOR</h1>
-                <div class="header-subtitle">Futuristic AI Copilot & GS Mains Curriculum Dashboard · CSE 2026-27</div>
+                <h1 class="header-title">⚡ UPSC AI NEURAL COPILOT</h1>
+                <div class="header-subtitle">Quantum RAG Neural Engine · Real-time Syllabus Matrix & Psychological Copilot</div>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-family:'JetBrains Mono'; font-size:0.78rem; background:rgba(56,189,248,0.15); color:#38BDF8; padding:5px 12px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); font-weight:700;">
+                    MODEL: GROQ LLAMA 3.3 70B NEURAL
+                </span>
             </div>
         </div>
         <div class="status-badge-container">
-            <span class="status-badge badge-cyan"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#2563EB;"></span> RAG NEURAL ENGINE ONLINE</span>
-            <span class="status-badge badge-violet">⚡ 623 SYLLABUS MODULES</span>
-            <span class="status-badge badge-emerald">📚 GS1-GS4 MAINS COVERAGE</span>
-            <span class="status-badge badge-amber">🎯 TARGET: UPSC CSE 2026/27</span>
+            <span class="status-badge badge-success">🟢 RAG NEURAL CORE: ONLINE</span>
+            <span class="status-badge badge-primary">🧠 623 MAINS MICROTOPICS ACTIVE</span>
+            <span class="status-badge badge-purple">⚡ INFERENCE LATENCY: &lt;0.4s</span>
+            <span class="status-badge badge-primary">🛡️ CLINICAL PSYCHOLOGIST COPILOT: READY</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
