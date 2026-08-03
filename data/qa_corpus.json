@@ -36,10 +36,10 @@
       "Should I also prepare for RBI or State PSC while doing UPSC?",
       "Backup options if UPSC doesn't work out while I'm preparing?"
     ],
-    "answer_template": "Preparing for UPSC is a long journey, and having a **backup plan** is sensible — it reduces pressure and keeps options open.\n\n**Parallel exam options (while you continue UPSC prep):**\n- **RBI** — e.g. RBI Grade B; strong option if you're comfortable with finance/economy-heavy papers\n- **State PSC** — state civil services; syllabus overlap with UPSC (GS, polity, history) can make dual prep efficient\n\nPick 1–2 backups based on your state, optional overlap, and timeline — avoid spreading too thin.\n\n**Job-market skilling (alongside exams):**\nExam prep alone doesn't always translate to immediate employability. Build **practical skills** for the job market in parallel.\n\n**For structured skilling:** https://nextleap.app — fellowship-style programs in Product Management, UX/Product Design, Data Analytics, Business Analytics, and Software Engineering.\n\n**Practical approach:** Keep UPSC as primary; add **one** backup exam with high syllabus overlap + **part-time skilling** so you're not fully dependent on a single outcome.",
+    "answer_template": "Preparing for UPSC is a long journey, and having a **backup plan** is sensible — it reduces pressure and keeps options open.\n\n**Parallel exam options (while you continue UPSC prep):**\n- **RBI Grade B** — strong option if you're comfortable with finance/economy-heavy papers\n- **State PSC** — state civil services; heavy syllabus overlap with UPSC GS papers\n\nPick 1–2 backups based on your state and optional subject overlap.\n\n**Job-market skilling & career tech courses (alongside exams):**\nBuild **in-demand practical tech & analytics skills** in parallel to ensure employability.\n\n**Recommended Skilling Platform:** [PW Skills](https://pwskills.com)\nExplore industry-aligned courses in:\n- **Data Science & AI / ML**: Data Science Master Class, Generative AI & LLMs\n- **Full Stack Development**: Java, MERN, Python Web Development\n- **Data Analytics & BI**: Data Analytics, Power BI & SQL\n- **Cloud & DevOps**: AWS, DevOps & Cybersecurity\n\n**Website:** https://pwskills.com\n\n**Practical approach:** Keep UPSC as primary; add **one** backup exam + **part-time skilling via PW Skills** so you're confident and job-ready.",
     "metadata": {
-      "tags": ["backup", "rbi", "state-psc", "skilling"],
-      "skilling_url": "https://nextleap.app"
+      "tags": ["backup", "rbi", "state-psc", "skilling", "pwskills"],
+      "skilling_url": "https://pwskills.com"
     }
   },
   {

@@ -5,7 +5,7 @@ from pathlib import Path
 def inject_custom_css():
     st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
     /* Global Light Alabaster Background */
     .stApp {
@@ -19,10 +19,10 @@ def inject_custom_css():
         color: #0F172A !important;
     }
 
-    /* Headings styling - Sophisticated & Expensive */
+    /* Headings styling - Futuristic & Expensive */
     h1, h2, h3, h4, h5, h6 {
         color: #0F172A !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-family: 'Outfit', sans-serif !important;
         font-weight: 700 !important;
         letter-spacing: -0.3px !important;
     }
@@ -30,8 +30,8 @@ def inject_custom_css():
     /* Form & Input Labels */
     label, div[data-testid="stWidgetLabel"] p, div[data-testid="stWidgetLabel"] span {
         color: #1E293B !important;
-        font-weight: 600 !important;
-        font-size: 0.9rem !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
         letter-spacing: 0.2px !important;
     }
 
@@ -39,17 +39,17 @@ def inject_custom_css():
     .block-container {
         padding-top: 1.8rem !important;
         padding-bottom: 3.5rem !important;
-        max-width: 1200px !important;
+        max-width: 1240px !important;
     }
 
-    /* Elite Header Banner */
+    /* Futuristic Header Banner */
     .futuristic-header {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 16px;
+        border: 1.5px solid #CBD5E1;
+        border-radius: 18px;
         padding: 26px 34px;
         margin-bottom: 24px;
-        box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.04), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+        box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
         position: relative;
         overflow: hidden;
     }
@@ -60,24 +60,26 @@ def inject_custom_css():
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #1E3A8A, #2563EB, #D97706, #059669);
+        height: 4px;
+        background: linear-gradient(90deg, #2563EB, #6366F1, #8B5CF6, #10B981, #F59E0B);
     }
 
     .header-title {
-        font-family: 'Cinzel', serif;
-        font-size: 2.1rem;
-        font-weight: 700;
-        color: #0F172A !important;
-        letter-spacing: 1.5px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #0F172A 0%, #1D4ED8 50%, #6D28D9 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
         margin: 0;
     }
 
     .header-subtitle {
-        font-size: 0.92rem;
-        color: #64748B !important;
+        font-size: 0.95rem;
+        color: #475569 !important;
         margin-top: 6px;
-        font-weight: 500;
+        font-weight: 600;
         letter-spacing: 0.2px;
     }
 
@@ -90,14 +92,15 @@ def inject_custom_css():
     }
 
     .status-badge {
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-family: 'JetBrains Mono', monospace;
         font-size: 0.78rem;
-        padding: 5px 14px;
+        padding: 6px 14px;
         border-radius: 20px;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.3px;
         display: inline-flex;
         align-items: center;
+        gap: 6px;
     }
 
     .badge-cyan {
@@ -127,22 +130,28 @@ def inject_custom_css():
     /* Minimalist Metric Cards */
     .metric-card {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 14px;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 16px;
         padding: 20px 24px;
-        box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.03);
+        box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+        transition: all 0.2s ease;
+    }
+
+    .metric-card:hover {
+        border-color: #2563EB;
+        transform: translateY(-2px);
     }
 
     .metric-label {
-        font-size: 0.8rem;
-        color: #64748B !important;
+        font-size: 0.82rem;
+        color: #2563EB !important;
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 700;
     }
 
     .metric-value {
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-family: 'Outfit', sans-serif;
         font-size: 2.1rem;
         font-weight: 800;
         color: #0F172A !important;
@@ -155,18 +164,18 @@ def inject_custom_css():
         gap: 10px !important;
         background: #FFFFFF !important;
         padding: 8px 12px !important;
-        border-radius: 14px !important;
-        border: 1px solid #E2E8F0 !important;
-        box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.04) !important;
+        border-radius: 16px !important;
+        border: 1.5px solid #CBD5E1 !important;
+        box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05) !important;
     }
 
     div[data-testid="stRadio"] label {
         background: #F8FAFC !important;
         border-radius: 10px !important;
-        padding: 9px 22px !important;
+        padding: 10px 22px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-size: 0.95rem !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         color: #475569 !important;
         cursor: pointer !important;
         border: 1px solid #E2E8F0 !important;
@@ -174,15 +183,16 @@ def inject_custom_css():
     }
 
     div[data-testid="stRadio"] label:hover {
-        color: #1E293B !important;
-        background: #EDF2F7 !important;
+        color: #1D4ED8 !important;
+        background: #EFF6FF !important;
+        border-color: #BFDBFE !important;
     }
 
     div[data-testid="stRadio"] label[data-checked="true"] {
-        background: #0F172A !important;
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2) !important;
     }
 
     div[data-testid="stRadio"] label[data-checked="true"] p,
@@ -190,11 +200,46 @@ def inject_custom_css():
         color: #FFFFFF !important;
     }
 
+    /* PROMINENT ULTRA-VISIBLE CHAT INPUT BAR */
+    div[data-testid="stChatInput"] {
+        padding: 8px !important;
+    }
+
+    div[data-testid="stChatInput"] input {
+        border: 2px solid #2563EB !important;
+        background: #FFFFFF !important;
+        color: #0F172A !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        box-shadow: 0 6px 24px rgba(37, 99, 235, 0.2), 0 0 0 1px #3B82F6 !important;
+        border-radius: 16px !important;
+        padding: 16px 22px !important;
+    }
+
+    div[data-testid="stChatInput"] input:focus {
+        border-color: #1D4ED8 !important;
+        box-shadow: 0 8px 30px rgba(37, 99, 235, 0.35) !important;
+    }
+
+    /* PROMINENT SEARCH INPUT BAR IN DASHBOARD */
+    div[data-baseweb="input"] {
+        background-color: #FFFFFF !important;
+        border: 2px solid #2563EB !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12) !important;
+    }
+
+    div[data-baseweb="input"] input {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+    }
+
     /* Selectboxes & Dropdowns */
     div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 10px !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 12px !important;
     }
 
     div[data-baseweb="select"] * {
@@ -204,8 +249,8 @@ def inject_custom_css():
 
     div[data-baseweb="popover"], div[data-baseweb="menu"] {
         background-color: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+        border: 1.5px solid #2563EB !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
     }
 
     div[data-baseweb="option"] {
@@ -214,29 +259,17 @@ def inject_custom_css():
     }
 
     div[data-baseweb="option"]:hover {
-        background-color: #F1F5F9 !important;
-        color: #0F172A !important;
-    }
-
-    /* Text Inputs */
-    div[data-baseweb="input"] {
-        background-color: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 10px !important;
-    }
-
-    div[data-baseweb="input"] input {
-        color: #0F172A !important;
-        font-weight: 500 !important;
+        background-color: #EFF6FF !important;
+        color: #1D4ED8 !important;
     }
 
     /* Expanders styling */
     div[data-testid="stExpander"] {
         background: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
-        border-radius: 12px !important;
-        margin-bottom: 14px !important;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02) !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 14px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03) !important;
     }
 
     div[data-testid="stExpander"] summary {
@@ -252,11 +285,11 @@ def inject_custom_css():
     /* Chat Messages styling */
     div[data-testid="stChatMessage"] {
         background: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
-        border-radius: 16px !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 18px !important;
         padding: 20px 24px !important;
         margin-bottom: 16px !important;
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03) !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
     }
 
     div[data-testid="stChatMessage"] p, div[data-testid="stChatMessage"] span, div[data-testid="stChatMessage"] li {
@@ -266,50 +299,79 @@ def inject_custom_css():
     }
 
     div[data-testid="stChatMessage"]:has(div[aria-label="Chat message from user"]) {
-        background: #F1F5F9 !important;
-        border: 1px solid #CBD5E1 !important;
-    }
-
-    /* Custom Chat Input */
-    div[data-testid="stChatInput"] input {
-        border-radius: 14px !important;
-        border: 1px solid #CBD5E1 !important;
-        background: #FFFFFF !important;
-        color: #0F172A !important;
-        font-size: 0.98rem !important;
-        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+        background: #EFF6FF !important;
+        border: 1.5px solid #BFDBFE !important;
     }
 
     /* Executive Buttons */
     .stButton>button {
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         background: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
+        border: 1.5px solid #CBD5E1 !important;
         color: #0F172A !important;
-        padding: 8px 18px !important;
+        padding: 9px 20px !important;
         transition: all 0.2s ease !important;
     }
 
     .stButton>button:hover {
-        background: #0F172A !important;
+        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
         color: #FFFFFF !important;
-        border-color: #0F172A !important;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
+        border-color: #2563EB !important;
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3) !important;
+    }
+
+    /* PW Skills Card styling */
+    .pwskills-card {
+        background: #FFFFFF;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+        transition: all 0.2s ease;
+    }
+
+    .pwskills-card:hover {
+        border-color: #2563EB;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+    }
+
+    .pwskills-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0F172A;
+    }
+
+    .pwskills-desc {
+        font-size: 0.9rem;
+        color: #475569;
+        margin-top: 6px;
+    }
+
+    .pwskills-link {
+        color: #2563EB;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .pwskills-link:hover {
+        text-decoration: underline;
     }
 
     /* Progress bar custom styling */
     .stProgress > div > div > div > div {
-        background-image: linear-gradient(90deg, #1E3A8A 0%, #2563EB 50%, #059669 100%) !important;
+        background-image: linear-gradient(90deg, #2563EB 0%, #6366F1 50%, #10B981 100%) !important;
     }
 
-    /* Info and Warning boxes */
+    /* Alert Boxes */
     div[data-testid="stAlert"] {
         background-color: #F8FAFC !important;
         color: #0F172A !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 12px !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 14px !important;
     }
 
     div[data-testid="stAlert"] p, div[data-testid="stAlert"] span {
@@ -323,12 +385,12 @@ def render_futuristic_header():
     <div class="futuristic-header">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
             <div>
-                <h1 class="header-title">🏛️ UPSC MAINS COPILOT</h1>
-                <div class="header-subtitle">Executive AI Mentor & Microtopic Curriculum Navigator · CSE 2026-27</div>
+                <h1 class="header-title">⚡ UPSC AI RAG MENTOR</h1>
+                <div class="header-subtitle">Futuristic AI Copilot & GS Mains Curriculum Dashboard · CSE 2026-27</div>
             </div>
         </div>
         <div class="status-badge-container">
-            <span class="status-badge badge-cyan">🟢 RAG KNOWLEDGE CORE</span>
+            <span class="status-badge badge-cyan"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#2563EB;"></span> RAG NEURAL ENGINE ONLINE</span>
             <span class="status-badge badge-violet">⚡ 623 SYLLABUS MODULES</span>
             <span class="status-badge badge-emerald">📚 GS1-GS4 MAINS COVERAGE</span>
             <span class="status-badge badge-amber">🎯 TARGET: UPSC CSE 2026/27</span>

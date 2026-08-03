@@ -7,13 +7,13 @@ from ui_components import inject_custom_css, render_futuristic_header
 
 # Set Streamlit Page Configuration
 st.set_page_config(
-    page_title="UPSC Mains Copilot & Curriculum Dashboard",
-    page_icon="🏛️",
+    page_title="UPSC AI RAG Mentor",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Inject High-Contrast Light Luxury CSS
+# Inject High-Contrast Light Futuristic CSS
 inject_custom_css()
 
 # Path constants
@@ -58,7 +58,7 @@ if "pending_prompt" not in st.session_state:
     st.session_state.pending_prompt = None
 
 if "nav_mode" not in st.session_state:
-    st.session_state.nav_mode = "🏛️ AI Copilot"
+    st.session_state.nav_mode = "🤖 AI Mentor Chat"
 
 # Helper to parse practice MCQs in response
 def parse_mcqs(text: str) -> list[dict]:
@@ -111,7 +111,7 @@ def render_assistant_message(content, idx, meta=None):
     
     if mcqs:
         st.write("---")
-        st.markdown("<h3 style='color: #0F172A;'>📝 Practice Assessment</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color: #2563EB;'>📝 Practice Quiz & Assessment</h3>", unsafe_allow_html=True)
         for q_idx, mcq in enumerate(mcqs):
             st.markdown(f"<strong style='color: #0F172A;'>Question {q_idx+1}:</strong> <span style='color: #1E293B;'>{mcq['question']}</span>", unsafe_allow_html=True)
             options_list = [f"{k}) {v}" for k, v in mcq["options"].items()]
@@ -171,27 +171,30 @@ with st.sidebar:
 
 # Check pending prompt redirect
 if st.session_state.pending_prompt:
-    st.session_state.nav_mode = "🏛️ AI Copilot"
+    st.session_state.nav_mode = "🤖 AI Mentor Chat"
 
 # Main Top Navigation Radio
+NAV_OPTIONS = ["🤖 AI Mentor Chat", "📋 Syllabus Navigator", "💼 Backup Plans & PW Skills", "➕ Custom Modules", "📊 Progress Analytics"]
+curr_idx = NAV_OPTIONS.index(st.session_state.nav_mode) if st.session_state.nav_mode in NAV_OPTIONS else 0
+
 nav_mode = st.radio(
     "Navigation",
-    ["🏛️ AI Copilot", "📋 Syllabus Navigator", "➕ Custom Modules", "📊 Progress Analytics"],
-    index=["🏛️ AI Copilot", "📋 Syllabus Navigator", "➕ Custom Modules", "📊 Progress Analytics"].index(st.session_state.nav_mode if st.session_state.nav_mode in ["🏛️ AI Copilot", "📋 Syllabus Navigator", "➕ Custom Modules", "📊 Progress Analytics"] else "🏛️ AI Copilot"),
+    NAV_OPTIONS,
+    index=curr_idx,
     label_visibility="collapsed"
 )
 st.session_state.nav_mode = nav_mode
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ==========================================
-# VIEW 1: 🏛️ AI COPILOT
+# VIEW 1: 🤖 AI MENTOR CHAT
 # ==========================================
-if nav_mode == "🏛️ AI Copilot":
-    st.markdown("<h3 style='color: #0F172A;'>🏛️ UPSC Mains Executive AI Copilot</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #475569;'>Ask anything regarding GS Mains syllabus topics, PYQs, strategy, or mental wellbeing.</p>", unsafe_allow_html=True)
+if nav_mode == "🤖 AI Mentor Chat":
+    st.markdown("<h3 style='color: #0F172A;'>🤖 UPSC AI RAG Mentor Copilot</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569;'>Ask anything regarding GS Mains syllabus topics, PYQs, backup plans, or mental wellbeing.</p>", unsafe_allow_html=True)
     
     # Quick Prompt Chips
-    st.markdown("<strong style='color: #0F172A;'>Curated Queries:</strong>", unsafe_allow_html=True)
+    st.markdown("<strong style='color: #2563EB;'>Curated AI Prompts:</strong>", unsafe_allow_html=True)
     col_q1, col_q2, col_q3, col_q4 = st.columns(4)
     with col_q1:
         if st.button("📜 Fundamental Duties", use_container_width=True):
@@ -220,13 +223,14 @@ if nav_mode == "🏛️ AI Copilot":
             else:
                 st.markdown(msg["content"])
 
-    # Handle incoming or pending prompt
+    # Prominent Chat Input Bar
+    st.markdown("<div style='margin-top: 10px; margin-bottom: 4px;'><strong style='color: #2563EB; font-size: 1rem;'>💬 Ask UPSC AI RAG Mentor:</strong></div>", unsafe_allow_html=True)
     prompt_to_process = None
     if st.session_state.pending_prompt:
         prompt_to_process = st.session_state.pending_prompt
         st.session_state.pending_prompt = None
     else:
-        prompt_to_process = st.chat_input("Inquire regarding UPSC prep, syllabus topics, PYQs, mental health...")
+        prompt_to_process = st.chat_input("Type your UPSC query, syllabus question, or career backup question here...")
 
     if prompt_to_process:
         st.session_state.messages.append({"role": "user", "content": prompt_to_process})
@@ -234,7 +238,7 @@ if nav_mode == "🏛️ AI Copilot":
             st.markdown(prompt_to_process)
 
         with st.chat_message("assistant"):
-            with st.spinner("✨ Querying Knowledge Base & Web Retrieval..."):
+            with st.spinner("✨ Searching UPSC RAG Knowledge Core & Web..."):
                 result = st.session_state.chatbot.chat(prompt_to_process)
             
             meta = {
@@ -293,13 +297,13 @@ elif nav_mode == "📋 Syllabus Navigator":
         
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Filter Bar
+    # High-Visibility Search & Filter Bar
     f_col1, f_col2, f_col3 = st.columns([2, 2, 2])
     with f_col1:
         selected_paper = st.selectbox(
             "Filter by GS Paper:",
             ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4"],
-            key="dash_paper_select_light"
+            key="dash_paper_select_f"
         )
     
     syllabus = load_syllabus_data()
@@ -309,16 +313,17 @@ elif nav_mode == "📋 Syllabus Navigator":
         selected_subject = st.selectbox(
             "Filter by Subject:",
             ["All Subjects"] + paper_subjects,
-            key="dash_subj_select_light"
+            key="dash_subj_select_f"
         )
     with f_col3:
-        search_query = st.text_input("Search Microtopic / Topic:", "", key="dash_search_input_light").lower().strip()
+        st.markdown("<div style='margin-bottom: -6px;'><strong style='color: #2563EB;'>🔍 Search Microtopics / Keywords:</strong></div>", unsafe_allow_html=True)
+        search_query = st.text_input("", placeholder="e.g. Fundamental Rights, Music, Economy...", key="dash_search_input_f", label_visibility="collapsed").lower().strip()
 
     st.markdown("---")
     
     if selected_paper in syllabus:
         p_info = syllabus[selected_paper]
-        st.markdown(f"<h3 style='color: #0F172A;'>📖 {p_info.get('title', selected_paper)}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: #2563EB;'>📖 {p_info.get('title', selected_paper)}</h3>", unsafe_allow_html=True)
         
         subjects_dict = p_info.get("subjects", {})
         subjects_to_display = [selected_subject] if selected_subject != "All Subjects" else list(subjects_dict.keys())
@@ -347,7 +352,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                         for m_text, m_id, is_comp in filtered_micros:
                             c_col1, c_col2 = st.columns([0.82, 0.18])
                             with c_col1:
-                                checked = st.checkbox(m_text, value=is_comp, key=f"chk_light_{m_id}")
+                                checked = st.checkbox(m_text, value=is_comp, key=f"chk_f_{m_id}")
                                 if checked != is_comp:
                                     if checked and m_id not in st.session_state.progress["completed"]:
                                         st.session_state.progress["completed"].append(m_id)
@@ -356,14 +361,152 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     save_user_progress(st.session_state.progress)
                                     st.rerun()
                             with c_col2:
-                                if st.button("💡 Explainer", key=f"ask_light_{m_id}", use_container_width=True):
+                                if st.button("💡 Explainer", key=f"ask_f_{m_id}", use_container_width=True):
                                     st.session_state.pending_prompt = f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions."
-                                    st.session_state.nav_mode = "🏛️ AI Copilot"
+                                    st.session_state.nav_mode = "🤖 AI Mentor Chat"
                                     st.rerun()
                         st.write("")
 
 # ==========================================
-# VIEW 3: ➕ CUSTOM MODULES
+# VIEW 3: 💼 BACKUP PLANS & PW SKILLS
+# ==========================================
+elif nav_mode == "💼 Backup Plans & PW Skills":
+    st.markdown("<h3 style='color: #0F172A;'>💼 Career Backup Plans & PW Skills Courses</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569;'>Strategic parallel exam options and industry-aligned technical courses from <a href='https://pwskills.com' target='_blank' style='color:#2563EB; font-weight:700;'>PW Skills</a> to guarantee long-term career security.</p>", unsafe_allow_html=True)
+    
+    # Section 1: Parallel Exam Backups
+    st.markdown("<h4 style='color: #2563EB;'>🏛️ Option 1: High Syllabus-Overlap Government Exams</h4>", unsafe_allow_html=True)
+    ex_col1, ex_col2, ex_col3 = st.columns(3)
+    
+    with ex_col1:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">🏦 RBI Grade B Officer</div>
+            <div class="pwskills-desc">High overlap in Economic & Social Issues (ESI), General Awareness, and Finance. Ideal for UPSC aspirants with strong GS3 background.</div>
+            <div style="margin-top:10px;"><span style="color:#2563EB; font-weight:700;">Overlap: ~70%</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Consult AI on RBI Prep", key="btn_rbi_plan", use_container_width=True):
+            st.session_state.pending_prompt = "Explain how to prepare for RBI Grade B alongside UPSC CSE. Highlight syllabus overlap, timetable, and recommended sources."
+            st.session_state.nav_mode = "🤖 AI Mentor Chat"
+            st.rerun()
+            
+    with ex_col2:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">🏛️ State PSC Services (UPPCS/BPSC)</div>
+            <div class="pwskills-desc">Maximum syllabus match in History, Polity, Economy, and Geography. State-specific GS can be prepared in 4-6 weeks.</div>
+            <div style="margin-top:10px;"><span style="color:#2563EB; font-weight:700;">Overlap: ~85%</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Consult AI on State PSC", key="btn_psc_plan", use_container_width=True):
+            st.session_state.pending_prompt = "How can I integrate State PSC preparation with UPSC CSE? What state-specific GS strategy should I follow?"
+            st.session_state.nav_mode = "🤖 AI Mentor Chat"
+            st.rerun()
+
+    with ex_col3:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">🌾 NABARD Grade A Officer</div>
+            <div class="pwskills-desc">Focuses on Agriculture & Rural Development (ARD) and Economic Issues. Direct alignment with UPSC GS3 Agriculture topics.</div>
+            <div style="margin-top:10px;"><span style="color:#2563EB; font-weight:700;">Overlap: ~65%</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Consult AI on NABARD", key="btn_nabard_plan", use_container_width=True):
+            st.session_state.pending_prompt = "Explain NABARD Grade A exam pattern and syllabus overlap with UPSC GS Paper 3 Agriculture."
+            st.session_state.nav_mode = "🤖 AI Mentor Chat"
+            st.rerun()
+
+    st.markdown("---")
+
+    # Section 2: PW Skills Course Catalog
+    st.markdown("<h4 style='color: #2563EB;'>🎓 Option 2: PW Skills Career Tech Courses (<a href='https://pwskills.com' target='_blank' style='color:#2563EB;'>pwskills.com</a>)</h4>", unsafe_allow_html=True)
+    st.caption("Build high-paying tech and analytics skills in parallel to ensure 100% job readiness.")
+    
+    pw_courses = [
+        {
+            "category": "🧠 Data Science & AI / Machine Learning",
+            "courses": [
+                {
+                    "title": "Data Science Master Class",
+                    "desc": "Comprehensive training in Python, Statistics, Machine Learning, Deep Learning, SQL, and Power BI.",
+                    "url": "https://pwskills.com"
+                },
+                {
+                    "title": "Generative AI & LLM Engineering",
+                    "desc": "Master Prompt Engineering, LangChain, LlamaIndex, Fine-Tuning LLMs, and Vector Databases.",
+                    "url": "https://pwskills.com"
+                }
+            ]
+        },
+        {
+            "category": "💻 Full Stack Web & Software Engineering",
+            "courses": [
+                {
+                    "title": "Java Full Stack Development",
+                    "desc": "Complete Java, Spring Boot, Microservices, React.js, Data Structures & System Design.",
+                    "url": "https://pwskills.com"
+                },
+                {
+                    "title": "MERN Stack Web Development",
+                    "desc": "Build scalable web applications using MongoDB, Express.js, React, and Node.js.",
+                    "url": "https://pwskills.com"
+                }
+            ]
+        },
+        {
+            "category": "📊 Data Analytics & Business Intelligence",
+            "courses": [
+                {
+                    "title": "Data Analytics Job Guarantee Batch",
+                    "desc": "Master Advanced Excel, SQL, Tableau, Power BI, and Business Analytics for corporate roles.",
+                    "url": "https://pwskills.com"
+                },
+                {
+                    "title": "Power BI & SQL Mastery",
+                    "desc": "High-yield course on dashboard design, data modeling, DAX queries, and SQL data warehousing.",
+                    "url": "https://pwskills.com"
+                }
+            ]
+        },
+        {
+            "category": "☁️ Cloud Computing, DevOps & Cybersecurity",
+            "courses": [
+                {
+                    "title": "DevOps & AWS Cloud Engineering",
+                    "desc": "Learn Docker, Kubernetes, Jenkins, Terraform, Ansible, and Amazon Web Services (AWS).",
+                    "url": "https://pwskills.com"
+                },
+                {
+                    "title": "Cybersecurity & Ethical Hacking",
+                    "desc": "Network security, vulnerability assessment, penetration testing, and security compliance.",
+                    "url": "https://pwskills.com"
+                }
+            ]
+        }
+    ]
+    
+    for c_group in pw_courses:
+        st.markdown(f"#### {c_group['category']}")
+        p_col1, p_col2 = st.columns(2)
+        
+        for idx, course in enumerate(c_group["courses"]):
+            target_col = p_col1 if idx % 2 == 0 else p_col2
+            with target_col:
+                st.markdown(f"""
+                <div class="pwskills-card">
+                    <div class="pwskills-title">{course['title']}</div>
+                    <div class="pwskills-desc">{course['desc']}</div>
+                    <div style="margin-top:10px;"><a href="{course['url']}" target="_blank" class="pwskills-link">🔗 View Course on PWSkills.com →</a></div>
+                </div>
+                """, unsafe_allow_html=True)
+                if st.button(f"🤖 Consult AI on {course['title']}", key=f"btn_pw_{course['title'][:10]}", use_container_width=True):
+                    st.session_state.pending_prompt = f"How can I balance UPSC preparation while pursuing the PW Skills course '{course['title']}' (https://pwskills.com)? Provide a balanced daily schedule."
+                    st.session_state.nav_mode = "🤖 AI Mentor Chat"
+                    st.rerun()
+
+# ==========================================
+# VIEW 4: ➕ CUSTOM MODULES
 # ==========================================
 elif nav_mode == "➕ Custom Modules":
     st.markdown("<h3 style='color: #0F172A;'>➕ Add Custom Microtopics & Syllabus Files</h3>", unsafe_allow_html=True)
@@ -373,7 +516,7 @@ elif nav_mode == "➕ Custom Modules":
     
     with col_add1:
         st.markdown("<h4 style='color: #0F172A;'>📝 Add New Microtopic</h4>", unsafe_allow_html=True)
-        with st.form("add_microtopic_form_light"):
+        with st.form("add_microtopic_form_f"):
             paper_choice = st.selectbox("Select GS Paper:", ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4", "Optional / Essay"])
             subject_input = st.text_input("Subject Name (e.g. Modern History, Governance):")
             topic_input = st.text_input("Topic Name (e.g. 1857 Revolt, E-Governance):")
@@ -397,14 +540,14 @@ elif nav_mode == "➕ Custom Modules":
 
     with col_add2:
         st.markdown("<h4 style='color: #0F172A;'>📄 Upload Curriculum Document</h4>", unsafe_allow_html=True)
-        uploaded_pdf = st.file_uploader("Upload custom UPSC Syllabus PDF file", type=["pdf", "txt"], key="pdf_up_light")
+        uploaded_pdf = st.file_uploader("Upload custom UPSC Syllabus PDF file", type=["pdf", "txt"], key="pdf_up_f")
         if uploaded_pdf is not None:
-            if st.button("🚀 Process & Index File", key="proc_btn_light"):
+            if st.button("🚀 Process & Index File", key="proc_btn_f"):
                 st.info("Processing uploaded syllabus file into vector memory...")
                 st.success("✅ Syllabus document successfully processed!")
 
 # ==========================================
-# VIEW 4: 📊 PROGRESS ANALYTICS
+# VIEW 5: 📊 PROGRESS ANALYTICS
 # ==========================================
 elif nav_mode == "📊 Progress Analytics":
     st.markdown("<h3 style='color: #0F172A;'>📊 UPSC Preparation Analytics</h3>", unsafe_allow_html=True)
