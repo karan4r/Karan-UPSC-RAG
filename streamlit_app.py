@@ -60,6 +60,12 @@ if "pending_prompt" not in st.session_state:
 if "nav_mode" not in st.session_state:
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
 
+def redirect_to_copilot(prompt: str):
+    st.session_state.pending_prompt = prompt
+    st.session_state.nav_mode = "🤖 Neural AI Copilot"
+    st.session_state.main_nav_radio = "🤖 Neural AI Copilot"
+    st.rerun()
+
 def count_previous_mental_health_turns(messages: list[dict]) -> int:
     count = 0
     mh_words = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
@@ -293,7 +299,7 @@ with st.sidebar:
         st.rerun()
 
 # Check pending prompt redirect
-if st.session_state.pending_prompt:
+if st.session_state.get("pending_prompt"):
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
     st.session_state.main_nav_radio = "🤖 Neural AI Copilot"
 
@@ -309,15 +315,12 @@ NAV_OPTIONS = [
     "📊 Matrix Analytics"
 ]
 
-if "main_nav_radio" not in st.session_state or st.session_state.main_nav_radio != st.session_state.nav_mode:
+if "main_nav_radio" not in st.session_state:
     st.session_state.main_nav_radio = st.session_state.nav_mode
-
-curr_idx = NAV_OPTIONS.index(st.session_state.nav_mode) if st.session_state.nav_mode in NAV_OPTIONS else 0
 
 nav_mode = st.radio(
     "Navigation",
     NAV_OPTIONS,
-    index=curr_idx,
     horizontal=True,
     key="main_nav_radio",
     label_visibility="collapsed"
@@ -510,9 +513,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     st.rerun()
                             with c_col2:
                                 if st.button("💡 Explainer", key=f"ask_fs_{m_id}", use_container_width=True):
-                                    st.session_state.pending_prompt = f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions."
-                                    st.session_state.nav_mode = "🤖 Neural AI Copilot"
-                                    st.rerun()
+                                    redirect_to_copilot(f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions.")
                         st.write("")
 
 # ==========================================
@@ -567,9 +568,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Ask Counselor", key="btn_mh_overwhelm", use_container_width=True):
-            st.session_state.pending_prompt = "I feel completely overwhelmed by the huge UPSC syllabus and fear I won't finish in time. Please give me an empathetic step-by-step psychological strategy to regain control and reduce anxiety."
-            st.session_state.nav_mode = "🤖 Neural AI Copilot"
-            st.rerun()
+            redirect_to_copilot("I feel completely overwhelmed by the huge UPSC syllabus and fear I won't finish in time. Please give me an empathetic step-by-step psychological strategy to regain control and reduce anxiety.")
 
     with mh_col2:
         st.markdown("""
@@ -579,9 +578,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Ask Counselor", key="btn_mh_anxiety", use_container_width=True):
-            st.session_state.pending_prompt = "How can I overcome severe exam anxiety and negative marking fear during UPSC Prelims mock tests?"
-            st.session_state.nav_mode = "🤖 Neural AI Copilot"
-            st.rerun()
+            redirect_to_copilot("How can I overcome severe exam anxiety and negative marking fear during UPSC Prelims mock tests?")
 
     with mh_col3:
         st.markdown("""
@@ -591,9 +588,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Ask Counselor", key="btn_mh_sleep", use_container_width=True):
-            st.session_state.pending_prompt = "My sleep schedule is ruined due to late-night UPSC preparation, and I feel mentally exhausted during the day. How do I fix my sleep and energy levels?"
-            st.session_state.nav_mode = "🤖 Neural AI Copilot"
-            st.rerun()
+            redirect_to_copilot("My sleep schedule is ruined due to late-night UPSC preparation, and I feel mentally exhausted during the day. How do I fix my sleep and energy levels?")
 
     with mh_col4:
         st.markdown("""
@@ -603,9 +598,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Ask Counselor", key="btn_mh_isolation", use_container_width=True):
-            st.session_state.pending_prompt = "I am struggling with social isolation and family pressure during my UPSC attempt. How do I maintain mental resilience?"
-            st.session_state.nav_mode = "🤖 Neural AI Copilot"
-            st.rerun()
+            redirect_to_copilot("I am struggling with social isolation and family pressure during my UPSC attempt. How do I maintain mental resilience?")
 
     st.markdown("---")
 
