@@ -295,15 +295,31 @@ with st.sidebar:
 # Check pending prompt redirect
 if st.session_state.pending_prompt:
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
+    st.session_state.main_nav_radio = "🤖 Neural AI Copilot"
 
 # Main Top Navigation Radio
-NAV_OPTIONS = ["🤖 Neural AI Copilot", "📋 Syllabus Navigator", "💼 Backup Plans & PW Skills", "➕ Custom Modules", "📊 Matrix Analytics"]
+NAV_OPTIONS = [
+    "🤖 Neural AI Copilot",
+    "📋 Syllabus Navigator",
+    "🧘 Mental Health & Wellness",
+    "📝 Mock Tests & Assessment",
+    "🎓 Live & Recorded Classes",
+    "💼 Backup Plans & PW Skills",
+    "➕ Custom Modules",
+    "📊 Matrix Analytics"
+]
+
+if "main_nav_radio" not in st.session_state or st.session_state.main_nav_radio != st.session_state.nav_mode:
+    st.session_state.main_nav_radio = st.session_state.nav_mode
+
 curr_idx = NAV_OPTIONS.index(st.session_state.nav_mode) if st.session_state.nav_mode in NAV_OPTIONS else 0
 
 nav_mode = st.radio(
     "Navigation",
     NAV_OPTIONS,
     index=curr_idx,
+    horizontal=True,
+    key="main_nav_radio",
     label_visibility="collapsed"
 )
 st.session_state.nav_mode = nav_mode
@@ -500,7 +516,345 @@ elif nav_mode == "📋 Syllabus Navigator":
                         st.write("")
 
 # ==========================================
-# VIEW 3: 💼 BACKUP PLANS & PW SKILLS
+# VIEW 3: 🧘 MENTAL HEALTH & WELLNESS
+# ==========================================
+elif nav_mode == "🧘 Mental Health & Wellness":
+    st.markdown("<h3 style='color: #FFFFFF;'>🧘 Aspirant Mental Health & Mindset Wellness Hub</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #94A3B8;'>Empathetic psychological guidance, stress management, anti-burnout strategies, and daily mindset building for UPSC aspirants.</p>", unsafe_allow_html=True)
+    
+    # Mood Check-in Card
+    st.markdown("""
+    <div style="background: rgba(13, 17, 32, 0.85); border: 1.5px solid rgba(56, 189, 248, 0.3); border-radius: 18px; padding: 22px; margin-bottom: 24px;">
+        <h4 style="color: #38BDF8; margin-top: 0; margin-bottom: 8px;">💚 Daily Aspirant Mindset & Mood Check-in</h4>
+        <p style="color: #CBD5E1; font-size: 0.95rem; margin: 0;">How are you feeling right now during your study regimen?</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    mood_col1, mood_col2 = st.columns([1, 1])
+    with mood_col1:
+        mood = st.radio(
+            "Select your current state:",
+            [
+                "🟢 High Energy & Hyper-Focused",
+                "🟡 Moderate Stress / Slight Fatigue",
+                "🟠 Overwhelmed & Syllabus Anxiety",
+                "🔴 Severe Burnout & Low Motivation"
+            ],
+            key="aspirant_mood_select"
+        )
+    with mood_col2:
+        if "🟢 High Energy" in mood:
+            st.success("🌟 **Prime Flow State!** Capitalize on this momentum to tackle high-yield complex topics like Ethics Case Studies or GS Economy.")
+        elif "🟡 Moderate Stress" in mood:
+            st.info("⚡ **Mindful Advice:** Take a 10-minute walk, drink water, and practice 4-7-8 breathing before your next study session.")
+        elif "🟠 Overwhelmed" in mood:
+            st.warning("⚠️ **De-compress Now:** Break your daily targets into micro 25-minute sprints. Focus only on 1 topic at a time.")
+        else:
+            st.error("🛑 **Burnout Protocol Engaged:** Step away from textbooks. Talk to a family member/mentor or consult our AI Mental Health Counselor below.")
+
+    st.markdown("---")
+    
+    # 1-Click AI Counselor Prompts
+    st.markdown("<h4 style='color: #38BDF8;'>🤖 AI Psychological Copilot - Instant Consultations</h4>", unsafe_allow_html=True)
+    st.caption("Click any prompt to consult our empathetic AI counselor trained on UPSC aspirant psychology:")
+    
+    mh_col1, mh_col2, mh_col3, mh_col4 = st.columns(4)
+    with mh_col1:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">🤯 Overcoming Overwhelm</div>
+            <div class="pwskills-desc">Syllabus feels impossible to finish in time? Get a realistic prioritization plan.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Ask Counselor", key="btn_mh_overwhelm", use_container_width=True):
+            st.session_state.pending_prompt = "I feel completely overwhelmed by the huge UPSC syllabus and fear I won't finish in time. Please give me an empathetic step-by-step psychological strategy to regain control and reduce anxiety."
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    with mh_col2:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">🎯 Prelims Exam Anxiety</div>
+            <div class="pwskills-desc">Managing test panic, negative marking fear, and exam-hall performance pressure.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Ask Counselor", key="btn_mh_anxiety", use_container_width=True):
+            st.session_state.pending_prompt = "How can I overcome severe exam anxiety and negative marking fear during UPSC Prelims mock tests?"
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    with mh_col3:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">😴 Sleep & Burnout Routine</div>
+            <div class="pwskills-desc">Fixing insomnia, late-night overthinking, and fatigue during 10+ hour study routines.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Ask Counselor", key="btn_mh_sleep", use_container_width=True):
+            st.session_state.pending_prompt = "My sleep schedule is ruined due to late-night UPSC preparation, and I feel mentally exhausted during the day. How do I fix my sleep and energy levels?"
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    with mh_col4:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">👥 Isolation & Peer Pressure</div>
+            <div class="pwskills-desc">Dealing with social isolation, family expectations, and fear of falling behind.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🤖 Ask Counselor", key="btn_mh_isolation", use_container_width=True):
+            st.session_state.pending_prompt = "I am struggling with social isolation and family pressure during my UPSC attempt. How do I maintain mental resilience?"
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    st.markdown("---")
+
+    # Interactive Mindfulness & Support Resources Row
+    rec_col1, rec_col2 = st.columns([1.2, 0.8])
+    with rec_col1:
+        st.markdown("<h4 style='color: #FFFFFF;'>🧘 4-7-8 Box Breathing & Relaxation Tool</h4>", unsafe_allow_html=True)
+        st.markdown("""
+        1. **Inhale quietly** through your nose for **4 seconds**.
+        2. **Hold your breath** for **7 seconds**.
+        3. **Exhale completely** through your mouth for **8 seconds**.
+        4. Repeat 4 times to instantly reset your nervous system.
+        """)
+        if st.button("⏱️ Start 1-Minute Reset Timer", key="btn_breathing_timer"):
+            st.info("🌬️ *Inhale... 1.. 2.. 3.. 4..* | *Hold... 1.. 2.. 3.. 4.. 5.. 6.. 7..* | *Exhale... 1.. 2.. 3.. 4.. 5.. 6.. 7.. 8..*")
+            st.success("✨ Mindful Reset Complete! Take a deep breath and return to study with clarity.")
+
+    with rec_col2:
+        st.markdown("<h4 style='color: #FFFFFF;'>📞 Tele-MANAS Helplines</h4>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 14px; padding: 16px;">
+            <div style="color: #34D399; font-weight: 700; font-size: 1.05rem;">Govt. Tele-MANAS Helpline</div>
+            <div style="color: #FFFFFF; font-size: 1.2rem; font-weight: 800; margin-top: 4px;">📞 14416 / 1800-891-4416</div>
+            <div style="color: #94A3B8; font-size: 0.85rem; margin-top: 6px;">24x7 Free & Confidential Mental Health Counseling by Govt of India</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ==========================================
+# VIEW 4: 📝 MOCK TESTS & ASSESSMENT
+# ==========================================
+elif nav_mode == "📝 Mock Tests & Assessment":
+    st.markdown("<h3 style='color: #FFFFFF;'>📝 Prelims & Mains Mock Test Arena</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #94A3B8;'>Simulated Prelims MCQs with instant scoring (-0.66 negative marking) and Mains Answer Writing Evaluation.</p>", unsafe_allow_html=True)
+    
+    # Test Metrics Row
+    t_col1, t_col2, t_col3, t_col4 = st.columns(4)
+    with t_col1:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Tests Attempted</div>
+            <div class="metric-value">12</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with t_col2:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Average Accuracy</div>
+            <div class="metric-value">74.5%</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with t_col3:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Prelims Est. Score</div>
+            <div class="metric-value">108.6</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with t_col4:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Mains Answers Evaluated</div>
+            <div class="metric-value">28</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Sub-tabs for Test Generator vs Interactive Sample Test vs Mains Practice
+    test_tab1, test_tab2, test_tab3 = st.tabs(["⚡ AI Test Generator", "🎯 Live Prelims Practice Quiz", "✍️ Mains Answer Writing Challenge"])
+
+    with test_tab1:
+        st.markdown("<h4 style='color: #38BDF8;'>⚙️ Custom Test Generator</h4>", unsafe_allow_html=True)
+        g_col1, g_col2, g_col3 = st.columns(3)
+        with g_col1:
+            subj_test = st.selectbox("Select Subject / Module:", ["Polity & Constitution", "Modern Indian History", "Indian Economy & Budget", "Environment & Ecology", "Science & Technology", "Geography & Environment", "CSAT Quantitative Aptitude"])
+        with g_col2:
+            num_qs = st.selectbox("Number of Questions:", ["5 Questions", "10 Questions", "15 Questions"])
+        with g_col3:
+            diff_lvl = st.selectbox("Difficulty Level:", ["UPSC Prelims Standard", "High-Yield Statement-based", "PYQ Trend Pattern"])
+            
+        if st.button("🚀 Generate AI Practice Quiz in Copilot", use_container_width=True, key="btn_gen_test"):
+            st.session_state.pending_prompt = f"Generate a {num_qs} UPSC Prelims MCQ Practice Quiz on '{subj_test}' at '{diff_lvl}' level. Provide 4 options (A, B, C, D) for each, followed by correct answers and detailed explanations."
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    with test_tab2:
+        st.markdown("<h4 style='color: #38BDF8;'>🎯 Live Simulated Prelims Quiz (Sectional: Indian Polity & GS2)</h4>", unsafe_allow_html=True)
+        st.caption("Marks: +2.0 for correct, -0.66 for incorrect answer.")
+        
+        sample_questions = [
+            {
+                "id": 1,
+                "q": "With reference to the Preamble of the Indian Constitution, consider the following statements:\n1. It is non-justiciable in nature.\n2. It can be amended under Article 368 without altering basic structure.\n3. It was amended only once by the 44th Constitutional Amendment Act.",
+                "opts": ["1 and 2 only", "2 and 3 only", "1 and 3 only", "1, 2 and 3"],
+                "ans": "1 and 2 only",
+                "exp": "Statement 1 is correct (non-justiciable). Statement 2 is correct (can be amended under Art 368 as held in Kesavananda Bharati case). Statement 3 is INCORRECT because it was amended by the 42nd Amendment Act (1976), not 44th."
+            },
+            {
+                "id": 2,
+                "q": "Which of the following bodies is/are Constitutional Bodies under the Constitution of India?\n1. National Human Rights Commission (NHRC)\n2. Finance Commission\n3. NITI Aayog",
+                "opts": ["2 only", "1 and 2 only", "2 and 3 only", "1, 2 and 3"],
+                "ans": "2 only",
+                "exp": "Finance Commission is created under Article 280 (Constitutional Body). NHRC is a Statutory Body (Protection of Human Rights Act 1993). NITI Aayog is an Executive Body created by Cabinet resolution."
+            }
+        ]
+        
+        score = 0
+        total_q = len(sample_questions)
+        with st.form("interactive_mock_quiz_form"):
+            user_answers = {}
+            for sq in sample_questions:
+                st.markdown(f"**Q{sq['id']}:** {sq['q']}")
+                user_answers[sq['id']] = st.radio(f"Select Answer for Q{sq['id']}:", sq["opts"], index=None, key=f"mock_q_{sq['id']}")
+                st.write("")
+                
+            quiz_submitted = st.form_submit_button("🏁 Submit Test & Calculate Score")
+            
+        if quiz_submitted:
+            correct_cnt = 0
+            wrong_cnt = 0
+            unattempted = 0
+            for sq in sample_questions:
+                user_ans = user_answers.get(sq['id'])
+                if user_ans is None:
+                    unattempted += 1
+                elif user_ans == sq['ans']:
+                    correct_cnt += 1
+                else:
+                    wrong_cnt += 1
+                    
+            final_marks = (correct_cnt * 2.0) - (wrong_cnt * 0.66)
+            st.markdown(f"""
+            <div style="background: rgba(13, 17, 32, 0.9); border: 1.5px solid #38BDF8; border-radius: 16px; padding: 20px; margin-top: 16px;">
+                <h4 style="color: #38BDF8; margin: 0;">📊 Test Score Card</h4>
+                <div style="font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin-top: 8px;">Marks Obtained: <span style="color: #34D399;">{final_marks:.2f}</span> / {total_q * 2}</div>
+                <div style="color: #94A3B8; margin-top: 4px;">Correct: <strong style="color:#34D399;">{correct_cnt}</strong> | Incorrect: <strong style="color:#EF4444;">{wrong_cnt}</strong> | Unattempted: <strong>{unattempted}</strong></div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            for sq in sample_questions:
+                with st.expander(f"💡 Explanation for Q{sq['id']}"):
+                    st.markdown(f"**Correct Option:** {sq['ans']}\n\n**Detailed Explanation:** {sq['exp']}")
+
+    with test_tab3:
+        st.markdown("<h4 style='color: #38BDF8;'>✍️ Daily Mains Answer Writing Prompt</h4>", unsafe_allow_html=True)
+        st.markdown("""
+        **Mains Question (GS Paper 2 - Governance):**
+        > *"Analyze the role of Digital Public Infrastructure (DPI) in transforming service delivery and financial inclusion in India. Discuss the key challenges that remain." (15 Marks, 250 words)*
+        """)
+        
+        mains_ans = st.text_area("Write your answer structure or draft response here:", height=180, key="mains_writing_area")
+        if st.button("🤖 Evaluate My Answer with AI Copilot", key="btn_eval_mains", use_container_width=True):
+            if mains_ans.strip():
+                st.session_state.pending_prompt = f"Evaluate my UPSC Mains Answer for the question: 'Analyze the role of Digital Public Infrastructure (DPI) in transforming service delivery in India.' Here is my answer draft:\n\n{mains_ans}\n\nProvide marks out of 15, strengths, missing points, structure analysis, and a top-scoring model answer outline."
+                st.session_state.nav_mode = "🤖 Neural AI Copilot"
+                st.rerun()
+            else:
+                st.warning("Please type your answer draft above before submitting for AI evaluation.")
+
+# ==========================================
+# VIEW 5: 🎓 LIVE & RECORDED CLASSES
+# ==========================================
+elif nav_mode == "🎓 Live & Recorded Classes":
+    st.markdown("<h3 style='color: #FFFFFF;'>🎓 UPSC Live Classes & Interactive Lecture Library</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #94A3B8;'>Access structured daily lectures, review subject playlists, and use AI to generate concise revision notes from any class topic.</p>", unsafe_allow_html=True)
+    
+    # Today's Live Schedule Timeline
+    st.markdown("<h4 style='color: #38BDF8;'>📅 Today's Live Lecture Schedule</h4>", unsafe_allow_html=True)
+    
+    sched_col1, sched_col2, sched_col3 = st.columns(3)
+    with sched_col1:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div style="font-size:0.8rem; color:#34D399; font-weight:700;">🟢 LIVE NOW (08:00 - 10:00 AM)</div>
+            <div class="pwskills-title" style="margin-top:4px;">🏛️ GS2: Indian Constitution & Parliamentary Procedures</div>
+            <div class="pwskills-desc">Faculty: Dr. S. Sharma · Topic: Speaker Powers & Money Bill Controversies</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🎥 Join Live Classroom", key="btn_join_live1", use_container_width=True):
+            st.session_state.pending_prompt = "Summarize the key UPSC GS2 Mains concepts related to 'Speaker Powers, Money Bill qualification, and Article 110 controversies'."
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    with sched_col2:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div style="font-size:0.8rem; color:#38BDF8; font-weight:700;">⏰ UPCOMING (02:00 - 04:00 PM)</div>
+            <div class="pwskills-title" style="margin-top:4px;">📈 GS3: Macroeconomics & Union Budget Analysis</div>
+            <div class="pwskills-desc">Faculty: Prof. V. Verma · Topic: Fiscal Deficit & Capital Expenditure Trends</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("🔔 Set Class Reminder", key="btn_join_live2", use_container_width=True):
+            st.info("🔔 Reminder set for GS3 Macroeconomics & Union Budget class!")
+
+    with sched_col3:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div style="font-size:0.8rem; color:#C084FC; font-weight:700;">📼 RECORDED (06:00 - 08:00 PM)</div>
+            <div class="pwskills-title" style="margin-top:4px;">⚖️ GS4: Ethics Case Studies & Moral Philosophy</div>
+            <div class="pwskills-desc">Faculty: Anand Sir · Topic: Deontology vs Utilitarianism in Civil Service</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("▶️ Watch Lecture Recording", key="btn_join_live3", use_container_width=True):
+            st.session_state.pending_prompt = "Explain Deontology vs Utilitarianism with Civil Service ethics case study examples for UPSC GS Paper 4."
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    st.markdown("---")
+
+    # Subject Class Playlists & AI Note Summarizer
+    class_tab1, class_tab2 = st.tabs(["📚 Subject Lecture Playlists", "📝 AI Video & Lecture Summarizer"])
+    
+    with class_tab1:
+        c_paper = st.selectbox("Select GS Paper Module:", ["GS Paper 1 Lectures", "GS Paper 2 Lectures", "GS Paper 3 Lectures", "GS Paper 4 Ethics Lectures", "CSAT Masterclass"])
+        
+        lectures_data = [
+            {"title": "Lecture 1: Preamble & Basic Structure Doctrine", "duration": "1h 45m", "status": "Completed ✅"},
+            {"title": "Lecture 2: Fundamental Rights & Judicial Review (Art 12-35)", "duration": "2h 10m", "status": "Completed ✅"},
+            {"title": "Lecture 3: Directive Principles & Fundamental Duties", "duration": "1h 30m", "status": "Available 📼"},
+            {"title": "Lecture 4: Federal Structure & Centre-State Relations", "duration": "2h 00m", "status": "Available 📼"},
+        ]
+        
+        for lec in lectures_data:
+            lc1, lc2, lc3 = st.columns([0.6, 0.2, 0.2])
+            with lc1:
+                st.markdown(f"**{lec['title']}** ({lec['duration']})")
+            with lc2:
+                st.caption(lec['status'])
+            with lc3:
+                if st.button("📄 Generate Notes", key=f"btn_notes_{lec['title'][:15]}", use_container_width=True):
+                    st.session_state.pending_prompt = f"Generate comprehensive UPSC GS revision notes for the lecture topic '{lec['title']}'. Include definitions, key articles, Supreme Court landmark cases, and Mains answer keywords."
+                    st.session_state.nav_mode = "🤖 Neural AI Copilot"
+                    st.rerun()
+
+    with class_tab2:
+        st.markdown("<h4 style='color: #38BDF8;'>⚡ AI Lecture Note & Concept Generator</h4>", unsafe_allow_html=True)
+        st.markdown("Paste any lecture topic, sub-topic name, or lecture transcript excerpt below to instantly generate clean UPSC structured notes:")
+        
+        lec_topic = st.text_input("Enter Lecture Topic or Subject Keyword:", placeholder="e.g. Inflation Targeting & RBI Monetary Policy Framework", key="input_lec_topic")
+        if st.button("🚀 Generate Structured Revision Notes", key="btn_gen_lec_notes", use_container_width=True):
+            if lec_topic.strip():
+                st.session_state.pending_prompt = f"Generate high-yield UPSC Mains & Prelims structured notes for the class lecture topic: '{lec_topic}'. Organize into Key Definitions, Core Concepts, Critical Data/Reports, Committee Recommendations, and Practice Prelims MCQs."
+                st.session_state.nav_mode = "🤖 Neural AI Copilot"
+                st.rerun()
+            else:
+                st.warning("Please enter a lecture topic above.")
+
+# ==========================================
+# VIEW 6: 💼 BACKUP PLANS & PW SKILLS
 # ==========================================
 elif nav_mode == "💼 Backup Plans & PW Skills":
     st.markdown("<h3 style='color: #FFFFFF;'>💼 Career Backup Plans & PW Skills Courses</h3>", unsafe_allow_html=True)

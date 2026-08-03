@@ -177,44 +177,59 @@ def inject_custom_css():
     }
 
     /* Radio Tabs / Navigation Bar Styling */
-    div[data-testid="stRadio"] > div {
+    div[data-testid="stRadio"] > div,
+    div[data-testid="stRadio"] [role="radiogroup"],
+    div[data-testid="stWidgetGroup"] {
         flex-direction: row !important;
+        flex-wrap: wrap !important;
         gap: 8px !important;
         background: rgba(13, 17, 32, 0.8) !important;
-        padding: 6px !important;
+        padding: 8px !important;
         border-radius: 14px !important;
         border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        width: 100% !important;
     }
 
-    div[data-testid="stRadio"] label {
-        background: transparent !important;
+    div[data-testid="stRadio"] label,
+    div[role="radiogroup"] label {
+        background: rgba(15, 23, 42, 0.6) !important;
         border-radius: 10px !important;
-        padding: 10px 18px !important;
+        padding: 8px 16px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-size: 0.92rem !important;
         font-weight: 600 !important;
         color: #94A3B8 !important;
         cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        border: 1px solid transparent !important;
+        transition: all 0.25s ease !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        margin: 2px !important;
+        display: inline-flex !important;
+        align-items: center !important;
     }
 
-    div[data-testid="stRadio"] label:hover {
+    div[data-testid="stRadio"] label:hover,
+    div[role="radiogroup"] label:hover {
         color: #FFFFFF !important;
-        background: rgba(56, 189, 248, 0.1) !important;
+        background: rgba(56, 189, 248, 0.15) !important;
+        border-color: rgba(56, 189, 248, 0.4) !important;
     }
 
-    div[data-testid="stRadio"] label[data-checked="true"] {
-        background: linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%) !important;
+    div[data-testid="stRadio"] label[data-checked="true"],
+    div[role="radiogroup"] label[aria-checked="true"],
+    div[role="radiogroup"] label:has(input:checked) {
+        background: linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(124, 58, 237, 0.35) 100%) !important;
         color: #FFFFFF !important;
         border: 1px solid #38BDF8 !important;
         box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3) !important;
     }
 
-    div[data-testid="stRadio"] label[data-checked="true"] p,
-    div[data-testid="stRadio"] label[data-checked="true"] span {
-        color: #FFFFFF !important;
-        font-weight: 700 !important;
+    div[data-testid="stRadio"] label p,
+    div[role="radiogroup"] label p,
+    div[data-testid="stRadio"] label span,
+    div[role="radiogroup"] label span {
+        color: inherit !important;
+        font-weight: inherit !important;
+        font-size: 0.92rem !important;
     }
 
     /* Chat Message Bubbles in Cyber Dark Theme */
@@ -333,8 +348,8 @@ def render_futuristic_header():
         <div class="status-badge-container">
             <span class="status-badge badge-success">🟢 RAG NEURAL CORE: ONLINE</span>
             <span class="status-badge badge-primary">🧠 623 MAINS MICROTOPICS ACTIVE</span>
-            <span class="status-badge badge-purple">⚡ INFERENCE LATENCY: &lt;0.4s</span>
-            <span class="status-badge badge-primary">🛡️ CLINICAL PSYCHOLOGIST COPILOT: READY</span>
+            <span class="status-badge badge-purple">🧘 MENTAL HEALTH & WELLNESS: ACTIVE</span>
+            <span class="status-badge badge-success">📝 MOCK TESTS & CLASSES: READY</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
