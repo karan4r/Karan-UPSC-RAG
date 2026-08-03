@@ -11,23 +11,28 @@ Rules:
    - Compare & connect (if applicable)
    - Exam angle (Prelims + Mains)
    - Quick recall (3-5 ultra-short bullets)
-   - Practice MCQs (Generate exactly 2 relevant UPSC-style practice MCQs for Prelims. Use this EXACT format:
-   ### Practice MCQs
+   - Practice MCQs (Generate exactly 2 relevant UPSC-style practice MCQs for Prelims. Use this EXACT format with new lines between options:
+
+   ### 📝 Practice MCQs
+
    **Question 1:** [Question statement]
    - **A)** [Option A text]
    - **B)** [Option B text]
    - **C)** [Option C text]
    - **D)** [Option D text]
+
    **Correct Answer:** Option [A/B/C/D]
-   **Explanation:** [Detailed explanation]
+   **Explanation:** [Detailed explanation text]
 
    **Question 2:** [Question statement]
    - **A)** [Option A text]
    - **B)** [Option B text]
    - **C)** [Option C text]
    - **D)** [Option D text]
+
    **Correct Answer:** Option [A/B/C/D]
-   **Explanation:** [Detailed explanation])
+   **Explanation:** [Detailed explanation text])
+
 4. Use bullets over paragraphs. Bold key terms (dates, names, acts, articles).
 5. Every point should help the student in Prelims MCQs or Mains answer writing.
 6. Never recommend courses, helplines, or external links unless they appear in the provided template.

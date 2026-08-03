@@ -60,6 +60,83 @@ if "pending_prompt" not in st.session_state:
 if "nav_mode" not in st.session_state:
     st.session_state.nav_mode = "🤖 AI Mentor Chat"
 
+# Pre-processor to format any inline MCQs into clean markdown with options on separate lines
+def format_mcq_markdown(text: str) -> str:
+    if not text:
+        return ""
+        
+    if not re.search(r'\b[A-D][\)\.]\s+', text):
+        return text
+
+    header_match = re.search(r'(?i)###\s*(?:\*\*)?Practice\s*MCQs?(?:\*\*)?', text)
+    if header_match:
+        main_body = text[:header_match.start()].strip()
+        mcq_body = text[header_match.end():].strip()
+    else:
+        m_start = re.search(r'(?i)(?:^|\n)\s*(?:\d+[\.\)]|Question\s*\d+)\s+.*?\bA[\)\.]\s+', text)
+        if m_start:
+            main_body = text[:m_start.start()].strip()
+            mcq_body = text[m_start.start():].strip()
+        else:
+            main_body = ""
+            mcq_body = text
+
+    if not mcq_body:
+        return text
+
+    q_blocks = re.split(r'(?i)(?:\n\s*|\b)(?:\d+[\.\)]|Question\s*\d+)\s+', mcq_body)
+    formatted_mcqs = []
+    
+    q_counter = 1
+    for block in q_blocks:
+        block = block.strip()
+        if not block:
+            continue
+            
+        m_q = re.search(r'^(.*?)(?=\bA[\)\.]\s+)', block, re.DOTALL)
+        if not m_q:
+            continue
+            
+        q_text = m_q.group(1).strip()
+        q_text = re.sub(r'^\s*[:\-\*\.\d]+\s*', '', q_text)
+        
+        mA = re.search(r'\bA[\)\.]\s*(.*?)(?=\s*\bB[\)\.]|\s*Correct|\s*Explanation|$)', block, re.DOTALL)
+        mB = re.search(r'\bB[\)\.]\s*(.*?)(?=\s*\bC[\)\.]|\s*Correct|\s*Explanation|$)', block, re.DOTALL)
+        mC = re.search(r'\bC[\)\.]\s*(.*?)(?=\s*\bD[\)\.]|\s*Correct|\s*Explanation|$)', block, re.DOTALL)
+        mD = re.search(r'\bD[\)\.]\s*(.*?)(?=\s*Correct|\s*Explanation|\n\n|$)', block, re.DOTALL)
+        
+        m_ans = re.search(r'(?:Correct\s*(?:option|answer)?|Answer)\s*:\s*(.*?)(?=\s*Explanation:|\n|$)', block, re.IGNORECASE)
+        m_exp = re.search(r'Explanation\s*:\s*(.*)', block, re.IGNORECASE | re.DOTALL)
+        
+        if mA and mB and mC and mD:
+            optA = mA.group(1).strip().replace('\n', ' ')
+            optB = mB.group(1).strip().replace('\n', ' ')
+            optC = mC.group(1).strip().replace('\n', ' ')
+            optD = mD.group(1).strip().replace('\n', ' ')
+            
+            ans_str = m_ans.group(1).strip() if m_ans else "A"
+            exp_str = m_exp.group(1).strip() if m_exp else ""
+            
+            fmt_q = f"**Question {q_counter}:** {q_text}\n\n"
+            fmt_q += f"- **A)** {optA}\n"
+            fmt_q += f"- **B)** {optB}\n"
+            fmt_q += f"- **C)** {optC}\n"
+            fmt_q += f"- **D)** {optD}\n\n"
+            fmt_q += f"**Correct Answer:** {ans_str}\n"
+            if exp_str:
+                fmt_q += f"**Explanation:** {exp_str}\n"
+                
+            formatted_mcqs.append(fmt_q)
+            q_counter += 1
+
+    if not formatted_mcqs:
+        return text
+
+    mcq_section = "### 📝 Practice MCQs\n\n" + "\n---\n\n".join(formatted_mcqs)
+    if main_body:
+        return f"{main_body}\n\n{mcq_section}"
+    return mcq_section
+
 # Helper to parse practice MCQs in response cleanly
 def parse_mcqs(text: str) -> list[dict]:
     q_blocks = re.split(r'(?i)(?:\*\*?)?(?:Question|Q)\s*\d+\s*(?::|\.|\*\*|–|-)+\s*', text)
@@ -97,9 +174,10 @@ def parse_mcqs(text: str) -> list[dict]:
     return questions
 
 def split_answer_and_mcqs(text: str):
-    parts = re.split(r'(?i)###\s*(?:\*\*)?Practice\s*MCQs?(?:\*\*)?', text)
+    formatted_text = format_mcq_markdown(text)
+    parts = re.split(r'(?i)###\s*(?:\*\*)?Practice\s*MCQs?(?:\*\*)?', formatted_text)
     if len(parts) < 2:
-        return text, []
+        return formatted_text, []
     main_text = parts[0].strip()
     mcq_text = parts[1].strip()
     mcqs = parse_mcqs(mcq_text)
@@ -114,24 +192,24 @@ def render_assistant_message(content, idx, meta=None):
         st.markdown("<h3 style='color: #2563EB; font-family: Outfit; font-weight: 800; margin-bottom: 16px;'>📝 Practice Quiz & Prelims Assessment</h3>", unsafe_allow_html=True)
         
         for q_idx, mcq in enumerate(mcqs):
-            # Render Question & Options Card
             opts = mcq.get("options", {})
             opt_a = opts.get("A", "")
             opt_b = opts.get("B", "")
             opt_c = opts.get("C", "")
             opt_d = opts.get("D", "")
             
+            # Question Card with Options on distinct separate lines
             st.markdown(f"""
             <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 22px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(15,23,42,0.03);">
                 <div style="font-size: 1.05rem; font-weight: 700; color: #0F172A; margin-bottom: 14px; line-height: 1.5;">
                     <span style="color: #2563EB;">Question {q_idx+1}:</span> {mcq['question']}
                 </div>
-                <div style="font-size: 0.9rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Options:</div>
-                <div style="margin-left: 6px; margin-bottom: 8px;">
-                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>A)</strong> {opt_a}</div>
-                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>B)</strong> {opt_b}</div>
-                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>C)</strong> {opt_c}</div>
-                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>D)</strong> {opt_d}</div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">Options:</div>
+                <div style="margin-left: 4px; margin-bottom: 8px;">
+                    <div style="color: #0F172A; padding: 8px 14px; margin-bottom: 6px; background: #F8FAFC; border-radius: 10px; border: 1px solid #E2E8F0; font-size: 0.95rem; font-weight: 500;">• <strong>A)</strong> {opt_a}</div>
+                    <div style="color: #0F172A; padding: 8px 14px; margin-bottom: 6px; background: #F8FAFC; border-radius: 10px; border: 1px solid #E2E8F0; font-size: 0.95rem; font-weight: 500;">• <strong>B)</strong> {opt_b}</div>
+                    <div style="color: #0F172A; padding: 8px 14px; margin-bottom: 6px; background: #F8FAFC; border-radius: 10px; border: 1px solid #E2E8F0; font-size: 0.95rem; font-weight: 500;">• <strong>C)</strong> {opt_c}</div>
+                    <div style="color: #0F172A; padding: 8px 14px; margin-bottom: 6px; background: #F8FAFC; border-radius: 10px; border: 1px solid #E2E8F0; font-size: 0.95rem; font-weight: 500;">• <strong>D)</strong> {opt_d}</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
