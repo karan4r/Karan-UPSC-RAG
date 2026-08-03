@@ -525,9 +525,9 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     
     # Mood Check-in Card
     st.markdown("""
-    <div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(11, 15, 26, 0.98) 100%) !important; border: 1.5px solid rgba(56, 189, 248, 0.45) !important; border-radius: 18px !important; padding: 24px !important; margin-bottom: 24px !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;">
-        <div style="color: #38BDF8 !important; font-family: 'Outfit', sans-serif !important; font-size: 1.35rem !important; font-weight: 800 !important; margin-top: 0 !important; margin-bottom: 8px !important;">💚 Daily Aspirant Mindset & Mood Check-in</div>
-        <div style="color: #F8FAFC !important; font-size: 1.05rem !important; font-weight: 500 !important; margin: 0 !important;">How are you feeling right now during your study regimen?</div>
+    <div class="pwskills-card">
+        <div class="pwskills-title">💚 Daily Aspirant Mindset & Mood Check-in</div>
+        <div class="pwskills-desc">How are you feeling right now during your study regimen? Select your state below for tailored advice.</div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -617,12 +617,12 @@ elif nav_mode == "🧘 Mental Health & Wellness":
             st.success("✨ Mindful Reset Complete! Take a deep breath and return to study with clarity.")
 
     with rec_col2:
-        st.markdown("<h4 style='color: #FFFFFF;'>📞 Tele-MANAS Helplines</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #38BDF8 !important;'>📞 Tele-MANAS Helplines</h4>", unsafe_allow_html=True)
         st.markdown("""
-        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 14px; padding: 16px;">
-            <div style="color: #34D399; font-weight: 700; font-size: 1.05rem;">Govt. Tele-MANAS Helpline</div>
-            <div style="color: #FFFFFF; font-size: 1.2rem; font-weight: 800; margin-top: 4px;">📞 14416 / 1800-891-4416</div>
-            <div style="color: #94A3B8; font-size: 0.85rem; margin-top: 6px;">24x7 Free & Confidential Mental Health Counseling by Govt of India</div>
+        <div class="pwskills-card" style="border-color: #34D399 !important;">
+            <div style="color: #34D399 !important; font-weight: 800 !important; font-size: 1.15rem !important;">Govt. Tele-MANAS Helpline</div>
+            <div style="color: #FFFFFF !important; font-size: 1.4rem !important; font-weight: 800 !important; margin-top: 6px !important;">📞 14416 / 1800-891-4416</div>
+            <div style="color: #F8FAFC !important; font-size: 0.92rem !important; margin-top: 6px !important; font-weight: 500 !important;">24x7 Free & Confidential Mental Health Counseling by Govt of India</div>
         </div>
         """, unsafe_allow_html=True)
 

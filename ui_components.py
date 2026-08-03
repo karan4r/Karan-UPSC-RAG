@@ -9,32 +9,32 @@ def inject_custom_css():
 
     /* Global Next-Gen Dark Cyber Background */
     .stApp {
-        background-color: #060812 !important;
+        background-color: #0A0E1A !important;
         background-image: 
-            radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
-            radial-gradient(at 85% 85%, rgba(139, 92, 246, 0.08) 0px, transparent 50%) !important;
+            radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+            radial-gradient(at 85% 85%, rgba(139, 92, 246, 0.12) 0px, transparent 50%) !important;
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
-        color: #F8FAFC !important;
+        color: #FFFFFF !important;
     }
 
     /* Force text elements to high-contrast clear white/light gray */
-    html, body, p, span, div, li, label, .stMarkdown, .stMarkdown p, .stMarkdown span {
-        color: #E2E8F0 !important;
+    html, body, p, span, div, li, label, td, th, .stMarkdown, .stMarkdown p, .stMarkdown span {
+        color: #F1F5F9 !important;
     }
 
     /* Headings styling - Cyber Neon */
     h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
-        color: #F8FAFC !important;
+        color: #FFFFFF !important;
         font-family: 'Outfit', sans-serif !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         letter-spacing: -0.3px !important;
     }
 
     /* Form & Input Labels */
     label, div[data-testid="stWidgetLabel"] p, div[data-testid="stWidgetLabel"] span {
         color: #38BDF8 !important;
-        font-weight: 700 !important;
-        font-size: 0.95rem !important;
+        font-weight: 800 !important;
+        font-size: 0.98rem !important;
         letter-spacing: 0.3px !important;
         font-family: 'JetBrains Mono', monospace !important;
     }
@@ -48,22 +48,22 @@ def inject_custom_css():
 
     /* Sidebar Dark Glass Style */
     section[data-testid="stSidebar"] {
-        background-color: #070916 !important;
-        border-right: 1px solid rgba(56, 189, 248, 0.2) !important;
+        background-color: #0B0F1D !important;
+        border-right: 1.5px solid rgba(56, 189, 248, 0.3) !important;
     }
 
     section[data-testid="stSidebar"] * {
-        color: #CBD5E1 !important;
+        color: #F1F5F9 !important;
     }
 
     /* Futuristic Cyber Header Banner */
     .futuristic-header {
-        background: linear-gradient(135deg, rgba(13, 17, 32, 0.9) 0%, rgba(8, 11, 23, 0.95) 100%);
-        border: 1.5px solid rgba(56, 189, 248, 0.3);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+        border: 1.5px solid rgba(56, 189, 248, 0.4);
         border-radius: 20px;
         padding: 28px 34px;
         margin-bottom: 24px;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.15);
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.2);
         position: relative;
         overflow: hidden;
     }
@@ -90,8 +90,8 @@ def inject_custom_css():
     }
 
     .header-subtitle {
-        font-size: 0.95rem;
-        color: #94A3B8 !important;
+        font-size: 0.98rem;
+        color: #CBD5E1 !important;
         margin-top: 6px;
         font-weight: 600;
         letter-spacing: 0.2px;
@@ -115,53 +115,53 @@ def inject_custom_css():
     }
 
     .badge-primary {
-        background: rgba(14, 165, 233, 0.12);
+        background: rgba(14, 165, 233, 0.18);
         color: #38BDF8 !important;
-        border: 1px solid rgba(56, 189, 248, 0.3);
+        border: 1px solid rgba(56, 189, 248, 0.4);
     }
 
     .badge-success {
-        background: rgba(16, 185, 129, 0.12);
+        background: rgba(16, 185, 129, 0.18);
         color: #34D399 !important;
-        border: 1px solid rgba(52, 211, 153, 0.3);
+        border: 1px solid rgba(52, 211, 153, 0.4);
     }
 
     .badge-purple {
-        background: rgba(139, 92, 246, 0.12);
+        background: rgba(139, 92, 246, 0.18);
         color: #C084FC !important;
-        border: 1px solid rgba(192, 132, 252, 0.3);
+        border: 1px solid rgba(192, 132, 252, 0.4);
     }
 
     /* High Visibility Glowing Cyber Query Box Container */
     form[key="top_query_form"], form[key^="query_form_"], div[data-testid="stForm"] {
-        background: linear-gradient(135deg, rgba(13, 17, 32, 0.95) 0%, rgba(8, 11, 23, 0.98) 100%) !important;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
         border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
         border-radius: 18px !important;
         padding: 22px 26px !important;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.18) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.2) !important;
         margin-bottom: 24px !important;
     }
 
     form[key^="query_form_"] input, div[data-testid="stForm"] input {
-        border: 1px solid rgba(56, 189, 248, 0.4) !important;
-        background: #090D1A !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.5) !important;
+        background: #0B0F1D !important;
         color: #FFFFFF !important;
         font-size: 1.05rem !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         border-radius: 12px !important;
         padding: 12px 18px !important;
     }
 
     form[key^="query_form_"] input:focus, div[data-testid="stForm"] input:focus {
         border-color: #38BDF8 !important;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.5) !important;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.6) !important;
     }
 
     /* Cyber Neon Buttons */
     .stButton>button {
         border-radius: 12px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%) !important;
         border: none !important;
         color: #FFFFFF !important;
@@ -183,25 +183,25 @@ def inject_custom_css():
         flex-direction: row !important;
         flex-wrap: wrap !important;
         gap: 8px !important;
-        background: rgba(13, 17, 32, 0.8) !important;
+        background: rgba(15, 23, 42, 0.95) !important;
         padding: 8px !important;
         border-radius: 14px !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
         width: 100% !important;
     }
 
     div[data-testid="stRadio"] label,
     div[role="radiogroup"] label {
-        background: rgba(15, 23, 42, 0.6) !important;
+        background: rgba(30, 41, 59, 0.9) !important;
         border-radius: 10px !important;
-        padding: 8px 16px !important;
+        padding: 10px 18px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-size: 0.92rem !important;
-        font-weight: 600 !important;
-        color: #94A3B8 !important;
+        font-weight: 700 !important;
+        color: #CBD5E1 !important;
         cursor: pointer !important;
         transition: all 0.25s ease !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         margin: 2px !important;
         display: inline-flex !important;
         align-items: center !important;
@@ -210,17 +210,17 @@ def inject_custom_css():
     div[data-testid="stRadio"] label:hover,
     div[role="radiogroup"] label:hover {
         color: #FFFFFF !important;
-        background: rgba(56, 189, 248, 0.15) !important;
-        border-color: rgba(56, 189, 248, 0.4) !important;
+        background: rgba(56, 189, 248, 0.2) !important;
+        border-color: #38BDF8 !important;
     }
 
     div[data-testid="stRadio"] label[data-checked="true"],
     div[role="radiogroup"] label[aria-checked="true"],
     div[role="radiogroup"] label:has(input:checked) {
-        background: linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(124, 58, 237, 0.35) 100%) !important;
+        background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%) !important;
         color: #FFFFFF !important;
         border: 1px solid #38BDF8 !important;
-        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3) !important;
+        box-shadow: 0 4px 20px rgba(56, 189, 248, 0.45) !important;
     }
 
     div[data-testid="stRadio"] label p,
@@ -234,42 +234,42 @@ def inject_custom_css():
 
     /* Chat Message Bubbles in Cyber Dark Theme */
     div[data-testid="stChatMessage"] {
-        background: rgba(13, 17, 32, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        background: rgba(15, 23, 42, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         border-radius: 18px !important;
         padding: 22px 26px !important;
         margin-bottom: 18px !important;
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4) !important;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5) !important;
     }
 
     div[data-testid="stChatMessage"] p, div[data-testid="stChatMessage"] span, div[data-testid="stChatMessage"] li {
-        color: #E2E8F0 !important;
+        color: #F8FAFC !important;
         font-size: 0.98rem !important;
         line-height: 1.65 !important;
     }
 
     div[data-testid="stChatMessage"]:has(div[aria-label="Chat message from user"]) {
-        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(13, 17, 32, 0.9) 100%) !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.4) !important;
     }
 
     /* Expanders styling */
     div[data-testid="stExpander"] {
-        background: rgba(9, 13, 26, 0.85) !important;
-        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        background: rgba(15, 23, 42, 0.9) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.3) !important;
         border-radius: 14px !important;
         margin-bottom: 16px !important;
     }
 
     div[data-testid="stExpander"] summary {
         color: #38BDF8 !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
     }
 
     /* Metric Cards */
     .metric-card {
-        background: rgba(13, 17, 32, 0.75) !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.4) !important;
         border-radius: 16px !important;
         padding: 20px 24px !important;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
@@ -279,12 +279,12 @@ def inject_custom_css():
         font-family: 'Outfit', sans-serif !important;
         font-size: 2.2rem !important;
         font-weight: 800 !important;
-        color: #FFFFFF !important;
+        color: #38BDF8 !important;
     }
 
     .metric-label {
-        font-size: 0.82rem !important;
-        color: #94A3B8 !important;
+        font-size: 0.85rem !important;
+        color: #F8FAFC !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
@@ -292,8 +292,8 @@ def inject_custom_css():
 
     /* PW Skills Cards */
     .pwskills-card {
-        background: rgba(13, 17, 32, 0.75) !important;
-        border: 1.5px solid rgba(56, 189, 248, 0.25) !important;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
         border-radius: 16px !important;
         padding: 22px !important;
         margin-bottom: 16px !important;
@@ -302,31 +302,31 @@ def inject_custom_css():
 
     .pwskills-card:hover {
         border-color: #38BDF8 !important;
-        box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25) !important;
+        box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3) !important;
     }
 
     .pwskills-title {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #FFFFFF !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1.2rem !important;
+        font-weight: 800 !important;
+        color: #38BDF8 !important;
     }
 
     .pwskills-desc {
-        font-size: 0.92rem;
-        color: #CBD5E1 !important;
-        margin-top: 6px;
-        line-height: 1.5;
+        font-size: 0.95rem !important;
+        color: #F8FAFC !important;
+        margin-top: 6px !important;
+        line-height: 1.55 !important;
     }
 
     .pwskills-link {
         color: #38BDF8 !important;
-        font-weight: 700;
-        text-decoration: none;
+        font-weight: 700 !important;
+        text-decoration: none !important;
     }
 
     .pwskills-link:hover {
-        text-decoration: underline;
+        text-decoration: underline !important;
     }
     </style>
     """, unsafe_allow_html=True)
