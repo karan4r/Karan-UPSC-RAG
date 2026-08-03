@@ -19,11 +19,11 @@ def inject_custom_css():
 
     /* Force text elements to high-contrast clear white/light gray */
     html, body, p, span, div, li, label, .stMarkdown, .stMarkdown p, .stMarkdown span {
-        color: #CBD5E1 !important;
+        color: #E2E8F0 !important;
     }
 
     /* Headings styling - Cyber Neon */
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
         color: #F8FAFC !important;
         font-family: 'Outfit', sans-serif !important;
         font-weight: 700 !important;

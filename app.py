@@ -525,9 +525,9 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     
     # Mood Check-in Card
     st.markdown("""
-    <div style="background: rgba(13, 17, 32, 0.85); border: 1.5px solid rgba(56, 189, 248, 0.3); border-radius: 18px; padding: 22px; margin-bottom: 24px;">
-        <h4 style="color: #38BDF8; margin-top: 0; margin-bottom: 8px;">💚 Daily Aspirant Mindset & Mood Check-in</h4>
-        <p style="color: #CBD5E1; font-size: 0.95rem; margin: 0;">How are you feeling right now during your study regimen?</p>
+    <div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(11, 15, 26, 0.98) 100%) !important; border: 1.5px solid rgba(56, 189, 248, 0.45) !important; border-radius: 18px !important; padding: 24px !important; margin-bottom: 24px !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;">
+        <div style="color: #38BDF8 !important; font-family: 'Outfit', sans-serif !important; font-size: 1.35rem !important; font-weight: 800 !important; margin-top: 0 !important; margin-bottom: 8px !important;">💚 Daily Aspirant Mindset & Mood Check-in</div>
+        <div style="color: #F8FAFC !important; font-size: 1.05rem !important; font-weight: 500 !important; margin: 0 !important;">How are you feeling right now during your study regimen?</div>
     </div>
     """, unsafe_allow_html=True)
     
