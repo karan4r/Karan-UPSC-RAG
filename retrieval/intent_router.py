@@ -173,8 +173,8 @@ def classify_intent(query: str) -> IntentResult:
     if "backup_plan" in signals:
         return IntentResult("backup_plan_while_upsc", 0.7, signals)
 
-    if "academic" in signals or _matches(UPSC_PATTERNS, text):
-        return IntentResult("notes_or_explain_topic", 0.8, signals)
+    if "academic" in signals:
+        return IntentResult("notes_or_explain_topic", 0.85, signals)
 
     return IntentResult("general", 0.3, signals)
 

@@ -184,6 +184,16 @@ def split_answer_and_mcqs(text: str):
     return main_text, mcqs
 
 def render_assistant_message(content, idx, meta=None):
+    category = meta.get("category") if meta else None
+    
+    # Non-academic queries (mental health, backup plans, study routines, general advice)
+    if category == "non_academic":
+        st.markdown(content)
+        if meta:
+            with st.expander("🔍 System Retrieval & Context Signals"):
+                st.json(meta)
+        return
+
     main_text, mcqs = split_answer_and_mcqs(content)
     st.markdown(main_text)
     
@@ -198,7 +208,6 @@ def render_assistant_message(content, idx, meta=None):
             opt_c = opts.get("C", "")
             opt_d = opts.get("D", "")
             
-            # Question Card with Options on distinct separate lines
             st.markdown(f"""
             <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 22px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(15,23,42,0.03);">
                 <div style="font-size: 1.05rem; font-weight: 700; color: #0F172A; margin-bottom: 14px; line-height: 1.5;">
@@ -214,7 +223,6 @@ def render_assistant_message(content, idx, meta=None):
             </div>
             """, unsafe_allow_html=True)
             
-            # Interactive Answer Selection
             options_list = [f"{k}) {v}" for k, v in opts.items()]
             key = f"quiz_{idx}_{q_idx}"
             

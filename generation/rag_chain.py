@@ -5,10 +5,11 @@ from typing import Any, Optional
 from config import LLM_MODEL, get_groq_client
 from generation.prompts import (
     ACADEMIC_LLM_FALLBACK_TEMPLATE,
+    ACADEMIC_SYSTEM_PROMPT,
     ACADEMIC_USER_TEMPLATE,
     ACADEMIC_WEB_ONLY_TEMPLATE,
     GENERAL_FALLBACK,
-    SYSTEM_PROMPT,
+    NON_ACADEMIC_SYSTEM_PROMPT,
 )
 from ingestion.indexer import VectorIndex, load_index
 from retrieval.intent_router import (
@@ -18,7 +19,6 @@ from retrieval.intent_router import (
 )
 from retrieval.relevance import is_kb_relevant
 from retrieval.web_search import format_web_context, search_upsc_topic
-
 
 import json
 from pathlib import Path
@@ -35,11 +35,11 @@ class RAGChatbot:
             with open(self.pyq_path, encoding="utf-8") as f:
                 self.pyqs = json.load(f)
 
-    def _llm_complete(self, user_message: str) -> str:
+    def _llm_complete(self, user_message: str, system_prompt: str = ACADEMIC_SYSTEM_PROMPT) -> str:
         response = self.client.chat.completions.create(
             model=LLM_MODEL,
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
             ],
             temperature=0.3,
@@ -74,7 +74,7 @@ class RAGChatbot:
         return {
             "answer": record["answer_template"],
             "intent": record["intent"],
-            "category": record["category"],
+            "category": "non_academic" if record.get("category") != "academic" else "academic",
             "confidence": "high",
             "sources": [{"id": record["id"], "question": record["question"]}],
             "mode": "template",
@@ -141,7 +141,7 @@ class RAGChatbot:
             sources = []
             confidence = "medium"
 
-        answer = self._llm_complete(user_msg)
+        answer = self._llm_complete(user_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
 
         pyqs = self._find_relevant_pyqs(query)
         if pyqs:
@@ -191,7 +191,7 @@ class RAGChatbot:
             return {
                 "answer": clarification,
                 "intent": intent,
-                "category": "course_recommendation",
+                "category": "non_academic",
                 "confidence": "medium",
                 "sources": [],
                 "mode": "clarification",
@@ -222,11 +222,11 @@ class RAGChatbot:
 
         if intent == "general":
             fallback_msg = GENERAL_FALLBACK.format(query=query)
-            answer = self._llm_complete(fallback_msg)
+            answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
             return {
                 "answer": answer,
                 "intent": intent,
-                "category": "general",
+                "category": "non_academic",
                 "confidence": "low",
                 "sources": [],
                 "mode": "fallback",
@@ -240,16 +240,16 @@ class RAGChatbot:
             return result
 
         if "academic" in intent_result.signals or any(
-            w in query.lower() for w in ("explain", "notes", "causes", "what is")
+            w in query.lower() for w in ("explain", "notes", "causes", "what is", "fundamental rights", "article ", "amendment")
         ):
             return self._handle_academic(query, intent_result)
 
         fallback_msg = GENERAL_FALLBACK.format(query=query)
-        answer = self._llm_complete(fallback_msg)
+        answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
         return {
             "answer": answer,
             "intent": intent,
-            "category": "general",
+            "category": "non_academic",
             "confidence": "low",
             "sources": [],
             "mode": "fallback",
