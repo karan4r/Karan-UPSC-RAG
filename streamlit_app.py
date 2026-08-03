@@ -227,16 +227,16 @@ def render_assistant_message(content, idx, meta=None):
             opt_d = opts.get("D", "")
             
             st.markdown(f"""
-            <div style="background: rgba(13, 17, 32, 0.85); border: 1.5px solid rgba(56, 189, 248, 0.3); border-radius: 16px; padding: 22px; margin-bottom: 16px;">
-                <div style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 14px; line-height: 1.5;">
-                    <span style="color: #38BDF8;">Question {q_idx+1}:</span> {mcq['question']}
+            <div style="background: #1E293B !important; border: 1.5px solid rgba(56, 189, 248, 0.35) !important; border-radius: 16px !important; padding: 22px !important; margin-bottom: 16px !important;">
+                <div style="font-size: 1.05rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 14px !important; line-height: 1.5 !important;">
+                    <span style="color: #38BDF8 !important;">Question {q_idx+1}:</span> {mcq['question']}
                 </div>
-                <div style="font-size: 0.88rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">Options:</div>
+                <div style="font-size: 0.88rem !important; font-weight: 700 !important; color: #38BDF8 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; margin-bottom: 10px !important;">Options:</div>
                 <div style="margin-left: 4px; margin-bottom: 8px;">
-                    <div style="color: #F8FAFC; padding: 8px 14px; margin-bottom: 6px; background: rgba(9, 13, 26, 0.8); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.95rem; font-weight: 500;">• <strong>A)</strong> {opt_a}</div>
-                    <div style="color: #F8FAFC; padding: 8px 14px; margin-bottom: 6px; background: rgba(9, 13, 26, 0.8); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.95rem; font-weight: 500;">• <strong>B)</strong> {opt_b}</div>
-                    <div style="color: #F8FAFC; padding: 8px 14px; margin-bottom: 6px; background: rgba(9, 13, 26, 0.8); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.95rem; font-weight: 500;">• <strong>C)</strong> {opt_c}</div>
-                    <div style="color: #F8FAFC; padding: 8px 14px; margin-bottom: 6px; background: rgba(9, 13, 26, 0.8); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.95rem; font-weight: 500;">• <strong>D)</strong> {opt_d}</div>
+                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">A)</strong> {opt_a}</div>
+                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">B)</strong> {opt_b}</div>
+                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">C)</strong> {opt_c}</div>
+                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">D)</strong> {opt_d}</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
