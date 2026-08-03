@@ -770,8 +770,48 @@ elif nav_mode == "📝 Mock Tests & Assessment":
 # ==========================================
 elif nav_mode == "🎓 Live & Recorded Classes":
     st.markdown("<h3 style='color: #FFFFFF;'>🎓 UPSC Live Classes & Interactive Lecture Library</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Access structured daily lectures, review subject playlists, and use AI to generate concise revision notes from any class topic.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #94A3B8;'>Access live batch lectures from Physics Wallah (PW Live), review subject playlists, and generate instant AI notes.</p>", unsafe_allow_html=True)
     
+    pw_class_url = "https://www.pw.live/watch/?batchSlug=6a0d74b1acca9706aa169063&batchSubjectId=6a1d635dcf99bcb20ab85f01&subjectSlug=6a1d635dcf99bcb20ab85f01&topicSlug=all&scheduleId=6a3949598df846a134ed1e7d&type=penpencilvdo&isPPJEnabled=true&entryPoint=BATCH_LECTURE_VIDEOS_6a3949598df846a134ed1e7d&learn2Earn=true&parentId=6a0d74b1acca9706aa169063&vType=BATCHES&childId=6a3949598df846a134ed1e7d"
+
+    # Featured Live/Recorded Class Card
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, rgba(13, 17, 32, 0.95) 0%, rgba(8, 11, 23, 0.98) 100%); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <span style="background: rgba(239, 68, 68, 0.15); color: #EF4444; font-family: 'JetBrains Mono'; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                    🔴 LIVE BATCH LECTURE
+                </span>
+                <h4 style="color: #FFFFFF; font-size: 1.3rem; margin-top: 8px; margin-bottom: 4px;">🎓 PW Live Official Batch Class</h4>
+                <div style="color: #94A3B8; font-size: 0.92rem;">UPSC CSE Foundation Batch Lecture · PenPencil Video Portal</div>
+            </div>
+            <a href="{pw_class_url}" target="_blank" style="background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%); color: #FFFFFF; font-weight: 700; padding: 12px 22px; border-radius: 12px; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+                🎥 Open Fullscreen on PW.live →
+            </a>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Embedded Player Container
+    st.markdown("<h4 style='color: #38BDF8;'>📺 Interactive PW Class Portal</h4>", unsafe_allow_html=True)
+    
+    try:
+        import streamlit.components.v1 as components
+        components.iframe(pw_class_url, height=520, scrolling=True)
+    except Exception:
+        st.markdown(f'<iframe src="{pw_class_url}" width="100%" height="520" frameborder="0" allowfullscreen></iframe>', unsafe_allow_html=True)
+
+    c_btn1, c_btn2 = st.columns([1, 1])
+    with c_btn1:
+        st.markdown(f'<a href="{pw_class_url}" target="_blank" style="width:100%; display:block; text-align:center; background:rgba(56,189,248,0.15); color:#38BDF8; font-weight:700; padding:12px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); text-decoration:none;">🚀 Launch Class on PW Live (Direct Link)</a>', unsafe_allow_html=True)
+    with c_btn2:
+        if st.button("🤖 Generate AI Notes for this PW Class", key="btn_pw_class_notes", use_container_width=True):
+            st.session_state.pending_prompt = "Generate detailed UPSC revision notes for the active PW Live batch lecture topic. Include core concepts, definitions, key Mains analytical points, and practice Prelims MCQs."
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+    st.markdown("---")
+
     # Today's Live Schedule Timeline
     st.markdown("<h4 style='color: #38BDF8;'>📅 Today's Live Lecture Schedule</h4>", unsafe_allow_html=True)
     
