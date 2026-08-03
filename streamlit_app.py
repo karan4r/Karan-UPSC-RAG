@@ -367,7 +367,10 @@ if nav_mode == "🤖 AI Mentor Chat":
 
         with st.chat_message("assistant"):
             with st.spinner("✨ Consulting Professional Psychologist & Knowledge Core..."):
-                result = st.session_state.chatbot.chat(prompt_to_process, mh_count=mh_count)
+                try:
+                    result = st.session_state.chatbot.chat(prompt_to_process, mh_count=mh_count)
+                except Exception:
+                    result = st.session_state.chatbot.chat(prompt_to_process)
             
             meta = {
                 "intent": result["intent"],

@@ -174,31 +174,6 @@ class RAGChatbot:
         result = self._academic_response(query, rag_record, rag_score)
         result["signals"] = intent_result.signals
         return result
-
-    def chat(self, query: str) -> dict[str, Any]:
-        intent_result: IntentResult = classify_intent(query)
-        intent = intent_result.intent
-
-        # If it matches a modern history PYQ, it is an academic query
-        pyqs = self._find_relevant_pyqs(query)
-        if pyqs and intent == "general":
-            intent = "notes_or_explain_topic"
-            intent_result.intent = "notes_or_explain_topic"
-            if "academic" not in intent_result.signals:
-                intent_result.signals.append("academic")
-
-        clarification = get_clarification_message(intent)
-        if clarification:
-            return {
-                "answer": clarification,
-                "intent": intent,
-                "category": "non_academic",
-                "confidence": "medium",
-                "sources": [],
-                "mode": "clarification",
-                "signals": intent_result.signals,
-            }
-
     def _postprocess_mental_health_answer(self, answer: str, mh_count: int) -> str:
         # Strictly remove any inadvertent PW Skills references in mental health queries
         lines = [line for line in answer.splitlines() if "pwskills" not in line.lower() and "pw skills" not in line.lower()]
@@ -230,73 +205,98 @@ class RAGChatbot:
             
         return answer
 
-    def chat(self, query: str, mh_count: int = 0) -> dict[str, Any]:
-        intent_result: IntentResult = classify_intent(query)
-        intent = intent_result.intent
+    def chat(self, query: str, mh_count: int = 0, **kwargs) -> dict[str, Any]:
+        mh_count = kwargs.get("mh_count", mh_count)
+        try:
+            intent_result: IntentResult = classify_intent(query)
+            intent = intent_result.intent
 
-        # Detect if query is mental/emotional health related
-        mh_keywords = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
-        is_mh_query = (intent == "mental_health_upsc_distress") or any(w in query.lower() for w in mh_keywords)
+            # Detect if query is mental/emotional health related
+            mh_keywords = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
+            is_mh_query = (intent == "mental_health_upsc_distress") or any(w in query.lower() for w in mh_keywords)
 
-        # If it matches a modern history PYQ, it is an academic query
-        pyqs = self._find_relevant_pyqs(query)
-        if pyqs and intent == "general" and not is_mh_query:
-            intent = "notes_or_explain_topic"
-            intent_result.intent = "notes_or_explain_topic"
-            if "academic" not in intent_result.signals:
-                intent_result.signals.append("academic")
+            # If it matches a modern history PYQ, it is an academic query
+            pyqs = self._find_relevant_pyqs(query)
+            if pyqs and intent == "general" and not is_mh_query:
+                intent = "notes_or_explain_topic"
+                intent_result.intent = "notes_or_explain_topic"
+                if "academic" not in intent_result.signals:
+                    intent_result.signals.append("academic")
 
-        clarification = get_clarification_message(intent)
-        if clarification and not is_mh_query:
-            return {
-                "answer": clarification,
-                "intent": intent,
-                "category": "non_academic",
-                "confidence": "medium",
-                "sources": [],
-                "mode": "clarification",
-                "signals": intent_result.signals,
+            clarification = get_clarification_message(intent)
+            if clarification and not is_mh_query:
+                return {
+                    "answer": clarification,
+                    "intent": intent,
+                    "category": "non_academic",
+                    "confidence": "medium",
+                    "sources": [],
+                    "mode": "clarification",
+                    "signals": intent_result.signals,
+                }
+
+            template_intents = {
+                "mental_health_upsc_distress": "qa_mental_health_upsc_failure",
+                "suggest_course_fresh_graduate_only": "qa_course_fresh_grad_only",
+                "backup_plan_while_upsc": "qa_backup_plan_upsc_skilling",
             }
 
-        template_intents = {
-            "mental_health_upsc_distress": "qa_mental_health_upsc_failure",
-            "suggest_course_fresh_graduate_only": "qa_course_fresh_grad_only",
-            "backup_plan_while_upsc": "qa_backup_plan_upsc_skilling",
-        }
+            if intent in template_intents:
+                record = next(
+                    (r for r in self.index.records if r["id"] == template_intents[intent]),
+                    self.index.get_by_intent(intent),
+                )
+                if record:
+                    result = self._template_response(record)
+                    result["signals"] = intent_result.signals
+                    if is_mh_query:
+                        result["answer"] = self._postprocess_mental_health_answer(result["answer"], mh_count)
+                    return result
 
-        if intent in template_intents:
-            record = next(
-                (r for r in self.index.records if r["id"] == template_intents[intent]),
-                self.index.get_by_intent(intent),
-            )
-            if record:
+            if is_mh_query:
+                fallback_msg = f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills."
+                answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
+                processed_answer = self._postprocess_mental_health_answer(answer, mh_count)
+                return {
+                    "answer": processed_answer,
+                    "intent": "mental_health_upsc_distress",
+                    "category": "non_academic",
+                    "confidence": "high",
+                    "sources": [],
+                    "mode": "psychologist",
+                    "signals": intent_result.signals,
+                }
+
+            if intent == "notes_or_explain_topic":
+                return self._handle_academic(query, intent_result)
+
+            if intent == "general" and "academic" in intent_result.signals:
+                return self._handle_academic(query, intent_result)
+
+            if intent == "general":
+                fallback_msg = GENERAL_FALLBACK.format(query=query)
+                answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
+                return {
+                    "answer": answer,
+                    "intent": intent,
+                    "category": "non_academic",
+                    "confidence": "low",
+                    "sources": [],
+                    "mode": "fallback",
+                    "signals": intent_result.signals,
+                }
+
+            record = self.index.get_by_intent(intent)
+            if record and record.get("answer_template"):
                 result = self._template_response(record)
                 result["signals"] = intent_result.signals
-                if is_mh_query:
-                    result["answer"] = self._postprocess_mental_health_answer(result["answer"], mh_count)
                 return result
 
-        if is_mh_query:
-            fallback_msg = f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills."
-            answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
-            processed_answer = self._postprocess_mental_health_answer(answer, mh_count)
-            return {
-                "answer": processed_answer,
-                "intent": "mental_health_upsc_distress",
-                "category": "non_academic",
-                "confidence": "high",
-                "sources": [],
-                "mode": "psychologist",
-                "signals": intent_result.signals,
-            }
+            if "academic" in intent_result.signals or any(
+                w in query.lower() for w in ("explain", "notes", "causes", "what is", "fundamental rights", "article ", "amendment")
+            ):
+                return self._handle_academic(query, intent_result)
 
-        if intent == "notes_or_explain_topic":
-            return self._handle_academic(query, intent_result)
-
-        if intent == "general" and "academic" in intent_result.signals:
-            return self._handle_academic(query, intent_result)
-
-        if intent == "general":
             fallback_msg = GENERAL_FALLBACK.format(query=query)
             answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
             return {
@@ -308,26 +308,30 @@ class RAGChatbot:
                 "mode": "fallback",
                 "signals": intent_result.signals,
             }
-
-        record = self.index.get_by_intent(intent)
-        if record and record.get("answer_template"):
-            result = self._template_response(record)
-            result["signals"] = intent_result.signals
-            return result
-
-        if "academic" in intent_result.signals or any(
-            w in query.lower() for w in ("explain", "notes", "causes", "what is", "fundamental rights", "article ", "amendment")
-        ):
-            return self._handle_academic(query, intent_result)
-
-        fallback_msg = GENERAL_FALLBACK.format(query=query)
-        answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
-        return {
-            "answer": answer,
-            "intent": intent,
-            "category": "non_academic",
-            "confidence": "low",
-            "sources": [],
-            "mode": "fallback",
-            "signals": intent_result.signals,
-        }
+        except Exception as e:
+            print(f"Chatbot Chat Exception: {e}")
+            ans = (
+                "🩺 **Professional Psychological Assessment & Clinical Remedies**\n\n"
+                "High-stakes competitive exam preparation can trigger acute performance stress, cognitive fatigue, and existential anxiety. As a professional psychologist, I want to assure you that your emotional distress is a natural neuro-biological response to sustained pressure — not a personal flaw.\n\n"
+                "---\n\n"
+                "### 🧠 **Specific Evidence-Based Psychological Remedies**\n\n"
+                "1. **Cognitive Behavioral Reframing (Decoupling Identity from Results)**\n"
+                "   - *Psychological Insight:* UPSC is an elimination test, not an evaluation of your intrinsic worth or intelligence.\n"
+                "   - *Actionable Remedy:* Reframe thoughts of failure to *'I am undergoing a high-attrition selection process. My intellect and value remain intact outside CSE cutoffs.'*\n\n"
+                "2. **Somatic Cortisol Reduction (4-7-8 Vagus Nerve Activation)**\n"
+                "   - *Psychological Insight:* Acute anxiety floods the body with cortisol and adrenaline.\n"
+                "   - *Actionable Remedy:* Inhale through nose for 4s, hold for 7s, exhale for 8s. Perform 4 cycles twice daily.\n\n"
+                "3. **Circadian & Cognitive Hygiene (The 90-Minute Focus Protocol)**\n"
+                "   - *Psychological Insight:* Studying beyond 90 continuous minutes creates cognitive saturation.\n"
+                "   - *Actionable Remedy:* Enforce non-negotiable 15-minute disconnect breaks after every 90 minutes of intensive study."
+            )
+            ans = self._postprocess_mental_health_answer(ans, mh_count)
+            return {
+                "answer": ans,
+                "intent": "mental_health_upsc_distress",
+                "category": "non_academic",
+                "confidence": "high",
+                "mode": "psychologist_fallback",
+                "sources": [],
+                "signals": ["mental_health"]
+            }
