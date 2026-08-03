@@ -60,23 +60,23 @@ if "pending_prompt" not in st.session_state:
 if "nav_mode" not in st.session_state:
     st.session_state.nav_mode = "🤖 AI Mentor Chat"
 
-# Helper to parse practice MCQs in response
+# Helper to parse practice MCQs in response cleanly
 def parse_mcqs(text: str) -> list[dict]:
-    q_blocks = re.split(r'(?i)(?:\*\*?)?Question\s*\d+\s*(?::|\.|\*\*|–|-)+\s*', text)
+    q_blocks = re.split(r'(?i)(?:\*\*?)?(?:Question|Q)\s*\d+\s*(?::|\.|\*\*|–|-)+\s*', text)
     questions = []
     for block in q_blocks:
         block = block.strip()
         if not block:
             continue
         
-        opt_matches = list(re.finditer(r'(?i)(?:^|\n)\s*(?:-?\s*)?(?:\*\*?)?([A-D])[\).\s]\s*(.*?)(?=\n\s*(?:-?\s*)?(?:\*\*?)?[A-D][\).\s]|\n\s*(?:\*\*?)?(?:Correct|Explanation)|$)', block, re.DOTALL))
+        opt_matches = list(re.finditer(r'(?i)(?:^|\n)\s*(?:-?\s*)?(?:\*\*?)?([A-D])[\).\s\-]\s*(.*?)(?=\n\s*(?:-?\s*)?(?:\*\*?)?[A-D][\).\s\-]|\n\s*(?:\*\*?)?(?:Correct|Explanation|Answer)|$)', block, re.DOTALL))
         options = {}
         for m in opt_matches:
             letter = m.group(1).upper()
             content = m.group(2).strip().replace("**", "")
             options[letter] = content
             
-        ans_match = re.search(r'(?i)Correct\s*(?:Answer|Option)?\s*(?::|\*\*|:?\*\*)\s*([A-D])', block)
+        ans_match = re.search(r'(?i)(?:Correct|Answer|Option)\s*(?:Answer|Option)?\s*(?::|\*\*|:?\*\*)\s*(?:Option\s*)?([A-D])', block)
         correct_ans = ans_match.group(1).upper() if ans_match else None
         
         exp_match = re.search(r'(?i)Explanation\s*(?::|\*\*|:?\*\*)\s*(.*)', block, re.DOTALL)
@@ -87,11 +87,11 @@ def parse_mcqs(text: str) -> list[dict]:
             q_text = block[:opt_matches[0].start()].strip()
         q_text = re.sub(r'^\s*[:\-\*.]+\s*', '', q_text)
         
-        if options and correct_ans:
+        if options and len(options) >= 2:
             questions.append({
                 "question": q_text,
                 "options": options,
-                "correct": correct_ans,
+                "correct": correct_ans or "A",
                 "explanation": explanation
             })
     return questions
@@ -111,27 +111,52 @@ def render_assistant_message(content, idx, meta=None):
     
     if mcqs:
         st.write("---")
-        st.markdown("<h3 style='color: #2563EB;'>📝 Practice Quiz & Assessment</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color: #2563EB; font-family: Outfit; font-weight: 800; margin-bottom: 16px;'>📝 Practice Quiz & Prelims Assessment</h3>", unsafe_allow_html=True)
+        
         for q_idx, mcq in enumerate(mcqs):
-            st.markdown(f"<strong style='color: #0F172A;'>Question {q_idx+1}:</strong> <span style='color: #1E293B;'>{mcq['question']}</span>", unsafe_allow_html=True)
-            options_list = [f"{k}) {v}" for k, v in mcq["options"].items()]
+            # Render Question & Options Card
+            opts = mcq.get("options", {})
+            opt_a = opts.get("A", "")
+            opt_b = opts.get("B", "")
+            opt_c = opts.get("C", "")
+            opt_d = opts.get("D", "")
+            
+            st.markdown(f"""
+            <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 22px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(15,23,42,0.03);">
+                <div style="font-size: 1.05rem; font-weight: 700; color: #0F172A; margin-bottom: 14px; line-height: 1.5;">
+                    <span style="color: #2563EB;">Question {q_idx+1}:</span> {mcq['question']}
+                </div>
+                <div style="font-size: 0.9rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Options:</div>
+                <div style="margin-left: 6px; margin-bottom: 8px;">
+                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>A)</strong> {opt_a}</div>
+                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>B)</strong> {opt_b}</div>
+                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>C)</strong> {opt_c}</div>
+                    <div style="color: #0F172A; padding: 6px 12px; margin-bottom: 4px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9; font-size: 0.95rem;">• <strong>D)</strong> {opt_d}</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Interactive Answer Selection
+            options_list = [f"{k}) {v}" for k, v in opts.items()]
             key = f"quiz_{idx}_{q_idx}"
             
             selected = st.radio(
-                "Choose the correct option:",
+                f"Attempt Question {q_idx+1}:",
                 options_list,
                 index=None,
-                key=key,
-                label_visibility="collapsed"
+                key=key
             )
             
             if selected:
                 selected_letter = selected.split(")")[0].strip().upper()
                 if selected_letter == mcq["correct"]:
-                    st.success(f"🎉 **Correct!** The correct answer is **{mcq['correct']}**.")
+                    st.success(f"🎉 **Correct Answer!** You selected Option **{mcq['correct']}**.")
                 else:
-                    st.error(f"❌ **Incorrect.** You selected **{selected_letter}**. The correct answer is **{mcq['correct']}**.")
-                st.info(f"**Explanation:**\n{mcq['explanation']}")
+                    st.error(f"❌ **Incorrect.** You selected Option **{selected_letter}**. The correct answer is Option **{mcq['correct']}**.")
+                st.info(f"**Solution & Explanation:**\n\n- **Correct Option:** Option **{mcq['correct']}**\n- **Detailed Explanation:** {mcq['explanation']}")
+            else:
+                with st.expander(f"💡 Reveal Solution & Explanation for Question {q_idx+1}"):
+                    st.markdown(f"**Correct Option:** Option **{mcq['correct']}**\n\n**Detailed Explanation:**\n{mcq['explanation']}")
             st.write("")
             
     if meta:
@@ -386,7 +411,7 @@ elif nav_mode == "💼 Backup Plans & PW Skills":
             <div style="margin-top:10px;"><span style="color:#2563EB; font-weight:700;">Overlap: ~70%</span></div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🤖 Consult AI on RBI Prep", key="btn_rbi_plan_s", use_container_width=True):
+        if st.button("🤖 Consult AI on RBI Prep", key="btn_rbi_plan_fs", use_container_width=True):
             st.session_state.pending_prompt = "Explain how to prepare for RBI Grade B alongside UPSC CSE. Highlight syllabus overlap, timetable, and recommended sources."
             st.session_state.nav_mode = "🤖 AI Mentor Chat"
             st.rerun()
@@ -399,7 +424,7 @@ elif nav_mode == "💼 Backup Plans & PW Skills":
             <div style="margin-top:10px;"><span style="color:#2563EB; font-weight:700;">Overlap: ~85%</span></div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🤖 Consult AI on State PSC", key="btn_psc_plan_s", use_container_width=True):
+        if st.button("🤖 Consult AI on State PSC", key="btn_psc_plan_fs", use_container_width=True):
             st.session_state.pending_prompt = "How can I integrate State PSC preparation with UPSC CSE? What state-specific GS strategy should I follow?"
             st.session_state.nav_mode = "🤖 AI Mentor Chat"
             st.rerun()
@@ -412,7 +437,7 @@ elif nav_mode == "💼 Backup Plans & PW Skills":
             <div style="margin-top:10px;"><span style="color:#2563EB; font-weight:700;">Overlap: ~65%</span></div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("🤖 Consult AI on NABARD", key="btn_nabard_plan_s", use_container_width=True):
+        if st.button("🤖 Consult AI on NABARD", key="btn_nabard_plan_fs", use_container_width=True):
             st.session_state.pending_prompt = "Explain NABARD Grade A exam pattern and syllabus overlap with UPSC GS Paper 3 Agriculture."
             st.session_state.nav_mode = "🤖 AI Mentor Chat"
             st.rerun()
@@ -500,7 +525,7 @@ elif nav_mode == "💼 Backup Plans & PW Skills":
                     <div style="margin-top:10px;"><a href="{course['url']}" target="_blank" class="pwskills-link">🔗 View Course on PWSkills.com →</a></div>
                 </div>
                 """, unsafe_allow_html=True)
-                if st.button(f"🤖 Consult AI on {course['title']}", key=f"btn_pws_{course['title'][:10]}", use_container_width=True):
+                if st.button(f"🤖 Consult AI on {course['title']}", key=f"btn_pws_fs_{course['title'][:10]}", use_container_width=True):
                     st.session_state.pending_prompt = f"How can I balance UPSC preparation while pursuing the PW Skills course '{course['title']}' (https://pwskills.com)? Provide a balanced daily schedule."
                     st.session_state.nav_mode = "🤖 AI Mentor Chat"
                     st.rerun()
