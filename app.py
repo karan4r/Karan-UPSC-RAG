@@ -337,9 +337,6 @@ if nav_mode == "🤖 AI Mentor Chat":
         st.markdown("<br>", unsafe_allow_html=True)
         bottom_card_sub, bottom_card_val = render_query_card(f"below_output_{len(st.session_state.messages)}")
 
-    # Fixed bottom chat input as auxiliary fallback
-    bottom_chat_val = st.chat_input("Type your UPSC query, syllabus question, or career backup question here...")
-
     # Determine prompt to process
     prompt_to_process = None
     if st.session_state.pending_prompt:
@@ -349,8 +346,6 @@ if nav_mode == "🤖 AI Mentor Chat":
         prompt_to_process = top_val.strip()
     elif bottom_card_sub and bottom_card_val.strip():
         prompt_to_process = bottom_card_val.strip()
-    elif bottom_chat_val:
-        prompt_to_process = bottom_chat_val.strip()
 
     if prompt_to_process:
         st.session_state.messages.append({"role": "user", "content": prompt_to_process})
