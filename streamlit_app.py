@@ -317,31 +317,6 @@ def render_query_card(box_key: str):
 # VIEW 1: 🤖 AI MENTOR CHAT
 # ==========================================
 if nav_mode == "🤖 AI Mentor Chat":
-    st.markdown("<h3 style='color: #0F172A;'>🤖 UPSC AI RAG Mentor Copilot</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #475569;'>Ask anything regarding GS Mains syllabus topics, PYQs, backup plans, or mental wellbeing.</p>", unsafe_allow_html=True)
-    
-    # Quick Prompt Chips
-    st.markdown("<strong style='color: #2563EB;'>Curated AI Prompts:</strong>", unsafe_allow_html=True)
-    col_q1, col_q2, col_q3, col_q4 = st.columns(4)
-    with col_q1:
-        if st.button("📜 Fundamental Duties", use_container_width=True):
-            st.session_state.pending_prompt = "Explain Fundamental Duties under Article 51A with key court rulings and PYQs."
-            st.rerun()
-    with col_q2:
-        if st.button("🎓 1-Year Curriculum", use_container_width=True):
-            st.session_state.pending_prompt = "Recommend a comprehensive 1-year foundation course for a fresh graduate."
-            st.rerun()
-    with col_q3:
-        if st.button("💼 Career Backups", use_container_width=True):
-            st.session_state.pending_prompt = "What backup exams or skilling options should I consider alongside UPSC?"
-            st.rerun()
-    with col_q4:
-        if st.button("🕊️ Mental Wellbeing", use_container_width=True):
-            st.session_state.pending_prompt = "I am feeling stressed and overwhelmed by UPSC prep. How can I manage anxiety and where can I find support?"
-            st.rerun()
-
-    st.markdown("---")
-
     # If NO messages yet: Render prominent Query Box at the top
     top_sub, top_val = False, ""
     if not st.session_state.messages:
