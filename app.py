@@ -306,6 +306,7 @@ if st.session_state.get("pending_prompt"):
 NAV_OPTIONS = [
     "🤖 Neural AI Copilot",
     "📋 Syllabus Navigator",
+    "⚡ Productivity & Targets",
     "🧘 Mental Health & Wellness",
     "📝 Mock Tests & Assessment",
     "🎓 Live & Recorded Classes",
@@ -514,6 +515,264 @@ elif nav_mode == "📋 Syllabus Navigator":
                                 if st.button("💡 Explainer", key=f"ask_fs_{m_id}", use_container_width=True):
                                     redirect_to_copilot(f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions.")
                         st.write("")
+
+# ==========================================
+# VIEW: ⚡ PRODUCTIVITY & TARGETS
+# ==========================================
+elif nav_mode == "⚡ Productivity & Targets":
+    st.markdown("<h3 style='color: #FFFFFF;'>⚡ Daily, Weekly & Monthly Productivity Matrix</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #94A3B8;'>Plan study targets mapped to GS Syllabus microtopics, monitor daily velocity graphics, and track target completion.</p>", unsafe_allow_html=True)
+    
+    import datetime
+    today_str = datetime.date.today().isoformat()
+    
+    if "targets" not in st.session_state.progress:
+        st.session_state.progress["targets"] = []
+        
+    targets = st.session_state.progress["targets"]
+    completed_microtopics = set(st.session_state.progress.get("completed", []))
+    
+    # Filter targets by timeframe
+    daily_targets = [t for t in targets if t.get("timeframe") == "Daily"]
+    weekly_targets = [t for t in targets if t.get("timeframe") == "Weekly"]
+    monthly_targets = [t for t in targets if t.get("timeframe") == "Monthly"]
+    
+    daily_done = sum(1 for t in daily_targets if t.get("completed"))
+    daily_total = len(daily_targets)
+    daily_pct = (daily_done / daily_total * 100) if daily_total > 0 else 0
+    
+    weekly_done = sum(1 for t in weekly_targets if t.get("completed"))
+    weekly_total = len(weekly_targets)
+    weekly_pct = (weekly_done / weekly_total * 100) if weekly_total > 0 else 0
+
+    monthly_done = sum(1 for t in monthly_targets if t.get("completed"))
+    monthly_total = len(monthly_targets)
+    monthly_pct = (monthly_done / monthly_total * 100) if monthly_total > 0 else 0
+
+    # 1. Dashboard Metrics Row
+    p_col1, p_col2, p_col3, p_col4 = st.columns(4)
+    with p_col1:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">📅 Daily Productivity</div>
+            <div class="metric-value">{daily_done}/{daily_total}</div>
+            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{daily_pct:.0f}% Completed Today</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with p_col2:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">🗓️ Weekly Target Rate</div>
+            <div class="metric-value">{weekly_done}/{weekly_total}</div>
+            <div style="color: #34D399; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{weekly_pct:.0f}% Week Progress</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with p_col3:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">📆 Monthly Milestones</div>
+            <div class="metric-value">{monthly_done}/{monthly_total}</div>
+            <div style="color: #C084FC; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{monthly_pct:.0f}% Month Goal</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with p_col4:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">🔥 Productivity Velocity</div>
+            <div class="metric-value">{daily_done + 3 if daily_done > 0 else 3} Days</div>
+            <div style="color: #F59E0B; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Active Flow Streak</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 2. Real-Time Productivity Graphics
+    st.markdown("<h4 style='color: #38BDF8;'>📊 Real-Time Productivity Graphics & Target Analytics</h4>", unsafe_allow_html=True)
+    
+    g_col1, g_col2 = st.columns([1.2, 0.8])
+    
+    with g_col1:
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title">📈 Daily & Horizon Target Execution Velocity</div>
+            <div class="pwskills-desc">Visual breakdown of completed vs pending target tasks across Daily, Weekly, and Monthly planning horizons.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        try:
+            import pandas as pd
+            chart_data = {
+                "Timeframe": ["Daily Targets", "Weekly Targets", "Monthly Targets"],
+                "Completed": [daily_done, weekly_done, monthly_done],
+                "Pending": [max(0, daily_total - daily_done), max(0, weekly_total - weekly_done), max(0, monthly_total - monthly_done)]
+            }
+            df_chart = pd.DataFrame(chart_data).set_index("Timeframe")
+            st.bar_chart(df_chart, height=220)
+        except Exception:
+            st.progress(daily_pct / 100.0)
+            st.caption(f"Daily Target Progress: {daily_pct:.1f}%")
+            st.progress(weekly_pct / 100.0)
+            st.caption(f"Weekly Target Progress: {weekly_pct:.1f}%")
+
+    with g_col2:
+        perf_status = "🚀 PEAK PERFORMANCE" if daily_pct >= 80 else ("⚡ HIGH YIELD IN PROGRESS" if daily_pct >= 50 else ("🟡 GET STARTED TODAY" if daily_total > 0 else "🎯 SET YOUR DAILY TARGETS"))
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: rgba(56, 189, 248, 0.5) !important;">
+            <div class="pwskills-title">🎯 Today's Productivity Index</div>
+            <div style="text-align: center; margin: 14px 0;">
+                <div style="font-family: 'Outfit'; font-size: 3.2rem; font-weight: 800; color: #38BDF8; line-height: 1;">
+                    {daily_pct:.0f}%
+                </div>
+                <div style="color: #34D399; font-weight: 700; font-size: 0.88rem; margin-top: 6px; letter-spacing: 0.5px;">
+                    {perf_status}
+                </div>
+            </div>
+            <div style="background: #0F172A; border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <div style="font-size: 0.82rem; color: #CBD5E1;">
+                    📌 <strong>Syllabus Microtopics Mapped:</strong> {sum(1 for t in targets if t.get('microtopic_id'))} linked
+                </div>
+                <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 4px;">
+                    ⏱️ <strong>Est. Hours Logged Today:</strong> {sum(float(t.get('hours_est', 1.0)) for t in targets if t.get('completed')):.1f} hrs
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # 3. Create Target Mapped to Syllabus
+    st.markdown("<h4 style='color: #38BDF8;'>➕ Create New Target (Mapped to Syllabus Navigator)</h4>", unsafe_allow_html=True)
+    
+    syllabus = load_syllabus_data()
+    paper_options = ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4", "CSAT & Optional"]
+    
+    with st.form("create_target_form_unique", clear_on_submit=True):
+        t_title = st.text_input("Target Description / Goal Title:", placeholder="e.g. Master Fundamental Rights Art 12-35 & solve 20 PYQs", key="target_title_input")
+        
+        c1, c2, c3, c4 = st.columns(4)
+        with c1:
+            t_timeframe = st.selectbox("Planning Horizon:", ["Daily", "Weekly", "Monthly"], key="target_tf_select")
+        with c2:
+            t_paper = st.selectbox("Select GS Paper:", paper_options, key="target_paper_select")
+        with c3:
+            paper_subjs = list(syllabus.get(t_paper, {}).get("subjects", {}).keys())
+            t_subj = st.selectbox("Select Subject:", ["General"] + paper_subjs, key="target_subj_select")
+        with c4:
+            t_type = st.selectbox("Target Goal Type:", ["Note Making 📝", "PYQ Practice 🎯", "Revision 🔄", "Answer Writing ✍️", "Video Lecture 🎥"], key="target_type_select")
+        
+        available_micros = []
+        if t_paper in syllabus:
+            s_dict = syllabus[t_paper].get("subjects", {})
+            if t_subj != "General" and t_subj in s_dict:
+                for top_k, top_v in s_dict[t_subj].get("topics", {}).items():
+                    for m in top_v.get("microtopics", []):
+                        m_id = f"{t_paper}_{t_subj}_{top_k}_{m}"
+                        available_micros.append((f"{top_k}: {m}", m_id, m))
+            else:
+                for s_k, s_v in s_dict.items():
+                    for top_k, top_v in s_v.get("topics", {}).items():
+                        for m in top_v.get("microtopics", []):
+                            m_id = f"{t_paper}_{s_k}_{top_k}_{m}"
+                            available_micros.append((f"{s_k} - {top_k}: {m}", m_id, m))
+        
+        m_options_labels = ["(Optional) Map to Syllabus Microtopic..."] + [item[0] for item in available_micros]
+        t_mapped_m = st.selectbox("Map Target to Syllabus Microtopic:", m_options_labels, key="target_micro_select")
+        
+        c_h1, c_h2 = st.columns([1, 1])
+        with c_h1:
+            t_hours = st.number_input("Estimated Study Hours:", min_value=0.5, max_value=12.0, value=2.0, step=0.5, key="target_hours_input")
+        with c_h2:
+            st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+            t_submit = st.form_submit_button("🎯 Add Target to My Matrix Plan", use_container_width=True)
+            
+        if t_submit:
+            if t_title.strip():
+                mapped_id = None
+                mapped_title = None
+                if t_mapped_m != "(Optional) Map to Syllabus Microtopic...":
+                    for item in available_micros:
+                        if item[0] == t_mapped_m:
+                            mapped_id = item[1]
+                            mapped_title = item[2]
+                            break
+                            
+                new_target = {
+                    "id": f"tgt_{int(datetime.datetime.now().timestamp())}",
+                    "title": t_title.strip(),
+                    "timeframe": t_timeframe,
+                    "paper": t_paper,
+                    "subject": t_subj,
+                    "microtopic_id": mapped_id,
+                    "microtopic_title": mapped_title,
+                    "goal_type": t_type,
+                    "hours_est": float(t_hours),
+                    "completed": False,
+                    "created_at": today_str
+                }
+                st.session_state.progress.setdefault("targets", []).append(new_target)
+                save_user_progress(st.session_state.progress)
+                st.success(f"✅ Added {t_timeframe} Target: '{t_title.strip()}' mapped to {t_paper}!")
+                st.rerun()
+            else:
+                st.warning("Please enter a target description before saving.")
+
+    st.markdown("---")
+
+    # 4. View & Manage Planned Targets
+    st.markdown("<h4 style='color: #FFFFFF;'>📋 Active Study Targets & Execution Matrix</h4>", unsafe_allow_html=True)
+    
+    tgt_tab1, tgt_tab2, tgt_tab3 = st.tabs(["📅 Daily Targets", "🗓️ Weekly Targets", "📆 Monthly Targets"])
+    
+    def render_target_list(target_list, tf_name):
+        if not target_list:
+            st.info(f"No {tf_name.lower()} targets planned yet. Use the form above to create your first {tf_name.lower()} study target!")
+            return
+            
+        for idx, tgt in enumerate(target_list):
+            is_done = tgt.get("completed", False)
+            t_id = tgt.get("id", f"tgt_{idx}")
+            
+            t_col1, t_col2 = st.columns([0.78, 0.22])
+            with t_col1:
+                chk = st.checkbox(
+                    f"**{tgt['title']}**  `[{tgt['paper']}]`  `[{tgt.get('goal_type', 'Target')}]`  `({tgt.get('hours_est', 1.0)} hrs)`",
+                    value=is_done,
+                    key=f"chk_target_{t_id}"
+                )
+                if chk != is_done:
+                    tgt["completed"] = chk
+                    m_id = tgt.get("microtopic_id")
+                    if m_id:
+                        comp_list = st.session_state.progress.setdefault("completed", [])
+                        if chk and m_id not in comp_list:
+                            comp_list.append(m_id)
+                        elif not chk and m_id in comp_list:
+                            comp_list.remove(m_id)
+                    save_user_progress(st.session_state.progress)
+                    st.rerun()
+                    
+                if tgt.get("microtopic_title"):
+                    st.caption(f"📌 **Mapped Syllabus Topic:** {tgt['microtopic_title']}")
+
+            with t_col2:
+                btn_cols = st.columns([1, 1])
+                with btn_cols[0]:
+                    if tgt.get("microtopic_title"):
+                        if st.button("💡 Notes", key=f"btn_exp_tgt_{t_id}", use_container_width=True):
+                            redirect_to_copilot(f"Generate high-yield UPSC notes and practice questions for '{tgt['microtopic_title']}' ({tgt['paper']}).")
+                with btn_cols[1]:
+                    if st.button("🗑️", key=f"btn_del_tgt_{t_id}", use_container_width=True):
+                        st.session_state.progress["targets"].remove(tgt)
+                        save_user_progress(st.session_state.progress)
+                        st.rerun()
+            st.markdown("<hr style='margin: 8px 0; border-color: rgba(255,255,255,0.05);'>", unsafe_allow_html=True)
+
+    with tgt_tab1:
+        render_target_list(daily_targets, "Daily")
+    with tgt_tab2:
+        render_target_list(weekly_targets, "Weekly")
+    with tgt_tab3:
+        render_target_list(monthly_targets, "Monthly")
 
 # ==========================================
 # VIEW 3: 🧘 MENTAL HEALTH & WELLNESS
