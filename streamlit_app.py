@@ -63,7 +63,6 @@ if "nav_mode" not in st.session_state:
 def redirect_to_copilot(prompt: str):
     st.session_state.pending_prompt = prompt
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
-    st.session_state.main_nav_radio = "🤖 Neural AI Copilot"
     st.rerun()
 
 def count_previous_mental_health_turns(messages: list[dict]) -> int:
