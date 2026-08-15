@@ -96,7 +96,5 @@ NEVER refuse or say the topic is not in any knowledge base."""
 
 GENERAL_FALLBACK = """The student asked: {query}
 
-Give a direct, warm, and helpful non-academic response to the student's question.
-DO NOT use academic syllabus structures or Practice MCQs.
-If they need course recommendations, backup plans, or mental health support, provide official resources and websites (e.g. Tele MANAS: 1-800-891-4416 / https://telemanas.mohfw.gov.in/ or PW Skills: https://pwskills.com).
-Do not invent unverified course URLs or fake helpline numbers."""
+Provide a clear, helpful, and accurate response to the student's question.
+Answer their specific query directly. Do NOT include mental health helplines, Tele MANAS numbers, or psychological counseling cards unless the student's question is explicitly asking for mental health or emotional distress support."""

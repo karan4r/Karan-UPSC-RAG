@@ -67,7 +67,7 @@ def redirect_to_copilot(prompt: str):
 
 def count_previous_mental_health_turns(messages: list[dict]) -> int:
     count = 0
-    mh_words = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
+    mh_words = {"mental health", "depressed", "depression", "anxiety", "anxious", "hopeless", "burnout", "suicidal", "self harm", "emotional distress", "exam anxiety", "mental stress"}
     for msg in reversed(messages):
         if msg.get("role") == "user":
             content = msg.get("content", "").lower()

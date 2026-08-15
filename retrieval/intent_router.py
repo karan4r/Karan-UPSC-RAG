@@ -73,18 +73,19 @@ UPSC_PATTERNS = [
 ]
 
 MENTAL_HEALTH_PATTERNS = [
-    r"depress",
-    r"anxiety",
-    r"anxious",
-    r"stress(ed)?",
-    r"mental health",
-    r"hopeless",
+    r"\bmental health\b",
+    r"\banxi(ety|ous)\b",
+    r"\b(mental|exam|study|prep|feeling|too much)\s+stress(ed)?\b",
+    r"(?<!heat\s)(?<!yield\s)(?<!water\s)(?<!thermal\s)(?<!financial\s)(?<!banking\s)\bstress(ed)?\b",
+    r"(?<!great\s)(?<!monsoon\s)(?<!tropical\s)(?<!economic\s)\bdepress(ed|ion)?\b",
+    r"\bhopeless\b",
     r"can'?t cope",
     r"broken me",
-    r"suicid",
-    r"self[- ]harm",
-    r"overwhelmed emotionally",
-    r"emotionally",
+    r"\bsuicid",
+    r"\bself[- ]harm\b",
+    r"\boverwhelmed\b",
+    r"\bemotionally\s+(distress|breakdown|drained|exhausted|unstable|struggling)\b",
+    r"\bemotional distress\b",
 ]
 
 FAILURE_PATTERNS = [
@@ -115,6 +116,43 @@ ACADEMIC_PATTERNS = [
     r"movement",
     r"reform",
     r"act of \d",
+    r"supreme court",
+    r"high court",
+    r"judgement",
+    r"constitution",
+    r"\bgdp\b",
+    r"inflation",
+    r"monsoon",
+    r"agriculture",
+    r"geography",
+    r"history",
+    r"governance",
+    r"polity",
+    r"economy",
+    r"environment",
+    r"science",
+    r"technology",
+    r"ethics",
+    r"disaster",
+    r"security",
+    r"international relations",
+    r"treaty",
+    r"policy",
+    r"scheme",
+    r"amendment",
+    r"preamble",
+    r"judiciary",
+    r"legislature",
+    r"executive",
+    r"fiscal",
+    r"monetary",
+    r"banking",
+    r"heat stress",
+    r"water stress",
+    r"yield stress",
+    r"financial stress",
+    r"great depression",
+    r"monsoon depression",
 ]
 
 
@@ -152,7 +190,10 @@ def classify_intent(query: str) -> IntentResult:
     signals = _collect_signals(text)
 
     # Priority: mental health > fresh grad course > backup > academic
-    if "mental_health" in signals:
+    # Note: If academic signal is present and no personal distress indicators (e.g. 'i', 'me', 'my', 'feeling', 'am') exist, prioritize academic.
+    has_personal_distress = any(w in text.split() for w in ("i", "me", "my", "feeling", "am", "feel", "i'm"))
+    
+    if "mental_health" in signals and (has_personal_distress or "academic" not in signals):
         return IntentResult("mental_health_upsc_distress", 0.95, signals)
 
     if (
@@ -175,6 +216,9 @@ def classify_intent(query: str) -> IntentResult:
 
     if "academic" in signals:
         return IntentResult("notes_or_explain_topic", 0.85, signals)
+
+    if "mental_health" in signals:
+        return IntentResult("mental_health_upsc_distress", 0.95, signals)
 
     return IntentResult("general", 0.3, signals)
 

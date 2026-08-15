@@ -207,13 +207,14 @@ class RAGChatbot:
 
     def chat(self, query: str, mh_count: int = 0, **kwargs) -> dict[str, Any]:
         mh_count = kwargs.get("mh_count", mh_count)
+        is_mh_query = False
+        intent = "general"
         try:
             intent_result: IntentResult = classify_intent(query)
             intent = intent_result.intent
 
-            # Detect if query is mental/emotional health related
-            mh_keywords = {"mental", "depressed", "depression", "stress", "anxiety", "anxious", "hopeless", "burnout", "overwhelmed", "emotional", "distress", "sadness", "loneliness", "panic"}
-            is_mh_query = (intent == "mental_health_upsc_distress") or any(w in query.lower() for w in mh_keywords)
+            # Detect if query is strictly mental/emotional health related
+            is_mh_query = (intent == "mental_health_upsc_distress")
 
             # If it matches a modern history PYQ, it is an academic query
             pyqs = self._find_relevant_pyqs(query)
@@ -275,12 +276,12 @@ class RAGChatbot:
 
             if intent == "general":
                 fallback_msg = GENERAL_FALLBACK.format(query=query)
-                answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
+                answer = self._llm_complete(fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
                 return {
                     "answer": answer,
                     "intent": intent,
-                    "category": "non_academic",
-                    "confidence": "low",
+                    "category": "academic",
+                    "confidence": "medium",
                     "sources": [],
                     "mode": "fallback",
                     "signals": intent_result.signals,
@@ -298,40 +299,56 @@ class RAGChatbot:
                 return self._handle_academic(query, intent_result)
 
             fallback_msg = GENERAL_FALLBACK.format(query=query)
-            answer = self._llm_complete(fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT)
+            answer = self._llm_complete(fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
             return {
                 "answer": answer,
                 "intent": intent,
-                "category": "non_academic",
-                "confidence": "low",
+                "category": "academic",
+                "confidence": "medium",
                 "sources": [],
                 "mode": "fallback",
                 "signals": intent_result.signals,
             }
         except Exception as e:
             print(f"Chatbot Chat Exception: {e}")
-            ans = (
-                "🩺 **Professional Psychological Assessment & Clinical Remedies**\n\n"
-                "High-stakes competitive exam preparation can trigger acute performance stress, cognitive fatigue, and existential anxiety. As a professional psychologist, I want to assure you that your emotional distress is a natural neuro-biological response to sustained pressure — not a personal flaw.\n\n"
-                "---\n\n"
-                "### 🧠 **Specific Evidence-Based Psychological Remedies**\n\n"
-                "1. **Cognitive Behavioral Reframing (Decoupling Identity from Results)**\n"
-                "   - *Psychological Insight:* UPSC is an elimination test, not an evaluation of your intrinsic worth or intelligence.\n"
-                "   - *Actionable Remedy:* Reframe thoughts of failure to *'I am undergoing a high-attrition selection process. My intellect and value remain intact outside CSE cutoffs.'*\n\n"
-                "2. **Somatic Cortisol Reduction (4-7-8 Vagus Nerve Activation)**\n"
-                "   - *Psychological Insight:* Acute anxiety floods the body with cortisol and adrenaline.\n"
-                "   - *Actionable Remedy:* Inhale through nose for 4s, hold for 7s, exhale for 8s. Perform 4 cycles twice daily.\n\n"
-                "3. **Circadian & Cognitive Hygiene (The 90-Minute Focus Protocol)**\n"
-                "   - *Psychological Insight:* Studying beyond 90 continuous minutes creates cognitive saturation.\n"
-                "   - *Actionable Remedy:* Enforce non-negotiable 15-minute disconnect breaks after every 90 minutes of intensive study."
-            )
-            ans = self._postprocess_mental_health_answer(ans, mh_count)
-            return {
-                "answer": ans,
-                "intent": "mental_health_upsc_distress",
-                "category": "non_academic",
-                "confidence": "high",
-                "mode": "psychologist_fallback",
-                "sources": [],
-                "signals": ["mental_health"]
-            }
+            if is_mh_query:
+                ans = (
+                    "🩺 **Professional Psychological Assessment & Clinical Remedies**\n\n"
+                    "High-stakes competitive exam preparation can trigger acute performance stress, cognitive fatigue, and existential anxiety. As a professional psychologist, I want to assure you that your emotional distress is a natural neuro-biological response to sustained pressure — not a personal flaw.\n\n"
+                    "---\n\n"
+                    "### 🧠 **Specific Evidence-Based Psychological Remedies**\n\n"
+                    "1. **Cognitive Behavioral Reframing (Decoupling Identity from Results)**\n"
+                    "   - *Psychological Insight:* UPSC is an elimination test, not an evaluation of your intrinsic worth or intelligence.\n"
+                    "   - *Actionable Remedy:* Reframe thoughts of failure to *'I am undergoing a high-attrition selection process. My intellect and value remain intact outside CSE cutoffs.'*\n\n"
+                    "2. **Somatic Cortisol Reduction (4-7-8 Vagus Nerve Activation)**\n"
+                    "   - *Psychological Insight:* Acute anxiety floods the body with cortisol and adrenaline.\n"
+                    "   - *Actionable Remedy:* Inhale through nose for 4s, hold for 7s, exhale for 8s. Perform 4 cycles twice daily.\n\n"
+                    "3. **Circadian & Cognitive Hygiene (The 90-Minute Focus Protocol)**\n"
+                    "   - *Psychological Insight:* Studying beyond 90 continuous minutes creates cognitive saturation.\n"
+                    "   - *Actionable Remedy:* Enforce non-negotiable 15-minute disconnect breaks after every 90 minutes of intensive study."
+                )
+                ans = self._postprocess_mental_health_answer(ans, mh_count)
+                return {
+                    "answer": ans,
+                    "intent": "mental_health_upsc_distress",
+                    "category": "non_academic",
+                    "confidence": "high",
+                    "mode": "psychologist_fallback",
+                    "sources": [],
+                    "signals": ["mental_health"]
+                }
+            else:
+                try:
+                    fallback_msg = f"Produce a structured UPSC GS answer for the query: {query}"
+                    ans = self._llm_complete(fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
+                except Exception:
+                    ans = f"### Overview for **{query}**\n\nThis UPSC topic requires structured analysis covering core facts, significance, and exam relevance. Please review official GS syllabus guidelines and standard reference materials."
+                return {
+                    "answer": ans,
+                    "intent": intent if 'intent' in locals() else "notes_or_explain_topic",
+                    "category": "academic",
+                    "confidence": "medium",
+                    "mode": "fallback",
+                    "sources": [],
+                    "signals": intent_result.signals if 'intent_result' in locals() else ["academic"]
+                }
