@@ -790,13 +790,19 @@ elif nav_mode == "💞 Relationship Management":
         "drain_level": 3
     })
     
-    # Calculate Syllabus Progress Metrics
+    # Calculate Syllabus Progress Metrics from Syllabus Navigator
     total_micros = 623
     completed_set = set(st.session_state.progress.get("completed", []))
     completed_cnt = len(completed_set)
     covered_pct = (completed_cnt / total_micros * 100) if total_micros > 0 else 0
     left_pct = max(0.0, 100.0 - covered_pct)
     left_cnt = max(0, total_micros - completed_cnt)
+
+    # Calculate Paper-wise breakdown from Syllabus Navigator
+    gs1_done = sum(1 for m in completed_set if m.startswith("GS Paper 1"))
+    gs2_done = sum(1 for m in completed_set if m.startswith("GS Paper 2"))
+    gs3_done = sum(1 for m in completed_set if m.startswith("GS Paper 3"))
+    gs4_done = sum(1 for m in completed_set if m.startswith("GS Paper 4"))
 
     # 1. Diagnostic & Parameter Input Form
     with st.expander("⚙️ Configure Your Emotional & Relationship Profile", expanded=True):
@@ -837,7 +843,7 @@ elif nav_mode == "💞 Relationship Management":
             with r_col3:
                 drain = st.slider("Emotional Drain Level (1-10):", min_value=1, max_value=10, value=int(rel_state.get("drain_level", 3)), key="emo_drain_slider")
                 
-            r_saved = st.form_submit_button("💾 Save Profile & Update Mapping Graphics", use_container_width=True)
+            r_saved = st.form_submit_button("💾 Save Profile & Correlate with Syllabus Navigator", use_container_width=True)
             if r_saved:
                 st.session_state.progress["relationship_state"] = {
                     "status": rel_status,
@@ -845,7 +851,7 @@ elif nav_mode == "💞 Relationship Management":
                     "drain_level": drain
                 }
                 save_user_progress(st.session_state.progress)
-                st.success("✅ Relationship Profile Updated!")
+                st.success("✅ Profile Saved & Syllabus Correlation Updated!")
                 st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -890,13 +896,13 @@ elif nav_mode == "💞 Relationship Management":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Graphical Analysis Section
+    # Graphical Analysis & Paper-wise Correlation Section
     g_col1, g_col2 = st.columns([1.2, 0.8])
     with g_col1:
         st.markdown("""
         <div class="pwskills-card">
-            <div class="pwskills-title">📈 Syllabus Progress vs. Emotional Toll Correlation</div>
-            <div class="pwskills-desc">Visual comparison of completed syllabus microtopics against remaining topics and current emotional bandwidth drain.</div>
+            <div class="pwskills-title">📈 Syllabus Progress vs. Emotional Energy Allocation</div>
+            <div class="pwskills-desc">Real-time comparison of completed syllabus microtopics against remaining topics and current emotional bandwidth drain.</div>
         </div>
         """, unsafe_allow_html=True)
         
@@ -915,11 +921,12 @@ elif nav_mode == "💞 Relationship Management":
 
     with g_col2:
         curr_status = rel_state.get("status", status_options[0])
+        curr_emo = rel_state.get("emotional_situation", "🟢 Emotionally Stable & Supported")
         
         if "Ghosting" in curr_status:
             adv_color = "#EF4444"
             adv_title = "👻 Ghosting Recovery Protocol Active"
-            adv_msg = f"Ghosting causes cognitive loops. You have **{left_cnt} syllabus microtopics left**. Every 30 mins spent checking last seen/messages costs 1 microtopic of GS Polity or Economy. Execute 45-min Pomodoro sprints now!"
+            adv_msg = f"Ghosting causes cognitive loops. You have **{left_cnt} microtopics left**. Every 30 mins spent checking last seen/messages costs 1 microtopic of GS Polity or Economy. Execute 25-min Pomodoro sprints now!"
         elif "One-Sided" in curr_status:
             adv_color = "#F59E0B"
             adv_title = "💘 Unrequited Energy Re-direction"
@@ -951,63 +958,136 @@ elif nav_mode == "💞 Relationship Management":
 
     st.markdown("---")
 
-    # 3. Dual Management Ecosystem (Prep + Relationship Protocol)
-    st.markdown("<h4 style='color: #38BDF8;'>🛡️ Dual Management Ecosystem: Relationship & Prep Rules</h4>", unsafe_allow_html=True)
-    
-    eco_col1, eco_col2, eco_col3 = st.columns(3)
-    with eco_col1:
-        st.markdown("""
-        <div class="pwskills-card">
-            <div class="pwskills-title">🕒 Strict Time-Blocking Protocol</div>
-            <div class="pwskills-desc">
-                • <strong>09:00 AM - 08:00 PM:</strong> 100% UPSC Prep Darkout (Phone on DND/Study Mode).<br>
-                • <strong>08:00 PM - 08:30 PM:</strong> Fixed Relationship/Personal Check-in Window.<br>
-                • <strong>10:30 PM Onwards:</strong> Zero Overthinking / Sleep Hygiene.
+    # 3. DYNAMIC CORRELATION ENGINE: SYLLABUS NAVIGATOR X RELATIONSHIP PROFILE
+    st.markdown("<h4 style='color: #38BDF8;'>🔗 Dynamic Correlation: Syllabus Navigator Completion x Relationship Profile</h4>", unsafe_allow_html=True)
+    st.caption("Deep analytical cross-mapping between your active microtopics in Syllabus Navigator and your current relationship inputs:")
+
+    est_days_lost = round(drain * 1.8, 1)
+    cognitive_capacity = max(10, 100 - drain * 9)
+
+    c_matrix_col1, c_matrix_col2 = st.columns([1, 1])
+    with c_matrix_col1:
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: rgba(56, 189, 248, 0.4) !important;">
+            <div class="pwskills-title" style="color: #38BDF8 !important;">📊 GS Paper Microtopic Breakdown</div>
+            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>GS Paper 1 (History, Geography, Society):</strong> <span style="color: #34D399; font-weight: 700;">{gs1_done}/386</span> completed ({ (gs1_done/386*100) if 386>0 else 0:.1f}%)<br>
+                • <strong>GS Paper 2 (Polity, Governance, IR):</strong> <span style="color: #34D399; font-weight: 700;">{gs2_done}/89</span> completed ({ (gs2_done/89*100) if 89>0 else 0:.1f}%)<br>
+                • <strong>GS Paper 3 (Economy, Environment, Sci-Tech):</strong> <span style="color: #34D399; font-weight: 700;">{gs3_done}/73</span> completed ({ (gs3_done/73*100) if 73>0 else 0:.1f}%)<br>
+                • <strong>GS Paper 4 (Ethics, Integrity, Aptitude):</strong> <span style="color: #34D399; font-weight: 700;">{gs4_done}/69</span> completed ({ (gs4_done/69*100) if 69>0 else 0:.1f}%)
+            </div>
+            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+                🎯 <strong>Syllabus Navigator Status:</strong> {completed_cnt} of 623 microtopics checked ({covered_pct:.1f}% finished).
             </div>
         </div>
         """, unsafe_allow_html=True)
-    with eco_col2:
-        st.markdown("""
-        <div class="pwskills-card">
-            <div class="pwskills-title">🧠 Cognitive Re-framing Rules</div>
-            <div class="pwskills-desc">
-                • <strong>If Ghosted:</strong> Silence is a clear answer. Do not seek closure from the person who created the chaos.<br>
-                • <strong>If One-Sided:</strong> Your self-worth isn't determined by someone's inability to see your value.<br>
-                • <strong>If Distracted:</strong> The IAS officer list does not pause for personal drama.
+
+    with c_matrix_col2:
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: rgba(245, 158, 11, 0.4) !important;">
+            <div class="pwskills-title" style="color: #F59E0B !important;">⚠️ Emotional Drag & Rumination Impact</div>
+            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>Current Emotional Toll:</strong> <span style="color: #F59E0B; font-weight: 700;">{drain}/10 Drain Index</span><br>
+                • <strong>Cognitive Retention Capacity:</strong> <span style="color: #38BDF8; font-weight: 700;">{cognitive_capacity}%</span> effective bandwidth<br>
+                • <strong>Estimated Productivity Loss:</strong> <span style="color: #EF4444; font-weight: 700;">~{est_days_lost} days/month</span> lost to rumination & anxiety<br>
+                • <strong>Vulnerable Syllabus Area:</strong> <span style="color: #C084FC; font-weight: 700;">{"GS4 Ethics & GS2 Polity" if drain>=6 else "GS1 & GS3 Core Subjects"}</span>
+            </div>
+            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+                💡 <strong>Corelation Finding:</strong> Relationship stress level ({drain}/10) directly threatens the remaining {left_cnt} microtopics if left unmanaged.
             </div>
         </div>
         """, unsafe_allow_html=True)
-    with eco_col3:
-        st.markdown("""
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 4. ACTIONABLE & IMPLEMENTABLE SUGGESTIONS SUITE
+    st.markdown("<h4 style='color: #38BDF8;'>💡 Tailored Implementable Suggestions for Prep & Relationship Management</h4>", unsafe_allow_html=True)
+    st.caption("Concrete, actionable protocols designed for immediate daily implementation based on your correlation profile:")
+
+    # Determine dynamic suggestion content based on profile
+    if drain >= 7:
+        quota_recommendation = (
+            f"**High Drain Execution Quota ({drain}/10):** Do NOT force 3-hour study blocks—rumination will shatter retention. "
+            f"Switch to **25-minute Pomodoro Sprints**. Set a daily quota of **2 to 3 microtopics** from Syllabus Navigator. "
+            f"Start your day with lightweight GS4 Ethics microtopics (*Emotional Intelligence*, *Human Values*) to build emotional composure before tackling heavy topics."
+        )
+    elif drain >= 4:
+        quota_recommendation = (
+            f"**Moderate Drain Execution Quota ({drain}/10):** Maintain **45-minute focus sprints**. "
+            f"Target **4 microtopics daily** from Syllabus Navigator ({left_cnt} remaining). "
+            f"Complete your hardest GS2 Polity or GS3 Economy microtopic before 11:30 AM before checking any personal messages."
+        )
+    else:
+        quota_recommendation = (
+            f"**Low Drain Execution Quota ({drain}/10):** Your emotional state is stable. "
+            f"Capitalize on high focus: Execute **90-minute deep work blocks** targeting **5 to 6 microtopics daily** to finish the remaining {left_cnt} microtopics ahead of schedule!"
+        )
+
+    sug_col1, sug_col2 = st.columns(2)
+    with sug_col1:
+        st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title">📚 Syllabus Safeguard Technique</div>
-            <div class="pwskills-desc">
-                • <strong>Emotional Urge Rule:</strong> Whenever tempted to text/overthink, solve 5 PYQs first.<br>
-                • <strong>Microtopic Mapping:</strong> Link every study target to daily progress so relationship stress never halts momentum.
+            <div class="pwskills-title" style="color: #34D399 !important;">🎯 1. Microtopic Execution Plan (Syllabus Navigator)</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                {quota_recommendation}
             </div>
         </div>
         """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #F59E0B !important;">⚡ 2. The "5-PYQ Circuit Breaker" Rule</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                <strong>Implementation Protocol:</strong> Whenever you feel an overwhelming urge to check message timestamps, stalk social media, or overthink <em>"{curr_status}"</em>:<br>
+                1. <strong>Enforce a 10-minute pause:</strong> Step away from your phone.<br>
+                2. <strong>Solve 5 PYQs:</strong> Open Syllabus Navigator or PYQ section and solve 5 MCQs or write 1 Mains answer outline.<br>
+                3. <strong>Reward mechanism:</strong> Only after completing 5 PYQs are you allowed to look at your personal phone. This re-wires dopamine loops towards UPSC targets.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with sug_col2:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #C084FC !important;">📖 3. GS4 Ethics Syllabus Integration (Study Your Situation)</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                <strong>Syllabus Synergy:</strong> Convert your personal relationship dynamics into GS4 Ethics study material!<br>
+                • <strong>Current Inputs:</strong> <em>{curr_status}</em> ({curr_emo})<br>
+                • <strong>GS4 Syllabus Topic:</strong> <em>Emotional Intelligence (EI), Moral Fortitude & Attitude</em><br>
+                • <strong>Exam Task:</strong> Write a 150-word Mains practice answer on: <em>"How does Emotional Intelligence help a civil servant handle unprovoked personal stress while maintaining administrative efficiency?"</em>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #38BDF8 !important;">⏰ 4. Strict Time-Fence & Digital Boundary Schedule</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>08:30 AM - 07:30 PM (UPSC Darkout):</strong> Phone on DND/Focus Mode. Zero checking of relationship chats. Focus 100% on Syllabus Navigator microtopics.<br>
+                • <strong>07:30 PM - 08:15 PM (Personal Window):</strong> Fixed 45-min window for personal communication, calls, or reflection logging.<br>
+                • <strong>10:15 PM Onwards (Digital Shutdown):</strong> No screen time or overthinking before sleep to ensure cognitive recovery.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 5. 1-CLICK AI COUNSELOR CONSULTATION GENERATOR
+    st.markdown("<h4 style='color: #38BDF8;'>🤖 1-Click AI Counselor Consultation (Pre-Filled Profile & Syllabus Data)</h4>", unsafe_allow_html=True)
+    st.caption("Click the button below to launch an AI Consultation tailored to your exact relationship profile and remaining microtopics:")
+
+    consult_prompt = (
+        f"I am preparing for UPSC Civil Services. My current relationship dynamics is '{curr_status}', my emotional state is '{curr_emo}', and my emotional drain level is {drain}/10. "
+        f"According to my Syllabus Navigator tracking, I have completed {completed_cnt} microtopics ({covered_pct:.1f}%) and have {left_cnt} microtopics remaining ({left_pct:.1f}%). "
+        f"Please provide an empathetic, highly structured, 7-day actionable study and emotional recovery plan that allows me to protect my study targets while managing relationship stress effectively."
+    )
+
+    if st.button("🚀 Launch AI Counselor Consultation for My Profile & Syllabus Progress", key="btn_rel_correlated_consult", use_container_width=True):
+        redirect_to_copilot(consult_prompt)
 
     st.markdown("---")
 
-    # 4. 1-Click AI Relationship Copilot Consultations
-    st.markdown("<h4 style='color: #38BDF8;'>🤖 AI Relationship & Prep Counselor Prompt Suite</h4>", unsafe_allow_html=True)
-    st.caption("Click any prompt to consult our empathetic AI copilot for tailored psychological strategies:")
-    
-    c_col1, c_col2, c_col3 = st.columns(3)
-    with c_col1:
-        if st.button("👻 Handling Ghosting & Overthinking", key="btn_rel_ghost", use_container_width=True):
-            redirect_to_copilot(f"I am an UPSC aspirant experiencing ghosting/sudden silence in my relationship. My emotional drain is {drain}/10, and I have {left_cnt} syllabus microtopics left ({left_pct:.1f}%). Give me an empathetic psychological strategy and a daily study routine to stop overthinking and refocus on GS Mains.")
-    with c_col2:
-        if st.button("💘 Overcoming One-Sided Love", key="btn_rel_onesided", use_container_width=True):
-            redirect_to_copilot(f"I am struggling with one-sided love and unrequited attachment while preparing for UPSC CSE. How do I detach emotionally, channel my energy into syllabus completion ({covered_pct:.1f}% covered so far), and maintain mental peace?")
-    with c_col3:
-        if st.button("💔 Post-Breakup Study Plan", key="btn_rel_breakup", use_container_width=True):
-            redirect_to_copilot(f"I recently went through a breakup during my UPSC CSE preparation. How do I cope with grief and heartbreak while ensuring my target of completing {left_cnt} remaining microtopics stays on track?")
-
-    st.markdown("---")
-
-    # 5. Private Emotional Venting & Reflection Journal
+    # 6. Private Emotional Venting & Reflection Journal
     st.markdown("<h4 style='color: #FFFFFF;'>✍️ Aspirant Emotional Venting & Mindset Reflection Log</h4>", unsafe_allow_html=True)
     st.caption("Vent your thoughts here to clear cognitive clutter before starting your study session. Kept strictly private in local session state.")
     
@@ -1022,6 +1102,7 @@ elif nav_mode == "💞 Relationship Management":
         st.session_state.progress["emotional_journal"] = journal_text
         save_user_progress(st.session_state.progress)
         st.success("✨ Reflection Log Saved! Your mind is clear—time to focus on the syllabus.")
+
 
 # ==========================================
 # VIEW 3: 🧘 MENTAL HEALTH & WELLNESS
