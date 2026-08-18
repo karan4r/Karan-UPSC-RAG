@@ -36,6 +36,15 @@ class RAGChatbot:
             with open(self.pyq_path, encoding="utf-8") as f:
                 self.pyqs = json.load(f)
 
+    def generate_academic_fallback(self, query: str) -> str:
+        return generate_academic_fallback(query)
+
+    def _generate_academic_fallback(self, query: str) -> str:
+        return generate_academic_fallback(query)
+
+    def _extract_topic_name(self, query: str) -> str:
+        return extract_topic_name(query)
+
     def _llm_complete(self, user_message: str, system_prompt: str = ACADEMIC_SYSTEM_PROMPT) -> str:
         models_to_try = [LLM_MODEL] + [m for m in LLM_FALLBACK_MODELS if m != LLM_MODEL]
         seen = set()
@@ -193,131 +202,90 @@ class RAGChatbot:
             "mode": mode,
         }
 
-    def _extract_topic_name(self, query: str) -> str:
-        quote_match = re.search(r"['\"]([^'\"]{3,100})['\"]", query)
-        if quote_match:
-            return quote_match.group(1).strip()
-        clean = re.sub(r"(?i)^(explain|notes on|what is|describe|provide|give|generate|details on)\s+(the\s+)?(upsc\s+)?(mains\s+)?(microtopic\s+)?", "", query).strip()
-        clean = re.sub(r"(?i)\s+under\s+.*$", "", clean).strip()
-        clean = re.sub(r"(?i)\s+in\s+detail.*$", "", clean).strip()
-        clean = re.sub(r"(?i)\s+include\s+.*$", "", clean).strip()
-        return clean.capitalize() if clean else query
+def extract_topic_name(query: str) -> str:
+    quote_match = re.search(r"['\"]([^'\"]{3,100})['\"]", query)
+    if quote_match:
+        return quote_match.group(1).strip()
+    clean = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe|provide|give|generate|details on)\s+(the\s+)?(upsc\s+)?(mains\s+)?(microtopic\s+)?", "", query).strip()
+    clean = re.sub(r"(?i)\s+under\s+.*$", "", clean).strip()
+    clean = re.sub(r"(?i)\s+in\s+detail.*$", "", clean).strip()
+    clean = re.sub(r"(?i)\s+include\s+.*$", "", clean).strip()
+    return clean.capitalize() if clean else query
 
-    def _ensure_prelims_questions(self, answer: str, query: str) -> str:
-        if "Prelims Practice Questions" in answer or "Practice MCQs" in answer or "Question 1:" in answer or "📝" in answer:
-            return answer
 
-        topic = self._extract_topic_name(query)
+def generate_academic_fallback(query: str) -> str:
+    title = extract_topic_name(query)
+    return (
+        f"### 📖 Expert Faculty Explanation & Core Analysis\n\n"
+        f"**Executive Summary (Prelims-Ready Definition):**\n"
+        f"**{title}** is a pivotal subject area within the UPSC Civil Services Examination framework (covering General Studies Papers 1, 2, 3 & 4), demanding a structured understanding of foundational concepts, historical evolution, statutory provisions, and modern policy implications.\n\n"
+        f"---\n\n"
+        f"#### 🔍 Key Conceptual Dimensions & Detailed Breakdown:\n"
+        f"1. **Core Conceptual & Theoretical Foundation:**\n"
+        f"   - **Background & Context:** {title} represents a fundamental component of India's governance, administrative history, and constitutional evolution.\n"
+        f"   - **Institutional Framework:** Encompasses key statutory bodies, judicial interpretations, legislative mandates, and executive policies.\n\n"
+        f"2. **Socio-Economic & Administrative Significance:**\n"
+        f"   - **Governance Impact:** Drives public service delivery, constitutional accountability, institutional transparency, and administrative efficiency.\n"
+        f"   - **Stakeholder Dynamics:** Affects citizen rights, socio-economic equity, structural reforms, and sustainable growth objectives.\n\n"
+        f"3. **Contemporary Challenges & Policy Bottlenecks:**\n"
+        f"   - **Implementation Challenges:** Capacity constraints, inter-departmental coordination gaps, and resource allocation issues.\n"
+        f"   - **Reform Roadmap:** Emphasizes technology integration, administrative decentralization, and evidence-based policy formulation.\n\n"
+        f"---\n\n"
+        f"### 📊 Exam Angle (Prelims & Mains Focus)\n\n"
+        f"🎯 **UPSC Prelims Strategic Focus:**\n"
+        f"- Pay specific attention to chronological timelines, specific constitutional articles/statutes, nodal ministries, and committee recommendations related to **{title}**.\n"
+        f"- Watch out for common Prelims trap options regarding executive discretion vs statutory mandates.\n\n"
+        f"🎯 **UPSC Mains Strategic Focus (GS Answer Writing):**\n"
+        f"- **Introduction:** Start with a 2-line contextual definition or recent landmark event/statute related to **{title}**.\n"
+        f"- **Body:** Structure using multi-dimensional subheadings (Administrative, Economic, Social, Legal) backed by Law Commission / NITI Aayog / Supreme Court precedents.\n"
+        f"- **Conclusion:** End with a forward-looking, constructive 'Way Forward' emphasizing constitutional vision.\n\n"
+        f"---\n\n"
+        f"### 📝 Practice MCQs & UPSC Prelims Questions\n\n"
+        f"**Question 1:** With reference to **{title}**, consider the following statements:\n"
+        f"1. It forms an integral component of the operational framework of Indian governance.\n"
+        f"2. Comprehensive analysis requires evaluating core statutory principles alongside contemporary policy initiatives.\n\n"
+        f"Which of the statements given above is/are correct?\n"
+        f"- **A)** 1 only\n"
+        f"- **B)** 2 only\n"
+        f"- **C)** Both 1 and 2\n"
+        f"- **D)** Neither 1 nor 2\n\n"
+        f"**Correct Answer:** Option **C**\n"
+        f"**Explanation:** Both statements are correct. UPSC Civil Services examination requires synthesizing theoretical foundations with contemporary policy developments regarding {title}.\n\n"
+        f"**Question 2:** Which of the following best reflects the primary objective of institutional reforms surrounding **{title}**?\n"
+        f"- **A)** Restricting administrative oversight and statutory compliance\n"
+        f"- **B)** Enhancing institutional transparency, public welfare, and operational efficiency\n"
+        f"- **C)** Promoting rigid centralized decision-making frameworks\n"
+        f"- **D)** Excluding non-governmental stakeholders from policy processes\n\n"
+        f"**Correct Answer:** Option **B**\n"
+        f"**Explanation:** Effective administrative governance models focus on public welfare, transparency, institutional efficiency, and citizen-centric service delivery.\n\n"
+        f"---\n\n"
+        f"### ✍️ UPSC Mains Practice Questions\n\n"
+        f"**Mains Question 1 (10 Marks / 150 Words):**\n"
+        f"\"Critically analyze the significance of **{title}** in modern Indian governance. What structural measures are required to strengthen its effective implementation?\"\n\n"
+        f"- **Answer Writing Approach:**\n"
+        f"  - **Introduction (20-30 words):** Define {title} in the context of GS Mains syllabus.\n"
+        f"  - **Core Body Points (90-100 words):**\n"
+        f"    - Highlight key administrative and constitutional benefits.\n"
+        f"    - Discuss existing institutional bottlenecks (capacity, funding, coordination).\n"
+        f"  - **Conclusion (20-30 words):** Conclude with actionable recommendations and NITI Aayog / Committee references.\n\n"
+        f"**Mains Question 2 (15 Marks / 250 Words):**\n"
+        f"\"Examine the multi-dimensional challenges associated with **{title}**. How can policy intervention and digital governance tools resolve these bottlenecks? Discuss.\"\n\n"
+        f"- **Answer Writing Approach:**\n"
+        f"  - **Introduction (30-40 words):** Provide contextual background and current relevance of {title}.\n"
+        f"  - **Core Body Points (160-180 words):**\n"
+        f"    - Multi-dimensional breakdown: Legal & Statutory, Socio-Economic, Administrative.\n"
+        f"    - Role of technology (e-governance, AI, data analytics) in overcoming bottlenecks.\n"
+        f"  - **Conclusion / Way Forward (30-40 words):** Forward-looking roadmap aligned with constitutional ideals."
+    )
 
-        prelims_block = (
-            f"\n\n### 📝 Practice MCQs & UPSC Prelims Questions\n\n"
-            f"**Question 1:** With reference to **{topic}**, consider the following statements:\n"
-            f"1. It forms an essential component of the UPSC General Studies syllabus framework.\n"
-            f"2. Comprehensive analysis requires integrating statutory provisions with recent policy developments.\n"
-            f"Which of the statements given above is/are correct?\n"
-            f"- **A)** 1 only\n"
-            f"- **B)** 2 only\n"
-            f"- **C)** Both 1 and 2\n"
-            f"- **D)** Neither 1 nor 2\n\n"
-            f"**Correct Answer:** Option **C**\n"
-            f"**Explanation:** Both statements are correct. UPSC Civil Services examination requires evaluating core concepts alongside contemporary policy developments.\n\n"
-            f"**Question 2:** Which of the following best reflects the primary objective of studying **{topic}** for UPSC?\n"
-            f"- **A)** Isolated rote learning\n"
-            f"- **B)** Developing multi-dimensional conceptual clarity for GS answer writing\n"
-            f"- **C)** Technical specialization in non-syllabus areas\n"
-            f"- **D)** None of the above\n\n"
-            f"**Correct Answer:** Option **B**\n"
-            f"**Explanation:** UPSC evaluates candidates on analytical synthesis, policy awareness, and structured answer writing."
-        )
-        return answer.strip() + prelims_block
-
-    def _ensure_mains_questions(self, answer: str, query: str) -> str:
-        if "Mains Practice Questions" in answer or "Mains Question" in answer or "✍️" in answer:
-            return answer
-        
-        topic = self._extract_topic_name(query)
-
-        mains_block = (
-            f"\n\n### ✍️ UPSC Mains Practice Questions\n\n"
-            f"**Mains Question 1 (10 Marks / 150 Words):**\n"
-            f"\"Critically analyze the core dimensions and significance of **{topic}** in contemporary Indian governance.\"\n\n"
-            f"- **Answer Writing Approach:**\n"
-            f"  - **Introduction:** Briefly define {topic} and contextualize its syllabus relevance (2 lines).\n"
-            f"  - **Core Body Points:** Highlight key structural aspects, constitutional/statutory links, and challenges.\n"
-            f"  - **Conclusion / Way Forward:** Provide a balanced, forward-looking concluding observation.\n\n"
-            f"**Mains Question 2 (15 Marks / 250 Words):**\n"
-            f"\"Discuss the major challenges associated with **{topic}**. What policy and institutional reforms are needed to address these effectively?\"\n\n"
-            f"- **Answer Writing Approach:**\n"
-            f"  - **Introduction:** Contextual background of {topic}.\n"
-            f"  - **Core Body Points:** Multi-dimensional analysis (Administrative, Legal, Socio-Economic) + Committee references.\n"
-            f"  - **Conclusion / Way Forward:** Actionable policy recommendations for sustainable outcomes."
-        )
-        return answer.strip() + mains_block
+    def generate_academic_fallback(self, query: str) -> str:
+        return generate_academic_fallback(query)
 
     def _generate_academic_fallback(self, query: str) -> str:
-        title = self._extract_topic_name(query)
-        return (
-            f"### 📖 Expert Faculty Explanation & Core Analysis\n\n"
-            f"**Executive Summary (Prelims-Ready Definition):**\n"
-            f"**{title}** is a pivotal subject area within the UPSC Civil Services Examination framework (covering General Studies Papers 1, 2, 3 & 4), demanding a structured understanding of foundational concepts, historical evolution, statutory provisions, and modern policy implications.\n\n"
-            f"---\n\n"
-            f"#### 🔍 Key Conceptual Dimensions & Detailed Breakdown:\n"
-            f"1. **Core Conceptual & Theoretical Foundation:**\n"
-            f"   - **Background & Context:** {title} represents a fundamental component of India's governance, administrative history, and constitutional evolution.\n"
-            f"   - **Institutional Framework:** Encompasses key statutory bodies, judicial interpretations, legislative mandates, and executive policies.\n\n"
-            f"2. **Socio-Economic & Administrative Significance:**\n"
-            f"   - **Governance Impact:** Drives public service delivery, constitutional accountability, institutional transparency, and administrative efficiency.\n"
-            f"   - **Stakeholder Dynamics:** Affects citizen rights, socio-economic equity, structural reforms, and sustainable growth objectives.\n\n"
-            f"3. **Contemporary Challenges & Policy Bottlenecks:**\n"
-            f"   - **Implementation Challenges:** Capacity constraints, inter-departmental coordination gaps, and resource allocation issues.\n"
-            f"   - **Reform Roadmap:** Emphasizes technology integration, administrative decentralization, and evidence-based policy formulation.\n\n"
-            f"---\n\n"
-            f"### 📊 Exam Angle (Prelims & Mains Focus)\n\n"
-            f"🎯 **UPSC Prelims Strategic Focus:**\n"
-            f"- Pay specific attention to chronological timelines, specific constitutional articles/statutes, nodal ministries, and committee recommendations related to **{title}**.\n"
-            f"- Watch out for common Prelims trap options regarding executive discretion vs statutory mandates.\n\n"
-            f"🎯 **UPSC Mains Strategic Focus (GS Answer Writing):**\n"
-            f"- **Introduction:** Start with a 2-line contextual definition or recent landmark event/statute related to **{title}**.\n"
-            f"- **Body:** Structure using multi-dimensional subheadings (Administrative, Economic, Social, Legal) backed by Law Commission / NITI Aayog / Supreme Court precedents.\n"
-            f"- **Conclusion:** End with a forward-looking, constructive 'Way Forward' emphasizing constitutional vision.\n\n"
-            f"---\n\n"
-            f"### 📝 Practice MCQs & UPSC Prelims Questions\n\n"
-            f"**Question 1:** With reference to **{title}**, consider the following statements:\n"
-            f"1. It forms an integral component of the operational framework of Indian governance.\n"
-            f"2. Comprehensive analysis requires evaluating core statutory principles alongside contemporary policy initiatives.\n\n"
-            f"Which of the statements given above is/are correct?\n"
-            f"- **A)** 1 only\n"
-            f"- **B)** 2 only\n"
-            f"- **C)** Both 1 and 2\n"
-            f"- **D)** Neither 1 nor 2\n\n"
-            f"**Correct Answer:** Option **C**\n"
-            f"**Explanation:** Both statements are correct. UPSC Civil Services examination requires synthesizing theoretical foundations with contemporary policy developments regarding {title}.\n\n"
-            f"**Question 2:** Which of the following best reflects the primary objective of institutional reforms surrounding **{title}**?\n"
-            f"- **A)** Restricting administrative oversight and statutory compliance\n"
-            f"- **B)** Enhancing institutional transparency, public welfare, and operational efficiency\n"
-            f"- **C)** Promoting rigid centralized decision-making frameworks\n"
-            f"- **D)** Excluding non-governmental stakeholders from policy processes\n\n"
-            f"**Correct Answer:** Option **B**\n"
-            f"**Explanation:** Effective administrative governance models focus on public welfare, transparency, institutional efficiency, and citizen-centric service delivery.\n\n"
-            f"---\n\n"
-            f"### ✍️ UPSC Mains Practice Questions\n\n"
-            f"**Mains Question 1 (10 Marks / 150 Words):**\n"
-            f"\"Critically analyze the significance of **{title}** in modern Indian governance. What structural measures are required to strengthen its effective implementation?\"\n\n"
-            f"- **Answer Writing Approach:**\n"
-            f"  - **Introduction (20-30 words):** Define {title} in the context of GS Mains syllabus.\n"
-            f"  - **Core Body Points (90-100 words):**\n"
-            f"    - Highlight key administrative and constitutional benefits.\n"
-            f"    - Discuss existing institutional bottlenecks (capacity, funding, coordination).\n"
-            f"  - **Conclusion (20-30 words):** Conclude with actionable recommendations and NITI Aayog / Committee references.\n\n"
-            f"**Mains Question 2 (15 Marks / 250 Words):**\n"
-            f"\"Examine the multi-dimensional challenges associated with **{title}**. How can policy intervention and digital governance tools resolve these bottlenecks? Discuss.\"\n\n"
-            f"- **Answer Writing Approach:**\n"
-            f"  - **Introduction (30-40 words):** Provide contextual background and current relevance of {title}.\n"
-            f"  - **Core Body Points (160-180 words):**\n"
-            f"    - Multi-dimensional breakdown: Legal & Statutory, Socio-Economic, Administrative.\n"
-            f"    - Role of technology (e-governance, AI, data analytics) in overcoming bottlenecks.\n"
-            f"  - **Conclusion / Way Forward (30-40 words):** Forward-looking roadmap aligned with constitutional ideals."
-        )
+        return generate_academic_fallback(query)
+
+    def _extract_topic_name(self, query: str) -> str:
+        return extract_topic_name(query)
 
     def _handle_academic(self, query: str, intent_result: IntentResult) -> dict[str, Any]:
         results = self.index.search(query, top_k=1, category="academic")

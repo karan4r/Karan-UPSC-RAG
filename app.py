@@ -2,7 +2,7 @@ import streamlit as st
 import json
 import re
 from pathlib import Path
-from generation.rag_chain import RAGChatbot
+from generation.rag_chain import RAGChatbot, generate_academic_fallback
 from ui_components import inject_custom_css, render_futuristic_header
 
 # Set Streamlit Page Configuration
@@ -203,11 +203,9 @@ def split_answer_and_mcqs(text: str):
 def render_assistant_message(content, idx, meta=None):
     # Intercept any legacy or cached fallback output and sanitize it into a rich teacher answer
     if "requires structured analysis" in content or "Overview for" in content:
-        from generation.rag_chain import RAGChatbot
         clean_q = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe)\s+", "", content.split("\n")[0]).strip()
         clean_q = re.sub(r"[\*#`]", "", clean_q).strip()
-        bot = RAGChatbot()
-        content = bot._generate_academic_fallback(clean_q if clean_q else "UPSC Syllabus Topic")
+        content = generate_academic_fallback(clean_q if clean_q else "UPSC Syllabus Topic")
 
     category = meta.get("category") if meta else None
     
@@ -390,11 +388,9 @@ if nav_mode == "🤖 Neural AI Copilot":
             
             ans_content = result.get("answer", "")
             if "requires structured analysis" in ans_content or "Overview for" in ans_content:
-                from generation.rag_chain import RAGChatbot
                 clean_q = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe)\s+", "", ans_content.split("\n")[0]).strip()
                 clean_q = re.sub(r"[\*#`]", "", clean_q).strip()
-                bot = RAGChatbot()
-                ans_content = bot._generate_academic_fallback(clean_q if clean_q else prompt_to_process)
+                ans_content = generate_academic_fallback(clean_q if clean_q else prompt_to_process)
                 result["answer"] = ans_content
 
             meta = {
