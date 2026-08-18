@@ -1659,7 +1659,7 @@ elif nav_mode == "🎓 Live & Recorded Classes":
 # ==========================================
 # VIEW 6: 💼 BACKUP PLANS & PW SKILLS
 # ==========================================
-elif nav_mode == "💼 Backup Plans & PW Skills":
+elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"]:
     st.markdown("<h3 style='color: #FFFFFF;'>💼 Career Backup Plans & PW Skills Courses</h3>", unsafe_allow_html=True)
     st.markdown("<p style='color: #94A3B8;'>Strategic parallel exam options and industry-aligned technical courses from <a href='https://pwskills.com' target='_blank' style='color:#38BDF8; font-weight:700;'>PW Skills</a> to guarantee long-term career security.</p>", unsafe_allow_html=True)
     
