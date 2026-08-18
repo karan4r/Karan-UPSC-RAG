@@ -48,7 +48,7 @@ def save_user_progress(progress_data):
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-if "chatbot" not in st.session_state:
+if "chatbot" not in st.session_state or not hasattr(st.session_state.chatbot, "_generate_academic_fallback"):
     st.session_state.chatbot = RAGChatbot()
 
 if "progress" not in st.session_state:
@@ -390,9 +390,11 @@ if nav_mode == "🤖 Neural AI Copilot":
             
             ans_content = result.get("answer", "")
             if "requires structured analysis" in ans_content or "Overview for" in ans_content:
+                from generation.rag_chain import RAGChatbot
                 clean_q = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe)\s+", "", ans_content.split("\n")[0]).strip()
                 clean_q = re.sub(r"[\*#`]", "", clean_q).strip()
-                ans_content = st.session_state.chatbot._generate_academic_fallback(clean_q if clean_q else prompt_to_process)
+                bot = RAGChatbot()
+                ans_content = bot._generate_academic_fallback(clean_q if clean_q else prompt_to_process)
                 result["answer"] = ans_content
 
             meta = {
