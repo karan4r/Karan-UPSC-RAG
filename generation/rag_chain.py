@@ -15,6 +15,7 @@ from generation.prompts import (
     ACADEMIC_USER_TEMPLATE,
     ACADEMIC_WEB_ONLY_TEMPLATE,
     GENERAL_FALLBACK,
+    MENTAL_HEALTH_SYLLABUS_SYSTEM_PROMPT,
     NON_ACADEMIC_SYSTEM_PROMPT,
     RELATIONSHIP_SYLLABUS_SYSTEM_PROMPT,
 )
@@ -420,6 +421,69 @@ class RAGChatbot:
 
         return answer
 
+    def _generate_mental_health_syllabus_fallback(self, query: str) -> str:
+        mood_match = re.search(r"current mental state is '([^']+)'", query, re.I)
+        curr_mood = mood_match.group(1) if mood_match else "Mental Health State"
+
+        trigger_match = re.search(r"primary stress trigger is '([^']+)'", query, re.I)
+        curr_trigger = trigger_match.group(1) if trigger_match else "Syllabus Anxiety"
+
+        energy_match = re.search(r"daily focus energy level is (\d+/\d+|\d+)", query, re.I)
+        energy_str = energy_match.group(1) if energy_match else "5/10"
+
+        comp_match = re.search(r"completed (\d+) microtopics \(([^)]+)\)", query, re.I)
+        comp_str = f"{comp_match.group(1)} ({comp_match.group(2)})" if comp_match else "Completed Microtopics"
+
+        rem_match = re.search(r"have (\d+) microtopics remaining \(([^)]+)\)", query, re.I)
+        rem_str = f"{rem_match.group(1)} ({rem_match.group(2)})" if rem_match else "Remaining Microtopics"
+
+        return (
+            f"### 📊 Mindset & Syllabus Correlation Diagnostic\n\n"
+            f"• **Active Mental State:** `{curr_mood}`\n"
+            f"• **Primary Stress Trigger:** `{curr_trigger}`\n"
+            f"• **Daily Focus Capacity:** `{energy_str}`\n"
+            f"• **Syllabus Navigator Status:** `{comp_str} completed` | `{rem_str} remaining`\n\n"
+            f"#### 🔍 Cognitive Load & Energy Audit:\n"
+            f"Your current mindset state (**{curr_mood}**) combined with a focus energy score of **{energy_str}** indicates that heavy, uncalibrated 10-hour study marathons will increase anxiety and lower retention. "
+            f"With **{rem_str}** in Syllabus Navigator, the key to protecting your mental health while hitting study targets is **Mindset-Calibrated Microtopic Execution**—matching daily target length to active cognitive bandwidth.\n\n"
+            f"---\n\n"
+            f"### 🗓️ Mindset-Calibrated 7-Day Study Routine & Recovery Plan\n\n"
+            f"#### 🟢 **Day 1: De-compression & GS4 Ethics Anchor**\n"
+            f"- **Morning (08:30 AM - 11:30 AM):** Execute 2 Pomodoro sprints (25 mins each) on **GS4 Ethics: Stress Management & Emotional Intelligence in Public Service**. Soft start builds dopamine.\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Complete 2 microtopics of GS2 Polity (Articles 14-19 Fundamental Rights).\n"
+            f"- **Evening (07:30 PM - 08:15 PM):** Perform 4-7-8 box breathing for 5 mins. Zero textbook reading post 10:30 PM.\n\n"
+            f"#### 🟡 **Day 2: 1-Topic Isolation & GS2 Polity Sprints**\n"
+            f"- **Morning (08:30 AM - 11:30 AM):** Master 3 microtopics of GS2 Parliament & Legislative Procedures.\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Solve 10 UPSC Prelims PYQs on Indian Polity.\n"
+            f"- **Evening (07:30 PM - 08:15 PM):** 15-minute outdoor walk without phone.\n\n"
+            f"#### 🟠 **Day 3: Mock Panic De-escalation & PYQ Circuit Breaker**\n"
+            f"- **Morning (08:30 AM - 11:30 AM):** Master 2 microtopics of Modern History (Freedom Struggle 1857-1909).\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Solve 5 PYQs immediately whenever mock test anxiety or negative marking fear arises.\n"
+            f"- **Evening (07:30 PM - 08:15 PM):** Audit checked-off microtopics in Syllabus Navigator.\n\n"
+            f"#### 🔵 **Day 4: Mid-Week Momentum & GS3 Economy Sprints**\n"
+            f"- **Morning (08:30 AM - 11:30 AM):** Conquering 2 microtopics of GS3 Economy (Inflation & Monetary Policy Instruments).\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Active recall revision of Day 1-3 microtopics using flashcards.\n"
+            f"- **Evening (07:30 PM - 08:15 PM):** Strict digital DND protocol post 08:30 PM.\n\n"
+            f"#### 🟣 **Day 5: Mains Ethics Case Study & Re-framing Exercise**\n"
+            f"- **Morning (08:30 AM - 11:30 AM):** Write 1 GS4 Ethics Case Study on: *'Maintaining administrative composure during acute stress'*. Convert your personal stressor into case study material.\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Master 2 microtopics of GS3 Environment (Biodiversity Conservation).\n"
+            f"- **Evening (07:30 PM - 08:15 PM):** Reflection journaling & sleep prep.\n\n"
+            f"#### 🟡 **Day 6: Syllabus Progress Audit & Target Consolidation**\n"
+            f"- **Morning (08:30 AM - 11:30 AM):** Check off completed microtopics in Syllabus Navigator. Reach next target threshold.\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Solve 15 mixed Prelims MCQs across GS1 & GS2.\n"
+            f"- **Evening (07:30 PM - 08:15 PM):** Rest, light reading, and zero overthinking.\n\n"
+            f"#### 🟢 **Day 7: Mini Mock Assessment & Mindset Reset**\n"
+            f"- **Morning (08:30 AM - 10:00 AM):** 30-minute timed Prelims mini-test (20 MCQs).\n"
+            f"- **Afternoon (02:00 PM - 04:00 PM):** Test analysis & updating error log.\n"
+            f"- **Evening (07:30 PM - 08:30 PM):** Celebrate completing 7 days of disciplined execution despite mental fatigue!\n\n"
+            f"---\n\n"
+            f"### 🛡️ 4 Implementable Mindset Safeguard Protocols\n\n"
+            f"1. **Calibrated Daily Microtopic Quota:** Short 25/45-min Pomodoro sprints matching your energy level ({energy_str}).\n"
+            f"2. **The 1-Topic Isolation Rule:** Focus on 1 single microtopic at a time to halt syllabus panic.\n"
+            f"3. **GS4 Ethics Synergy:** Convert your primary stress trigger ({curr_trigger}) into GS4 Ethics study material.\n"
+            f"4. **Circadian & Somatic Reset:** 4-7-8 box breathing, 7.5+ hours night sleep, and post-study walk routine."
+        )
+
     def _generate_relationship_syllabus_fallback(self, query: str) -> str:
         rel_match = re.search(r"relationship dynamics is '([^']+)'", query, re.I)
         rel_status = rel_match.group(1) if rel_match else "Relationship Dynamics"
@@ -524,7 +588,7 @@ class RAGChatbot:
             if is_rel_plan_query:
                 return self._handle_relationship_syllabus_plan(query, intent_result)
 
-            is_mh_query = intent == "mental_health_upsc_distress"
+            is_mh_query = intent == "mental_health_upsc_distress" or "mental state" in query.lower() or "stress trigger" in query.lower()
 
             pyqs = self._find_relevant_pyqs(query)
             if pyqs and intent == "general" and not is_mh_query:
@@ -546,7 +610,6 @@ class RAGChatbot:
                 }
 
             template_intents = {
-                "mental_health_upsc_distress": "qa_mental_health_upsc_failure",
                 "suggest_course_fresh_graduate_only": "qa_course_fresh_grad_only",
                 "backup_plan_while_upsc": "qa_backup_plan_upsc_skilling",
             }
@@ -563,19 +626,22 @@ class RAGChatbot:
                 if record:
                     result = self._template_response(record)
                     result["signals"] = intent_result.signals
-                    if is_mh_query:
-                        result["answer"] = (
-                            self._postprocess_mental_health_answer(
-                                result["answer"], mh_count
-                            )
-                        )
                     return result
 
             if is_mh_query:
-                fallback_msg = f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills."
-                answer = self._llm_complete(
-                    fallback_msg, system_prompt=NON_ACADEMIC_SYSTEM_PROMPT
-                )
+                is_syllabus_correlated = "syllabus navigator tracking" in query.lower() or "microtopics" in query.lower() or "mental state" in query.lower()
+                sys_prompt = MENTAL_HEALTH_SYLLABUS_SYSTEM_PROMPT if is_syllabus_correlated else NON_ACADEMIC_SYSTEM_PROMPT
+                try:
+                    answer = self._llm_complete(
+                        query if is_syllabus_correlated else f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills.",
+                        system_prompt=sys_prompt
+                    )
+                    if not answer or len(answer) < 150 or "qa_mental_health_upsc_failure" in answer:
+                        answer = self._generate_mental_health_syllabus_fallback(query)
+                except Exception as err:
+                    print(f"LLM mental health error: {err}")
+                    answer = self._generate_mental_health_syllabus_fallback(query)
+
                 processed_answer = self._postprocess_mental_health_answer(
                     answer, mh_count
                 )
@@ -645,22 +711,8 @@ class RAGChatbot:
             }
         except Exception as e:
             print(f"Chatbot Chat Exception: {e}")
-            if is_mh_query:
-                ans = (
-                    "🩺 **Professional Psychological Assessment & Clinical Remedies**\n\n"
-                    "High-stakes competitive exam preparation can trigger acute performance stress, cognitive fatigue, and existential anxiety. As a professional psychologist, I want to assure you that your emotional distress is a natural neuro-biological response to sustained pressure — not a personal flaw.\n\n"
-                    "---\n\n"
-                    "### 🧠 **Specific Evidence-Based Psychological Remedies**\n\n"
-                    "1. **Cognitive Behavioral Reframing (Decoupling Identity from Results)**\n"
-                    "   - *Psychological Insight:* UPSC is an elimination test, not an evaluation of your intrinsic worth or intelligence.\n"
-                    "   - *Actionable Remedy:* Reframe thoughts of failure to *'I am undergoing a high-attrition selection process. My intellect and value remain intact outside CSE cutoffs.'*\n\n"
-                    "2. **Somatic Cortisol Reduction (4-7-8 Vagus Nerve Activation)**\n"
-                    "   - *Psychological Insight:* Acute anxiety floods the body with cortisol and adrenaline.\n"
-                    "   - *Actionable Remedy:* Inhale through nose for 4s, hold for 7s, exhale for 8s. Perform 4 cycles twice daily.\n\n"
-                    "3. **Circadian & Cognitive Hygiene (The 90-Minute Focus Protocol)**\n"
-                    "   - *Psychological Insight:* Studying beyond 90 continuous minutes creates cognitive saturation.\n"
-                    "   - *Actionable Remedy:* Enforce non-negotiable 15-minute disconnect breaks after every 90 minutes of intensive study."
-                )
+            if is_mh_query or "mental" in query.lower() or "stress" in query.lower():
+                ans = self._generate_mental_health_syllabus_fallback(query)
                 ans = self._postprocess_mental_health_answer(ans, mh_count)
                 return {
                     "answer": ans,
@@ -671,6 +723,33 @@ class RAGChatbot:
                     "sources": [],
                     "signals": ["mental_health"],
                 }
+
+            try:
+                fallback_msg = f"Produce a structured UPSC GS answer with Prelims MCQs and Mains practice questions for: {query}"
+                ans = self._llm_complete(
+                    fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT
+                )
+                ans = self._ensure_mains_questions(ans, query)
+            except Exception:
+                ans = self._generate_academic_fallback(query)
+
+            return {
+                "answer": ans,
+                "intent": (
+                    intent
+                    if "intent" in locals()
+                    else "notes_or_explain_topic"
+                ),
+                "category": "academic",
+                "confidence": "medium",
+                "mode": "fallback",
+                "sources": [],
+                "signals": (
+                    intent_result.signals
+                    if "intent_result" in locals()
+                    else ["academic"]
+                ),
+            }
 
             try:
                 fallback_msg = f"Produce a structured UPSC GS answer with Prelims MCQs and Mains practice questions for: {query}"
