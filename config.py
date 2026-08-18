@@ -7,9 +7,7 @@ load_dotenv(Path(__file__).resolve().parent / ".env")
 
 
 DEPRECATED_MODELS = {
-    "llama-3.3-70b-versatile",
     "llama3-70b-8192",
-    "llama-3.1-8b-instant",
     "llama-3.3-70b-specdec",
     "llama3-8b-8192",
     "mixtral-8x7b-32768",
@@ -38,7 +36,7 @@ LLM_PROVIDER = _get_secret("LLM_PROVIDER", "groq")
 LLM_MODEL = _get_secret("LLM_MODEL", "openai/gpt-oss-120b")
 LLM_FALLBACK_MODELS = [
     "openai/gpt-oss-120b",
-    "openai/gpt-oss-20b",
+    "groq/compound",
     "groq/compound-mini",
     "qwen/qwen3.6-27b",
 ]

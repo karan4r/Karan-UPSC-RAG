@@ -38,8 +38,15 @@ class RAGChatbot:
 
     def _llm_complete(self, user_message: str, system_prompt: str = ACADEMIC_SYSTEM_PROMPT) -> str:
         models_to_try = [LLM_MODEL] + [m for m in LLM_FALLBACK_MODELS if m != LLM_MODEL]
+        seen = set()
+        unique_models = []
+        for m in models_to_try:
+            if m not in seen:
+                seen.add(m)
+                unique_models.append(m)
+
         last_exception = None
-        for model_name in models_to_try:
+        for model_name in unique_models:
             try:
                 response = self.client.chat.completions.create(
                     model=model_name,
@@ -189,7 +196,7 @@ class RAGChatbot:
         topic = clean_q.capitalize() if clean_q else query
 
         prelims_block = (
-            f"\n\n### 📝 UPSC Prelims Practice Questions\n\n"
+            f"\n\n### 📝 Practice MCQs & UPSC Prelims Questions\n\n"
             f"**Question 1:** With reference to **{topic}**, consider the following statements:\n"
             f"1. It forms an essential component of the UPSC General Studies syllabus framework.\n"
             f"2. Comprehensive analysis requires integrating statutory provisions with recent policy developments.\n"
@@ -238,50 +245,66 @@ class RAGChatbot:
         clean_q = re.sub(r"^(explain|notes on|what is|describe)\s+", "", query, flags=re.I).strip()
         title = clean_q.capitalize() if clean_q else query
         return (
-            f"## 📖 Expert UPSC Educator Analysis: **{title}**\n\n"
-            f"### 🎯 Overview & Core Concepts\n"
-            f"**{title}** is a high-priority topic in the UPSC Civil Services Examination requiring a multi-dimensional approach covering constitutional, policy, historical, and socio-economic aspects.\n\n"
-            f"#### Key Dimensions & Analysis:\n"
-            f"- **Constitutional & Legal Framework:** Connects directly with core administrative structures and fundamental governance principles.\n"
-            f"- **Policy & Governance Impact:** Involves ongoing institutional reforms, public administration challenges, and stakeholder dynamics.\n"
-            f"- **Socio-Economic Relevance:** Directly affects equitable development, rights enforcement, and institutional accountability.\n\n"
+            f"### 📖 Expert Faculty Explanation & Core Analysis\n\n"
+            f"**Executive Summary (Prelims-Ready Definition):**\n"
+            f"**{title}** is a pivotal subject area within the UPSC Civil Services Examination framework (covering General Studies Papers 1, 2, 3 & 4), demanding a structured understanding of foundational concepts, historical evolution, statutory provisions, and modern policy implications.\n\n"
             f"---\n\n"
-            f"### 📊 Exam Angle (Prelims & Mains Focus)\n"
-            f"- **Prelims Focus:** Pay special attention to specific articles, statutory committees, key terminology, and historical timelines.\n"
-            f"- **Mains Focus:** Structure answers using Introduction-Body-Conclusion framework, incorporating relevant quotes, Supreme Court precedents, or committee recommendations.\n\n"
+            f"#### 🔍 Key Conceptual Dimensions & Detailed Breakdown:\n"
+            f"1. **Core Conceptual & Theoretical Foundation:**\n"
+            f"   - **Background & Context:** {title} represents a fundamental component of India's governance, administrative history, and constitutional evolution.\n"
+            f"   - **Institutional Framework:** Encompasses key statutory bodies, judicial interpretations, legislative mandates, and executive policies.\n\n"
+            f"2. **Socio-Economic & Administrative Significance:**\n"
+            f"   - **Governance Impact:** Drives public service delivery, constitutional accountability, institutional transparency, and administrative efficiency.\n"
+            f"   - **Stakeholder Dynamics:** Affects citizen rights, socio-economic equity, structural reforms, and sustainable growth objectives.\n\n"
+            f"3. **Contemporary Challenges & Policy Bottlenecks:**\n"
+            f"   - **Implementation Challenges:** Capacity constraints, inter-departmental coordination gaps, and resource allocation issues.\n"
+            f"   - **Reform Roadmap:** Emphasizes technology integration, administrative decentralization, and evidence-based policy formulation.\n\n"
             f"---\n\n"
-            f"### 📝 UPSC Prelims Practice Questions\n\n"
+            f"### 📊 Exam Angle (Prelims & Mains Focus)\n\n"
+            f"🎯 **UPSC Prelims Strategic Focus:**\n"
+            f"- Pay specific attention to chronological timelines, specific constitutional articles/statutes, nodal ministries, and committee recommendations related to **{title}**.\n"
+            f"- Watch out for common Prelims trap options regarding executive discretion vs statutory mandates.\n\n"
+            f"🎯 **UPSC Mains Strategic Focus (GS Answer Writing):**\n"
+            f"- **Introduction:** Start with a 2-line contextual definition or recent landmark event/statute related to **{title}**.\n"
+            f"- **Body:** Structure using multi-dimensional subheadings (Administrative, Economic, Social, Legal) backed by Law Commission / NITI Aayog / Supreme Court precedents.\n"
+            f"- **Conclusion:** End with a forward-looking, constructive 'Way Forward' emphasizing constitutional vision.\n\n"
+            f"---\n\n"
+            f"### 📝 Practice MCQs & UPSC Prelims Questions\n\n"
             f"**Question 1:** With reference to **{title}**, consider the following statements:\n"
-            f"1. It plays a pivotal role in the operational framework of Indian governance.\n"
-            f"2. Comprehensive analysis requires integrating statutory provisions with recent policy initiatives.\n"
+            f"1. It forms an integral component of the operational framework of Indian governance.\n"
+            f"2. Comprehensive analysis requires evaluating core statutory principles alongside contemporary policy initiatives.\n\n"
             f"Which of the statements given above is/are correct?\n"
             f"- **A)** 1 only\n"
             f"- **B)** 2 only\n"
             f"- **C)** Both 1 and 2\n"
             f"- **D)** Neither 1 nor 2\n\n"
             f"**Correct Answer:** Option **C**\n"
-            f"**Explanation:** Both statements are correct. UPSC Civil Services examination requires evaluating core theoretical concepts alongside contemporary policy developments.\n\n"
-            f"**Question 2:** Which of the following best reflects the primary administrative objective of **{title}**?\n"
-            f"- **A)** Promoting isolated statutory compliance\n"
-            f"- **B)** Fostering holistic governance, institutional efficiency, and public welfare\n"
-            f"- **C)** Restricting administrative discretion\n"
-            f"- **D)** None of the above\n\n"
+            f"**Explanation:** Both statements are correct. UPSC Civil Services examination requires synthesizing theoretical foundations with contemporary policy developments regarding {title}.\n\n"
+            f"**Question 2:** Which of the following best reflects the primary objective of institutional reforms surrounding **{title}**?\n"
+            f"- **A)** Restricting administrative oversight and statutory compliance\n"
+            f"- **B)** Enhancing institutional transparency, public welfare, and operational efficiency\n"
+            f"- **C)** Promoting rigid centralized decision-making frameworks\n"
+            f"- **D)** Excluding non-governmental stakeholders from policy processes\n\n"
             f"**Correct Answer:** Option **B**\n"
-            f"**Explanation:** Effective governance models prioritize public welfare, institutional transparency, and policy efficiency.\n\n"
+            f"**Explanation:** Effective administrative governance models focus on public welfare, transparency, institutional efficiency, and citizen-centric service delivery.\n\n"
             f"---\n\n"
             f"### ✍️ UPSC Mains Practice Questions\n\n"
             f"**Mains Question 1 (10 Marks / 150 Words):**\n"
-            f"\"Critically evaluate the significance of **{title}** in modern Indian governance. Suggest key measures for its effective implementation.\"\n\n"
+            f"\"Critically analyze the significance of **{title}** in modern Indian governance. What structural measures are required to strengthen its effective implementation?\"\n\n"
             f"- **Answer Writing Approach:**\n"
-            f"  - **Introduction:** Briefly define {title} and state its relevance in GS paper (2 lines).\n"
-            f"  - **Core Body Points:** Outline key significance, current challenges, and institutional frameworks.\n"
-            f"  - **Conclusion / Way Forward:** Provide a balanced, practical concluding observation.\n\n"
+            f"  - **Introduction (20-30 words):** Define {title} in the context of GS Mains syllabus.\n"
+            f"  - **Core Body Points (90-100 words):**\n"
+            f"    - Highlight key administrative and constitutional benefits.\n"
+            f"    - Discuss existing institutional bottlenecks (capacity, funding, coordination).\n"
+            f"  - **Conclusion (20-30 words):** Conclude with actionable recommendations and NITI Aayog / Committee references.\n\n"
             f"**Mains Question 2 (15 Marks / 250 Words):**\n"
-            f"\"Analyze the structural and administrative challenges associated with **{title}**. How can policy intervention overcome these bottlenecks?\"\n\n"
+            f"\"Examine the multi-dimensional challenges associated with **{title}**. How can policy intervention and digital governance tools resolve these bottlenecks? Discuss.\"\n\n"
             f"- **Answer Writing Approach:**\n"
-            f"  - **Introduction:** Contextual background of {title}.\n"
-            f"  - **Core Body Points:** Multi-dimensional analysis (Legal, Governance, Economic) + Committee/Court precedents.\n"
-            f"  - **Conclusion / Way Forward:** Actionable recommendations for long-term reform."
+            f"  - **Introduction (30-40 words):** Provide contextual background and current relevance of {title}.\n"
+            f"  - **Core Body Points (160-180 words):**\n"
+            f"    - Multi-dimensional breakdown: Legal & Statutory, Socio-Economic, Administrative.\n"
+            f"    - Role of technology (e-governance, AI, data analytics) in overcoming bottlenecks.\n"
+            f"  - **Conclusion / Way Forward (30-40 words):** Forward-looking roadmap aligned with constitutional ideals."
         )
 
     def _handle_academic(self, query: str, intent_result: IntentResult) -> dict[str, Any]:
@@ -292,18 +315,16 @@ class RAGChatbot:
         result = self._academic_response(query, rag_record, rag_score)
         result["signals"] = intent_result.signals
         return result
+
     def _postprocess_mental_health_answer(self, answer: str, mh_count: int) -> str:
-        # Strictly remove any inadvertent PW Skills references in mental health queries
         lines = [line for line in answer.splitlines() if "pwskills" not in line.lower() and "pw skills" not in line.lower()]
         answer = "\n".join(lines)
         
         helpline_pattern = r'(?s)---\s*\n### 📞 \*\*24/7 Confidential Professional Support Lines.*?(?=---\s*\n🤗|\Z)'
         
-        # If mh_count > 0, remove standard helpline section so it doesn't repeat
         if mh_count > 0:
             answer = re.sub(helpline_pattern, '', answer)
             
-        # If 3 continuous queries (mh_count >= 2), append Professional Psychologist Referral Card
         if mh_count >= 2:
             card_block = (
                 "\n\n---\n\n"
@@ -331,10 +352,8 @@ class RAGChatbot:
             intent_result: IntentResult = classify_intent(query)
             intent = intent_result.intent
 
-            # Detect if query is strictly mental/emotional health related
             is_mh_query = (intent == "mental_health_upsc_distress")
 
-            # If it matches a modern history PYQ, it is an academic query
             pyqs = self._find_relevant_pyqs(query)
             if pyqs and intent == "general" and not is_mh_query:
                 intent = "notes_or_explain_topic"
@@ -455,18 +474,20 @@ class RAGChatbot:
                     "sources": [],
                     "signals": ["mental_health"]
                 }
-                try:
-                    fallback_msg = f"Produce a structured UPSC GS answer with Prelims MCQs and Mains practice questions for: {query}"
-                    ans = self._llm_complete(fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
-                    ans = self._ensure_mains_questions(ans, query)
-                except Exception:
-                    ans = self._generate_academic_fallback(query)
-                return {
-                    "answer": ans,
-                    "intent": intent if 'intent' in locals() else "notes_or_explain_topic",
-                    "category": "academic",
-                    "confidence": "medium",
-                    "mode": "fallback",
-                    "sources": [],
-                    "signals": intent_result.signals if 'intent_result' in locals() else ["academic"]
-                }
+            
+            try:
+                fallback_msg = f"Produce a structured UPSC GS answer with Prelims MCQs and Mains practice questions for: {query}"
+                ans = self._llm_complete(fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
+                ans = self._ensure_mains_questions(ans, query)
+            except Exception:
+                ans = self._generate_academic_fallback(query)
+            
+            return {
+                "answer": ans,
+                "intent": intent if 'intent' in locals() else "notes_or_explain_topic",
+                "category": "academic",
+                "confidence": "medium",
+                "mode": "fallback",
+                "sources": [],
+                "signals": intent_result.signals if 'intent_result' in locals() else ["academic"]
+            }

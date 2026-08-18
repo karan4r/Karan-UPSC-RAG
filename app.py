@@ -514,7 +514,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     st.rerun()
                             with c_col2:
                                 if st.button("💡 Explainer", key=f"ask_fs_{m_id}", use_container_width=True):
-                                    redirect_to_copilot(f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}). Include key facts, significance, and practice questions.")
+                                    redirect_to_copilot(f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}) in detail like a UPSC exam teacher. Provide core concepts, Prelims relevance, Mains relevance, practice MCQs for Prelims, and Mains practice questions.")
                         st.write("")
 
 # ==========================================
@@ -760,7 +760,7 @@ elif nav_mode == "⚡ Productivity & Targets":
                 with btn_cols[0]:
                     if tgt.get("microtopic_title"):
                         if st.button("💡 Notes", key=f"btn_exp_tgt_{t_id}", use_container_width=True):
-                            redirect_to_copilot(f"Generate high-yield UPSC notes and practice questions for '{tgt['microtopic_title']}' ({tgt['paper']}).")
+                            redirect_to_copilot(f"Explain the UPSC topic '{tgt['microtopic_title']}' ({tgt['paper']}) in detail like a UPSC exam teacher. Provide core concepts, Prelims relevance, Mains relevance, practice MCQs for Prelims, and Mains practice questions.")
                 with btn_cols[1]:
                     if st.button("🗑️", key=f"btn_del_tgt_{t_id}", use_container_width=True):
                         st.session_state.progress["targets"].remove(tgt)
