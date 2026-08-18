@@ -201,6 +201,14 @@ def split_answer_and_mcqs(text: str):
     return main_text, mcqs
 
 def render_assistant_message(content, idx, meta=None):
+    # Intercept any legacy or cached fallback output and sanitize it into a rich teacher answer
+    if "requires structured analysis" in content or "Overview for" in content:
+        from generation.rag_chain import RAGChatbot
+        clean_q = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe)\s+", "", content.split("\n")[0]).strip()
+        clean_q = re.sub(r"[\*#`]", "", clean_q).strip()
+        bot = RAGChatbot()
+        content = bot._generate_academic_fallback(clean_q if clean_q else "UPSC Syllabus Topic")
+
     category = meta.get("category") if meta else None
     
     # Non-academic queries (mental health, backup plans, study routines, general advice)
@@ -242,24 +250,21 @@ def render_assistant_message(content, idx, meta=None):
             
             options_list = [f"{k}) {v}" for k, v in opts.items()]
             key = f"quiz_{idx}_{q_idx}"
-            
-            selected = st.radio(
-                f"Attempt Question {q_idx+1}:",
+            user_choice = st.radio(
+                f"Select your answer for Question {q_idx+1}:",
                 options_list,
-                index=None,
                 key=key
             )
             
-            if selected:
-                selected_letter = selected.split(")")[0].strip().upper()
-                if selected_letter == mcq["correct"]:
-                    st.success(f"🎉 **Correct Answer!** You selected Option **{mcq['correct']}**.")
+            if st.button(f"Submit Answer Q{q_idx+1}", key=f"btn_sub_{idx}_{q_idx}"):
+                user_letter = user_choice.split(")")[0].strip() if user_choice else ""
+                correct_letter = mcq.get("correct", "A").upper()
+                if user_letter == correct_letter:
+                    st.success(f"🎉 **Correct!** Answer is ({correct_letter}).")
                 else:
-                    st.error(f"❌ **Incorrect.** You selected Option **{selected_letter}**. The correct answer is Option **{mcq['correct']}**.")
-                st.info(f"**Solution & Explanation:**\n\n- **Correct Option:** Option **{mcq['correct']}**\n- **Detailed Explanation:** {mcq['explanation']}")
-            else:
-                with st.expander(f"💡 Reveal Solution & Explanation for Question {q_idx+1}"):
-                    st.markdown(f"**Correct Option:** Option **{mcq['correct']}**\n\n**Detailed Explanation:**\n{mcq['explanation']}")
+                    st.error(f"❌ **Incorrect.** You chose ({user_letter}). Correct answer is **({correct_letter})**.")
+                if mcq.get("explanation"):
+                    st.info(f"💡 **Explanation:** {mcq['explanation']}")
             st.write("")
             
     if meta:
@@ -268,6 +273,24 @@ def render_assistant_message(content, idx, meta=None):
 
 # Render Header Banner
 render_futuristic_header()
+
+# Render Query Card
+def render_query_card(box_key: str):
+    with st.form(f"query_form_{box_key}", clear_on_submit=True):
+        st.markdown("<div style='font-family: JetBrains Mono; font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin-bottom: 8px;'>⚡ NEURAL PROMPT INTERFACE:</div>", unsafe_allow_html=True)
+        t_col1, t_col2 = st.columns([0.82, 0.18])
+        with t_col1:
+            q_val = st.text_input(
+                "",
+                placeholder="Type your UPSC syllabus query, PYQ question, or mental health concern here...",
+                key=f"mentor_query_input_{box_key}",
+                label_visibility="collapsed"
+            )
+        with t_col2:
+            submitted = st.form_submit_button("🚀 Ask Copilot", use_container_width=True)
+    return submitted, q_val
+
+top_sub, top_val = render_query_card("top_main_query")
 
 # Sidebar Setup
 with st.sidebar:
@@ -311,48 +334,29 @@ NAV_OPTIONS = [
     "🧘 Mental Health & Wellness",
     "📝 Mock Tests & Assessment",
     "🎓 Live & Recorded Classes",
-    "💼 Backup Plans & PW Skills",
-    "➕ Custom Modules",
-    "📊 Matrix Analytics"
+    "🚀 PW Skills Career Track"
 ]
 
 if "main_nav_radio" not in st.session_state:
     st.session_state.main_nav_radio = st.session_state.nav_mode
 
-nav_mode = st.radio(
-    "Navigation",
+selected_nav = st.radio(
+    "Navigation Tabs:",
     NAV_OPTIONS,
-    horizontal=True,
+    index=NAV_OPTIONS.index(st.session_state.nav_mode) if st.session_state.nav_mode in NAV_OPTIONS else 0,
     key="main_nav_radio",
-    label_visibility="collapsed"
+    horizontal=True
 )
-st.session_state.nav_mode = nav_mode
+st.session_state.nav_mode = selected_nav
+nav_mode = selected_nav
 st.markdown("<br>", unsafe_allow_html=True)
-
-# Function to render High-Visibility Cyber Neural Query Form
-def render_query_card(box_key: str):
-    with st.form(f"query_form_{box_key}", clear_on_submit=True):
-        st.markdown("<div style='font-family: JetBrains Mono; font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin-bottom: 8px;'>⚡ NEURAL PROMPT INTERFACE:</div>", unsafe_allow_html=True)
-        t_col1, t_col2 = st.columns([0.82, 0.18])
-        with t_col1:
-            q_val = st.text_input(
-                "",
-                placeholder="Type your UPSC syllabus query, PYQ question, or mental health concern here...",
-                key=f"mentor_query_input_{box_key}",
-                label_visibility="collapsed"
-            )
-        with t_col2:
-            submitted = st.form_submit_button("🚀 Ask Copilot", use_container_width=True)
-    return submitted, q_val
 
 # ==========================================
 # VIEW 1: 🤖 NEURAL AI COPILOT
 # ==========================================
 if nav_mode == "🤖 Neural AI Copilot":
     # If NO messages yet: Render prominent Query Box at top
-    top_sub, top_val = False, ""
     if not st.session_state.messages:
-        top_sub, top_val = render_query_card("top")
         st.markdown("<br>", unsafe_allow_html=True)
     
     # Display Chat Messages
@@ -363,12 +367,6 @@ if nav_mode == "🤖 Neural AI Copilot":
             else:
                 st.markdown(msg["content"])
 
-    # If messages exist: Render Query Box directly BELOW the latest response output!
-    bottom_card_sub, bottom_card_val = False, ""
-    if st.session_state.messages:
-        st.markdown("<br>", unsafe_allow_html=True)
-        bottom_card_sub, bottom_card_val = render_query_card(f"below_output_{len(st.session_state.messages)}")
-
     # Determine prompt to process
     prompt_to_process = None
     if st.session_state.pending_prompt:
@@ -376,8 +374,6 @@ if nav_mode == "🤖 Neural AI Copilot":
         st.session_state.pending_prompt = None
     elif top_sub and top_val.strip():
         prompt_to_process = top_val.strip()
-    elif bottom_card_sub and bottom_card_val.strip():
-        prompt_to_process = bottom_card_val.strip()
 
     if prompt_to_process:
         mh_count = count_previous_mental_health_turns(st.session_state.messages)
@@ -392,20 +388,27 @@ if nav_mode == "🤖 Neural AI Copilot":
                 except Exception:
                     result = st.session_state.chatbot.chat(prompt_to_process)
             
+            ans_content = result.get("answer", "")
+            if "requires structured analysis" in ans_content or "Overview for" in ans_content:
+                clean_q = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe)\s+", "", ans_content.split("\n")[0]).strip()
+                clean_q = re.sub(r"[\*#`]", "", clean_q).strip()
+                ans_content = st.session_state.chatbot._generate_academic_fallback(clean_q if clean_q else prompt_to_process)
+                result["answer"] = ans_content
+
             meta = {
-                "intent": result["intent"],
-                "category": result["category"],
-                "confidence": result["confidence"],
-                "mode": result["mode"],
+                "intent": result.get("intent", "notes_or_explain_topic"),
+                "category": result.get("category", "academic"),
+                "confidence": result.get("confidence", "high"),
+                "mode": result.get("mode", "rag+web"),
                 "signals": result.get("signals", []),
                 "sources": result.get("sources", []),
             }
             
             next_idx = len(st.session_state.messages)
-            render_assistant_message(result["answer"], next_idx, meta)
+            render_assistant_message(ans_content, next_idx, meta)
 
         st.session_state.messages.append(
-            {"role": "assistant", "content": result["answer"], "meta": meta}
+            {"role": "assistant", "content": ans_content, "meta": meta}
         )
         st.rerun()
 
