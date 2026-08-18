@@ -189,6 +189,12 @@ def classify_intent(query: str) -> IntentResult:
     text = query.lower().strip()
     signals = _collect_signals(text)
 
+    # High Priority: Relationship & Syllabus Recovery 7-Day Plan requests
+    rel_keywords = ("relationship", "one-sided", "ghosting", "breakup", "unrequited", "mixed signals", "emotional drain")
+    plan_keywords = ("7-day", "7 day", "recovery plan", "study plan", "actionable study", "syllabus navigator", "microtopic")
+    if any(k in text for k in rel_keywords) and any(p in text for p in plan_keywords):
+        return IntentResult("relationship_syllabus_7day_plan", 0.98, signals + ["relationship_plan"])
+
     # Priority: mental health > fresh grad course > backup > academic
     # Note: If academic signal is present and no personal distress indicators (e.g. 'i', 'me', 'my', 'feeling', 'am') exist, prioritize academic.
     has_personal_distress = any(w in text.split() for w in ("i", "me", "my", "feeling", "am", "feel", "i'm"))
