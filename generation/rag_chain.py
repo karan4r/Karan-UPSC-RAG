@@ -676,11 +676,12 @@ class RAGChatbot:
                     "signals": intent_result.signals,
                 }
 
-            record = self.index.get_by_intent(intent)
-            if record and record.get("answer_template"):
-                result = self._template_response(record)
-                result["signals"] = intent_result.signals
-                return result
+            if intent not in ("mental_health_upsc_distress", "relationship_syllabus_7day_plan"):
+                record = self.index.get_by_intent(intent)
+                if record and record.get("answer_template"):
+                    result = self._template_response(record)
+                    result["signals"] = intent_result.signals
+                    return result
 
             if "academic" in intent_result.signals or any(
                 w in query.lower()

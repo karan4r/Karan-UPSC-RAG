@@ -48,7 +48,7 @@ def save_user_progress(progress_data):
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-if "chatbot" not in st.session_state or not hasattr(st.session_state.chatbot, "_generate_academic_fallback"):
+if "chatbot" not in st.session_state or not hasattr(st.session_state.chatbot, "_generate_mental_health_syllabus_fallback"):
     st.session_state.chatbot = RAGChatbot()
 
 if "progress" not in st.session_state:

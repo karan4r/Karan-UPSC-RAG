@@ -45,7 +45,7 @@
   {
     "id": "qa_mental_health_upsc_failure",
     "category": "wellbeing",
-    "intent": "mental_health_upsc_distress",
+    "intent": "qa_mental_health_upsc_failure_static",
     "priority": 100,
     "eligibility": {
       "required_signals": ["mental_health"]
