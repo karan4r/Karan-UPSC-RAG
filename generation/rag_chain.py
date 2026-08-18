@@ -162,9 +162,14 @@ class RAGChatbot:
             sources = []
             confidence = "medium"
 
-        answer = self._llm_complete(user_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
-        answer = self._ensure_prelims_questions(answer, query)
-        answer = self._ensure_mains_questions(answer, query)
+        try:
+            answer = self._llm_complete(user_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT)
+            answer = self._ensure_prelims_questions(answer, query)
+            answer = self._ensure_mains_questions(answer, query)
+        except Exception as err:
+            print(f"LLM completion error in _academic_response: {err}")
+            answer = self._generate_academic_fallback(query)
+            mode = "fallback"
 
         pyqs = self._find_relevant_pyqs(query)
         if pyqs:
@@ -188,12 +193,21 @@ class RAGChatbot:
             "mode": mode,
         }
 
+    def _extract_topic_name(self, query: str) -> str:
+        quote_match = re.search(r"['\"]([^'\"]{3,100})['\"]", query)
+        if quote_match:
+            return quote_match.group(1).strip()
+        clean = re.sub(r"(?i)^(explain|notes on|what is|describe|provide|give|generate|details on)\s+(the\s+)?(upsc\s+)?(mains\s+)?(microtopic\s+)?", "", query).strip()
+        clean = re.sub(r"(?i)\s+under\s+.*$", "", clean).strip()
+        clean = re.sub(r"(?i)\s+in\s+detail.*$", "", clean).strip()
+        clean = re.sub(r"(?i)\s+include\s+.*$", "", clean).strip()
+        return clean.capitalize() if clean else query
+
     def _ensure_prelims_questions(self, answer: str, query: str) -> str:
         if "Prelims Practice Questions" in answer or "Practice MCQs" in answer or "Question 1:" in answer or "📝" in answer:
             return answer
 
-        clean_q = re.sub(r"^(explain|notes on|what is|describe)\s+", "", query, flags=re.I).strip()
-        topic = clean_q.capitalize() if clean_q else query
+        topic = self._extract_topic_name(query)
 
         prelims_block = (
             f"\n\n### 📝 Practice MCQs & UPSC Prelims Questions\n\n"
@@ -221,8 +235,7 @@ class RAGChatbot:
         if "Mains Practice Questions" in answer or "Mains Question" in answer or "✍️" in answer:
             return answer
         
-        clean_q = re.sub(r"^(explain|notes on|what is|describe)\s+", "", query, flags=re.I).strip()
-        topic = clean_q.capitalize() if clean_q else query
+        topic = self._extract_topic_name(query)
 
         mains_block = (
             f"\n\n### ✍️ UPSC Mains Practice Questions\n\n"
@@ -242,8 +255,7 @@ class RAGChatbot:
         return answer.strip() + mains_block
 
     def _generate_academic_fallback(self, query: str) -> str:
-        clean_q = re.sub(r"^(explain|notes on|what is|describe)\s+", "", query, flags=re.I).strip()
-        title = clean_q.capitalize() if clean_q else query
+        title = self._extract_topic_name(query)
         return (
             f"### 📖 Expert Faculty Explanation & Core Analysis\n\n"
             f"**Executive Summary (Prelims-Ready Definition):**\n"
