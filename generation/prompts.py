@@ -16,7 +16,7 @@ Instructions for Academic & GS Syllabus Topics:
    - Strategic takeaways for Prelims (trap options, key terms).
    - Strategic takeaways for Mains GS Answer Writing.
 
-   ### 📝 UPSC Prelims Practice Questions
+   ### 📝 Practice MCQs & UPSC Prelims Questions
    Generate exactly 2 relevant UPSC-style practice MCQs for Prelims in this exact format:
 
    **Question 1:** [Question statement]
