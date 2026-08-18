@@ -332,7 +332,7 @@ def render_futuristic_header():
             </div>
             <div style="text-align: right;">
                 <span style="font-family:'JetBrains Mono'; font-size:0.78rem; background:rgba(56,189,248,0.15); color:#38BDF8; padding:5px 12px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); font-weight:700;">
-                    MODEL: GROQ LLAMA 3.3 70B NEURAL
+                    MODEL: GROQ GPT-OSS NEURAL
                 </span>
             </div>
         </div>

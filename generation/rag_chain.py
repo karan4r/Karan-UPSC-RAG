@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from config import LLM_MODEL, get_groq_client
+from config import LLM_MODEL, LLM_FALLBACK_MODELS, get_groq_client
 from generation.prompts import (
     ACADEMIC_LLM_FALLBACK_TEMPLATE,
     ACADEMIC_SYSTEM_PROMPT,
@@ -37,16 +37,29 @@ class RAGChatbot:
                 self.pyqs = json.load(f)
 
     def _llm_complete(self, user_message: str, system_prompt: str = ACADEMIC_SYSTEM_PROMPT) -> str:
-        response = self.client.chat.completions.create(
-            model=LLM_MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message},
-            ],
-            temperature=0.3,
-            max_tokens=2000,
-        )
-        return response.choices[0].message.content or ""
+        models_to_try = [LLM_MODEL] + [m for m in LLM_FALLBACK_MODELS if m != LLM_MODEL]
+        last_exception = None
+        for model_name in models_to_try:
+            try:
+                response = self.client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_message},
+                    ],
+                    temperature=0.3,
+                    max_tokens=2000,
+                )
+                content = response.choices[0].message.content or ""
+                content = re.sub(r"^<think>.*?</think>\s*", "", content, flags=re.DOTALL)
+                if content.strip():
+                    return content
+            except Exception as e:
+                print(f"LLM call failed with model {model_name}: {e}")
+                last_exception = e
+        if last_exception:
+            raise last_exception
+        return ""
 
     def _find_relevant_pyqs(self, query: str, top_k: int = 1) -> list[dict]:
         if not self.pyqs:
