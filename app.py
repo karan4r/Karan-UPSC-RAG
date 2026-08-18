@@ -1109,88 +1109,270 @@ elif nav_mode == "💞 Relationship Management":
 # ==========================================
 elif nav_mode == "🧘 Mental Health & Wellness":
     st.markdown("<h3 style='color: #FFFFFF;'>🧘 Aspirant Mental Health & Mindset Wellness Hub</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Empathetic psychological guidance, stress management, anti-burnout strategies, and daily mindset building for UPSC aspirants.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #94A3B8;'>Empathetic psychological guidance, stress management, anti-burnout strategies, and daily mindset building correlated with your Syllabus Navigator progress.</p>", unsafe_allow_html=True)
     
-    # Mood Check-in Card
-    st.markdown("""
-    <div class="pwskills-card">
-        <div class="pwskills-title">💚 Daily Aspirant Mindset & Mood Check-in</div>
-        <div class="pwskills-desc">How are you feeling right now during your study regimen? Select your state below for tailored advice.</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    mood_col1, mood_col2 = st.columns([1, 1])
-    with mood_col1:
-        mood = st.radio(
-            "Select your current state:",
-            [
+    # Initialize mental health state in user progress if not present
+    mh_state = st.session_state.progress.setdefault("mental_health_state", {
+        "mood": "🟡 Moderate Stress / Slight Fatigue",
+        "trigger": "📚 Syllabus Overwhelm & Fear of Completion",
+        "energy_level": 5
+    })
+
+    # Calculate Syllabus Progress Metrics from Syllabus Navigator
+    total_micros = 623
+    completed_set = set(st.session_state.progress.get("completed", []))
+    completed_cnt = len(completed_set)
+    covered_pct = (completed_cnt / total_micros * 100) if total_micros > 0 else 0
+    left_pct = max(0.0, 100.0 - covered_pct)
+    left_cnt = max(0, total_micros - completed_cnt)
+
+    # Calculate Paper-wise breakdown from Syllabus Navigator
+    gs1_done = sum(1 for m in completed_set if m.startswith("GS Paper 1"))
+    gs2_done = sum(1 for m in completed_set if m.startswith("GS Paper 2"))
+    gs3_done = sum(1 for m in completed_set if m.startswith("GS Paper 3"))
+    gs4_done = sum(1 for m in completed_set if m.startswith("GS Paper 4"))
+
+    # 1. Diagnostic Mindset & Stressor Input Form
+    with st.expander("⚙️ Configure Your Daily Mindset & Stressor Profile", expanded=True):
+        with st.form("mh_config_form"):
+            mh_col1, mh_col2, mh_col3 = st.columns([1.2, 1.2, 1])
+            
+            mood_options = [
                 "🟢 High Energy & Hyper-Focused",
                 "🟡 Moderate Stress / Slight Fatigue",
                 "🟠 Overwhelmed & Syllabus Anxiety",
                 "🔴 Severe Burnout & Low Motivation"
-            ],
-            key="aspirant_mood_select"
+            ]
+            curr_mood = mh_state.get("mood", mood_options[1])
+            mood_idx = mood_options.index(curr_mood) if curr_mood in mood_options else 1
+
+            trigger_options = [
+                "📚 Syllabus Overwhelm & Fear of Completion",
+                "🎯 Mock Test Panic & Negative Marking Anxiety",
+                "😴 Sleep Deprivation & Chronic Fatigue",
+                "👥 Social Isolation & Family Expectations",
+                "⏳ Fear of Failure & Repeat Attempt Pressure"
+            ]
+            curr_trigger = mh_state.get("trigger", trigger_options[0])
+            trigger_idx = trigger_options.index(curr_trigger) if curr_trigger in trigger_options else 0
+
+            with mh_col1:
+                selected_mood = st.selectbox(
+                    "Current Mental & Energy State:",
+                    mood_options,
+                    index=mood_idx,
+                    key="mh_mood_select_input"
+                )
+            with mh_col2:
+                selected_trigger = st.selectbox(
+                    "Primary Stressor / Mindset Trigger:",
+                    trigger_options,
+                    index=trigger_idx,
+                    key="mh_trigger_select_input"
+                )
+            with mh_col3:
+                energy_lvl = st.slider("Daily Focus Capacity (1-10):", min_value=1, max_value=10, value=int(mh_state.get("energy_level", 5)), key="mh_energy_slider")
+                
+            mh_saved = st.form_submit_button("💾 Save Mindset Profile & Correlate with Syllabus", use_container_width=True)
+            if mh_saved:
+                st.session_state.progress["mental_health_state"] = {
+                    "mood": selected_mood,
+                    "trigger": selected_trigger,
+                    "energy_level": energy_lvl
+                }
+                save_user_progress(st.session_state.progress)
+                st.success("✅ Mindset Profile Saved & Syllabus Correlation Updated!")
+                st.rerun()
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 2. Dynamic Correlation Dashboard (Mental Health x Syllabus Navigator)
+    st.markdown("<h4 style='color: #38BDF8;'>📊 Mental Health vs. Syllabus Completion Matrix</h4>", unsafe_allow_html=True)
+    
+    # Calculate Cognitive Capacity and Absorption Score
+    if "🔴 Severe Burnout" in curr_mood:
+        cognitive_capacity = 25
+        status_badge = "🔴 Burnout Protocol Active"
+        badge_color = "#EF4444"
+    elif "🟠 Overwhelmed" in curr_mood:
+        cognitive_capacity = 45
+        status_badge = "🟠 De-compress Needed"
+        badge_color = "#F59E0B"
+    elif "🟡 Moderate Stress" in curr_mood:
+        cognitive_capacity = 70
+        status_badge = "🟡 Moderate Energy"
+        badge_color = "#38BDF8"
+    else:
+        cognitive_capacity = 95
+        status_badge = "🟢 Peak Flow State"
+        badge_color = "#34D399"
+
+    m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+    with m_col1:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">📚 Syllabus Completed</div>
+            <div class="metric-value">{completed_cnt}</div>
+            <div style="color: #34D399; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{covered_pct:.1f}% Microtopics Done</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col2:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">⏳ Microtopics Remaining</div>
+            <div class="metric-value">{left_cnt}</div>
+            <div style="color: #EF4444; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{left_pct:.1f}% Microtopics Left</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col3:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">🧠 Focus Capacity</div>
+            <div class="metric-value">{cognitive_capacity}%</div>
+            <div style="color: {badge_color}; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{status_badge}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col4:
+        daily_absorption = max(1, int((energy_lvl / 10.0) * (cognitive_capacity / 100.0) * 6))
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">⚡ Daily Microtopic Quota</div>
+            <div class="metric-value">{daily_absorption} / day</div>
+            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Calibrated Target</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Cross-Mapping Analysis Section
+    st.markdown("<h4 style='color: #38BDF8;'>🔗 Dynamic Correlation: Mindset State x Syllabus Navigator Progress</h4>", unsafe_allow_html=True)
+    
+    corr_col1, corr_col2 = st.columns([1, 1])
+    with corr_col1:
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: rgba(56, 189, 248, 0.4) !important;">
+            <div class="pwskills-title" style="color: #38BDF8 !important;">📖 Syllabus Progress Status</div>
+            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>GS Paper 1 (History, Geography, Society):</strong> <span style="color: #34D399; font-weight: 700;">{gs1_done}/386</span> microtopics<br>
+                • <strong>GS Paper 2 (Polity, Governance, IR):</strong> <span style="color: #34D399; font-weight: 700;">{gs2_done}/89</span> microtopics<br>
+                • <strong>GS Paper 3 (Economy, Environment, Sci-Tech):</strong> <span style="color: #34D399; font-weight: 700;">{gs3_done}/73</span> microtopics<br>
+                • <strong>GS Paper 4 (Ethics, Integrity, Aptitude):</strong> <span style="color: #34D399; font-weight: 700;">{gs4_done}/69</span> microtopics
+            </div>
+            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+                🎯 <strong>Master Status:</strong> {completed_cnt} of 623 microtopics checked ({covered_pct:.1f}% covered).
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with corr_col2:
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: {badge_color} !important;">
+            <div class="pwskills-title" style="color: {badge_color} !important;">🧘 Mindset Drag & Academic Vulnerability</div>
+            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>Active Mindset State:</strong> <span style="color: {badge_color}; font-weight: 700;">{curr_mood}</span><br>
+                • <strong>Primary Stress Trigger:</strong> <span style="color: #F59E0B; font-weight: 700;">{curr_trigger}</span><br>
+                • <strong>Daily Focus Energy Level:</strong> <span style="color: #38BDF8; font-weight: 700;">{energy_lvl}/10</span><br>
+                • <strong>Vulnerable Syllabus Area:</strong> <span style="color: #C084FC; font-weight: 700;">{"GS3 Economy & GS1 History (High Fatigue)" if cognitive_capacity < 50 else "GS2 Polity & GS4 Ethics"}</span>
+            </div>
+            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+                💡 <strong>Corelation Finding:</strong> Current focus capacity ({cognitive_capacity}%) requires matching daily microtopic targets to your energy level to prevent burnout.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 3. TAILORED IMPLEMENTABLE SUGGESTIONS SUITE
+    st.markdown("<h4 style='color: #38BDF8;'>💡 Tailored Suggestions for Mental Health & Syllabus Handling</h4>", unsafe_allow_html=True)
+    st.caption("Concrete, actionable steps to protect your mental health while making steady progress on Syllabus Navigator microtopics:")
+
+    if "🔴 Severe Burnout" in curr_mood:
+        plan_suggestion = (
+            f"**Burnout Recovery Protocol:** STOP attempting 10-hour study marathons—your brain is in cognitive saturation. "
+            f"Set a micro-quota of **1 to 2 GS4 Ethics microtopics** per day. GS4 Ethics (*Emotional Intelligence*, *Human Values*) requires low technical fatigue and reinforces psychological resilience."
         )
-    with mood_col2:
-        if "🟢 High Energy" in mood:
-            st.success("🌟 **Prime Flow State!** Capitalize on this momentum to tackle high-yield complex topics like Ethics Case Studies or GS Economy.")
-        elif "🟡 Moderate Stress" in mood:
-            st.info("⚡ **Mindful Advice:** Take a 10-minute walk, drink water, and practice 4-7-8 breathing before your next study session.")
-        elif "🟠 Overwhelmed" in mood:
-            st.warning("⚠️ **De-compress Now:** Break your daily targets into micro 25-minute sprints. Focus only on 1 topic at a time.")
-        else:
-            st.error("🛑 **Burnout Protocol Engaged:** Step away from textbooks. Talk to a family member/mentor or consult our AI Mental Health Counselor below.")
+    elif "🟠 Overwhelmed" in curr_mood:
+        plan_suggestion = (
+            f"**Overwhelm De-escalation Plan:** Looking at all {left_cnt} remaining microtopics creates panic. "
+            f"Hide the master list. Select **only 2 microtopics** for today (e.g. GS2 Polity Articles or GS1 Geography). "
+            f"Use **25-minute Pomodoro sprints** with 10-minute rest breaks."
+        )
+    elif "🟡 Moderate Stress" in curr_mood:
+        plan_suggestion = (
+            f"**Moderate Stress Calibration:** Use **45-minute study sprints**. Target **3 to 4 microtopics daily**. "
+            f"Solve **5 Prelims PYQs** after completing each microtopic to convert stress into tangible test confidence."
+        )
+    else:
+        plan_suggestion = (
+            f"**Hyper-Focus Flow State:** Your mental energy is high ({energy_lvl}/10). "
+            f"Execute **90-minute deep work blocks** targeting **5 to 6 heavy microtopics daily** (GS3 Economy, GS2 Governance) to rapidly reduce the remaining {left_cnt} microtopics!"
+        )
+
+    sug_col1, sug_col2 = st.columns(2)
+    with sug_col1:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #34D399 !important;">🎯 1. Mindset-Calibrated Microtopic Plan</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                {plan_suggestion}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #F59E0B !important;">⚡ 2. The "1-Topic Isolation" Anti-Panic Technique</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                <strong>Implementation Protocol:</strong> When anxiety strikes regarding <em>"{curr_trigger}"</em>:<br>
+                1. <strong>Close all tabs & books:</strong> Except for 1 single microtopic from Syllabus Navigator.<br>
+                2. <strong>30-Minute Execution:</strong> Read only that microtopic or watch 1 focused explainer.<br>
+                3. <strong>Check the box:</strong> Marking 1 microtopic checked releases dopamine and restores emotional control.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with sug_col2:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #C084FC !important;">📖 3. GS4 Ethics Synergy (Mindset as Syllabus Content)</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                <strong>Exam Integration:</strong> Turn your current psychological stressor into GS4 Ethics study material!<br>
+                • <strong>Current Trigger:</strong> <em>{curr_trigger}</em><br>
+                • <strong>GS4 Syllabus Topic:</strong> <em>Stress Management, Emotional Intelligence & Work-Life Balance in Public Service</em><br>
+                • <strong>Exam Task:</strong> Write a 150-word GS4 answer on: <em>"What coping strategies can a District Collector adopt to prevent emotional burnout during crisis management?"</em>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="pwskills-card">
+            <div class="pwskills-title" style="color: #38BDF8 !important;">⏰ 4. Circadian & Sleep Hygiene Protocol</div>
+            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>Strict Sleep Window:</strong> Minimum 7.5 hours of sleep. Zero late-night textbook reading past 10:30 PM.<br>
+                • <strong>Somatic Cortisol Reset:</strong> Perform 4 cycles of 4-7-8 box breathing twice daily (morning & before sleep).<br>
+                • <strong>Post-Study Walk:</strong> 15-minute outdoor walk without phone after your evening study session to clear mental fatigue.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 4. 1-CLICK AI MENTAL HEALTH COUNSELOR LAUNCHER
+    st.markdown("<h4 style='color: #38BDF8;'>🤖 1-Click AI Counselor Consultation (Pre-Filled Mindset & Syllabus Data)</h4>", unsafe_allow_html=True)
+    st.caption("Click the button below to launch an empathetic AI Consultation tailored to your exact mood, stressor, and remaining microtopics:")
+
+    consult_mh_prompt = (
+        f"I am a UPSC aspirant. My current mental state is '{curr_mood}', my primary stress trigger is '{curr_trigger}', and my daily focus energy level is {energy_lvl}/10. "
+        f"In my Syllabus Navigator tracking, I have completed {completed_cnt} microtopics ({covered_pct:.1f}%) and have {left_cnt} microtopics remaining ({left_pct:.1f}%). "
+        f"Please provide an empathetic, professional psychological strategy and a daily study routine that helps me overcome {curr_trigger} while steadily completing my GS microtopics."
+    )
+
+    if st.button("🚀 Launch AI Counselor Consultation for My Mindset & Syllabus Progress", key="btn_mh_correlated_consult", use_container_width=True):
+        redirect_to_copilot(consult_mh_prompt)
 
     st.markdown("---")
-    
-    # 1-Click AI Counselor Prompts
-    st.markdown("<h4 style='color: #38BDF8;'>🤖 AI Psychological Copilot - Instant Consultations</h4>", unsafe_allow_html=True)
-    st.caption("Click any prompt to consult our empathetic AI counselor trained on UPSC aspirant psychology:")
-    
-    mh_col1, mh_col2, mh_col3, mh_col4 = st.columns(4)
-    with mh_col1:
-        st.markdown("""
-        <div class="pwskills-card">
-            <div class="pwskills-title">🤯 Overcoming Overwhelm</div>
-            <div class="pwskills-desc">Syllabus feels impossible to finish in time? Get a realistic prioritization plan.</div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🤖 Ask Counselor", key="btn_mh_overwhelm", use_container_width=True):
-            redirect_to_copilot("I feel completely overwhelmed by the huge UPSC syllabus and fear I won't finish in time. Please give me an empathetic step-by-step psychological strategy to regain control and reduce anxiety.")
 
-    with mh_col2:
-        st.markdown("""
-        <div class="pwskills-card">
-            <div class="pwskills-title">🎯 Prelims Exam Anxiety</div>
-            <div class="pwskills-desc">Managing test panic, negative marking fear, and exam-hall performance pressure.</div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🤖 Ask Counselor", key="btn_mh_anxiety", use_container_width=True):
-            redirect_to_copilot("How can I overcome severe exam anxiety and negative marking fear during UPSC Prelims mock tests?")
-
-    with mh_col3:
-        st.markdown("""
-        <div class="pwskills-card">
-            <div class="pwskills-title">😴 Sleep & Burnout Routine</div>
-            <div class="pwskills-desc">Fixing insomnia, late-night overthinking, and fatigue during 10+ hour study routines.</div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🤖 Ask Counselor", key="btn_mh_sleep", use_container_width=True):
-            redirect_to_copilot("My sleep schedule is ruined due to late-night UPSC preparation, and I feel mentally exhausted during the day. How do I fix my sleep and energy levels?")
-
-    with mh_col4:
-        st.markdown("""
-        <div class="pwskills-card">
-            <div class="pwskills-title">👥 Isolation & Peer Pressure</div>
-            <div class="pwskills-desc">Dealing with social isolation, family expectations, and fear of falling behind.</div>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🤖 Ask Counselor", key="btn_mh_isolation", use_container_width=True):
-            redirect_to_copilot("I am struggling with social isolation and family pressure during my UPSC attempt. How do I maintain mental resilience?")
-
-    st.markdown("---")
-
-    # Interactive Mindfulness & Support Resources Row
+    # 5. Interactive Mindfulness & Helpline Resources
     rec_col1, rec_col2 = st.columns([1.2, 0.8])
     with rec_col1:
         st.markdown("<h4 style='color: #FFFFFF;'>🧘 4-7-8 Box Breathing & Relaxation Tool</h4>", unsafe_allow_html=True)
