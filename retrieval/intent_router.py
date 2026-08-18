@@ -189,6 +189,19 @@ def classify_intent(query: str) -> IntentResult:
     text = query.lower().strip()
     signals = _collect_signals(text)
 
+    # High Priority: Foundation Completed + Mentorship & Tests request
+    foundation_done = _matches([
+        r"completed\s+(?:my\s+)?foundation",
+        r"done\s+(?:with\s+)?(?:my\s+)?foundation",
+        r"finished\s+(?:my\s+)?foundation",
+        r"foundation\s+(?:is\s+)?completed",
+        r"after\s+(?:my\s+)?foundation",
+        r"foundation\s+done"
+    ], text)
+    mentorship_tests = any(p in text for p in ("mentorship", "test", "programme", "program", "batch", "series"))
+    if foundation_done and mentorship_tests:
+        return IntentResult("foundation_completed_mentorship_tests", 0.99, signals + ["foundation_completed", "mentorship_tests"])
+
     # High Priority: Relationship & Syllabus Recovery 7-Day Plan requests
     rel_keywords = ("relationship", "one-sided", "ghosting", "breakup", "unrequited", "mixed signals", "emotional drain")
     plan_keywords = ("7-day", "7 day", "recovery plan", "study plan", "actionable study", "syllabus navigator", "microtopic")

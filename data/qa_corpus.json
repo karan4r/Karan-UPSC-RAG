@@ -128,5 +128,22 @@
       "syllabus_topic": "Parliament",
       "topic_type": "process"
     }
+  },
+  {
+    "id": "qa_foundation_completed_mentorship_tests",
+    "category": "course_guidance",
+    "intent": "foundation_completed_mentorship_tests",
+    "priority": 100,
+    "question": "I have completed foundation and need a programme for mentorship and tests. What do you suggest?",
+    "question_variants": [
+      "Completed foundation need mentorship and tests",
+      "Finished foundation course recommend test series and mentorship batch",
+      "Foundation done need UPSC mentorship and test programme",
+      "Suggest course after completing foundation for mentorship and mock tests"
+    ],
+    "answer_template": "🎯 **PW OnlyIAS Advanced Mentorship & Test Series Programme**\n\nSince you have **completed your foundation** and are now seeking a dedicated programme for **1-on-1 mentorship, rigorous Prelims & Mains test series, and performance tracking**, we recommend the specialized PW OnlyIAS Mentorship & Test Series Batch:\n\n🔗 **Official Batch Overview & Enrollment Link:**\nhttps://www.pw.live/study-v2/batches/6a74a42dea0b1303dc5b2df4/batch-overview?came_from=batch_listing#Description_1\n\n---\n\n### 🌟 **Key Features of the Mentorship & Test Programme:**\n\n1. **👨‍🏫 1-on-1 Dedicated UPSC Mentorship:**\n   - Personalized study tracking & weekly timetable customization with experienced mentors.\n   - Strategic guidance for Prelims elimination techniques and Mains answer structure.\n\n2. **📝 Integrated Prelims & Mains Test Series:**\n   - **Prelims Test Series:** Sectional & Full-Length Mock Tests with detailed explanation keys and All-India Ranks.\n   - **Mains Test Series:** Evaluated within 72 hours by expert evaluators with micro-level feedback on intro, body, conclusion, diagrams, and value addition.\n\n3. **📊 Performance Analytics & Doubt Resolution:**\n   - Real-time performance diagnostic dashboard identifying weak subjects and time management gaps.\n   - Priority doubt resolution sessions with faculty.\n\n---\n\n💡 **Next Steps:** Review the batch schedule, faculty details, and test calendar on the official link above to enroll and accelerate your Mains & Prelims test execution!",
+    "metadata": {
+      "batch_url": "https://www.pw.live/study-v2/batches/6a74a42dea0b1303dc5b2df4/batch-overview?came_from=batch_listing#Description_1"
+    }
   }
 ]

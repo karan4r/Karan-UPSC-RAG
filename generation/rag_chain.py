@@ -579,6 +579,24 @@ class RAGChatbot:
             intent_result: IntentResult = classify_intent(query)
             intent = intent_result.intent
 
+            is_foundation_done_query = (
+                intent == "foundation_completed_mentorship_tests"
+                or (re.search(r"(completed|done|finished|after)\b.*?\bfoundation", query, re.I)
+                    and re.search(r"(mentorship|test|programme|program|batch|series)", query, re.I))
+                or (re.search(r"foundation\b.*?\b(completed|done|finished)", query, re.I)
+                    and re.search(r"(mentorship|test|programme|program|batch|series)", query, re.I))
+            )
+
+            if is_foundation_done_query:
+                record = next(
+                    (r for r in self.index.records if r["id"] == "qa_foundation_completed_mentorship_tests"),
+                    None,
+                )
+                if record:
+                    result = self._template_response(record)
+                    result["signals"] = intent_result.signals
+                    return result
+
             is_rel_plan_query = (
                 intent == "relationship_syllabus_7day_plan"
                 or any(k in query.lower() for k in ("relationship dynamics", "one-sided", "ghosting", "breakup", "unrequited", "mixed signals"))
@@ -591,14 +609,14 @@ class RAGChatbot:
             is_mh_query = intent == "mental_health_upsc_distress" or "mental state" in query.lower() or "stress trigger" in query.lower()
 
             pyqs = self._find_relevant_pyqs(query)
-            if pyqs and intent == "general" and not is_mh_query:
+            if pyqs and intent == "general" and not is_mh_query and not is_foundation_done_query:
                 intent = "notes_or_explain_topic"
                 intent_result.intent = "notes_or_explain_topic"
                 if "academic" not in intent_result.signals:
                     intent_result.signals.append("academic")
 
             clarification = get_clarification_message(intent)
-            if clarification and not is_mh_query:
+            if clarification and not is_mh_query and not is_foundation_done_query:
                 return {
                     "answer": clarification,
                     "intent": intent,
@@ -610,6 +628,7 @@ class RAGChatbot:
                 }
 
             template_intents = {
+                "foundation_completed_mentorship_tests": "qa_foundation_completed_mentorship_tests",
                 "suggest_course_fresh_graduate_only": "qa_course_fresh_grad_only",
                 "backup_plan_while_upsc": "qa_backup_plan_upsc_skilling",
             }
