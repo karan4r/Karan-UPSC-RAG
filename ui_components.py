@@ -322,25 +322,102 @@ def inject_custom_css():
     </style>
     """, unsafe_allow_html=True)
 
-def render_futuristic_header():
-    st.markdown("""
+EXAM_META_CONFIG = {
+    "UPSC": {
+        "title": "⚡ UPSC AI NEURAL COPILOT",
+        "subtitle": "Civil Services Examination (IAS / IPS / IFS) · Quantum RAG Neural Engine",
+        "badges": [
+            ("🟢 RAG NEURAL CORE: ONLINE", "badge-success"),
+            ("🧠 623 MAINS MICROTOPICS ACTIVE", "badge-primary"),
+            ("🧘 MENTAL HEALTH & WELLNESS: ACTIVE", "badge-purple"),
+            ("📝 PRELIMS & MAINS MOCKS: READY", "badge-success")
+        ]
+    },
+    "IIT-JEE": {
+        "title": "⚛️ IIT-JEE AI NEURAL MENTOR",
+        "subtitle": "Engineering Entrance (Physics, Chemistry & Mathematics) · Step-by-Step Problem Solving Engine",
+        "badges": [
+            ("🟢 JEE MAIN & ADVANCED CORE: ONLINE", "badge-success"),
+            ("📐 FORMULAS & DERIVATIONS ACTIVE", "badge-primary"),
+            ("💡 SHORTCUT & STEP-BY-STEP SOLVER", "badge-purple"),
+            ("🎯 HIGH-YIELD JEE MOCKS: READY", "badge-success")
+        ]
+    },
+    "NEET": {
+        "title": "🩺 NEET UG MEDICAL COPILOT",
+        "subtitle": "National Eligibility cum Entrance Test (NCERT Bio, Chem & Physics) · NCERT Line-by-Line Engine",
+        "badges": [
+            ("🟢 NCERT MASTER MATRIX: ONLINE", "badge-success"),
+            ("🧬 BIOLOGY, CHEM & PHYSICS HIGH-YIELD", "badge-primary"),
+            ("🔬 ASSERTION-REASON PRACTICE: ACTIVE", "badge-purple"),
+            ("💡 MNEMONIC & RECALL ENGINE: READY", "badge-success")
+        ]
+    },
+    "GATE": {
+        "title": "⚙️ GATE ENGINEERING AI COPILOT",
+        "subtitle": "Graduate Aptitude Test in Engineering (CS, EE, EC, ME, CE) · Numerical & Algorithmic Solver",
+        "badges": [
+            ("🟢 GATE TECHNICAL ENGINE: ONLINE", "badge-success"),
+            ("📊 NUMERICAL ANSWER TYPE (NAT) READY", "badge-primary"),
+            ("💻 CORE SUBJECT & ALGO MATRIX", "badge-purple"),
+            ("⚡ STEP-BY-STEP DERIVATIONS: ACTIVE", "badge-success")
+        ]
+    },
+    "CAT": {
+        "title": "📈 CAT APTITUDE & DILR MASTER",
+        "subtitle": "Common Admission Test for IIMs (QA, DILR, VARC) · Speed Math & Logical Breakdown Engine",
+        "badges": [
+            ("🟢 CAT STRATEGY MATRIX: ONLINE", "badge-success"),
+            ("⚡ SPEED MATH & SHORTCUT ELIMINATION", "badge-primary"),
+            ("🧩 DILR PUZZLE MATRIX ACTIVE", "badge-purple"),
+            ("📚 VARC PASSAGE ANALYSIS: READY", "badge-success")
+        ]
+    },
+    "Banking": {
+        "title": "🏦 BANKING EXAM AI COPILOT",
+        "subtitle": "IBPS PO/Clerk, SBI PO/Clerk & RBI Grade B · Speed Aptitude & Financial Awareness Engine",
+        "badges": [
+            ("🟢 BANKING SPEED ENGINE: ONLINE", "badge-success"),
+            ("⚡ 30-SEC CALCULATION TRICKS", "badge-primary"),
+            ("🧩 SYLLOGISM & SEATING ARRANGEMENT", "badge-purple"),
+            ("💳 FINANCIAL AWARENESS: ACTIVE", "badge-success")
+        ]
+    },
+    "SSC": {
+        "title": "🏢 SSC CGL & CHSL PREP COPILOT",
+        "subtitle": "Staff Selection Commission Tier-1 & Tier-2 · Quant, Reasoning, English & GA Speed Engine",
+        "badges": [
+            ("🟢 SSC TIER-1 & TIER-2 CORE: ONLINE", "badge-success"),
+            ("⚡ SPEED HACKS & OPTION SUBSTITUTION", "badge-primary"),
+            ("🏛️ STATIC GA MEMORY MATRIX", "badge-purple"),
+            ("📝 PATTERN MOCKS & REASONING: READY", "badge-success")
+        ]
+    }
+}
+
+def render_exam_header(selected_exam: str = "UPSC"):
+    config = EXAM_META_CONFIG.get(selected_exam, EXAM_META_CONFIG["UPSC"])
+    badges_html = "".join([f'<span class="status-badge {b[1]}">{b[0]}</span>' for b in config["badges"]])
+    
+    st.markdown(f"""
     <div class="futuristic-header">
         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-                <h1 class="header-title">⚡ UPSC AI NEURAL COPILOT</h1>
-                <div class="header-subtitle">Quantum RAG Neural Engine · Real-time Syllabus Matrix & Psychological Copilot</div>
+                <h1 class="header-title">{config['title']}</h1>
+                <div class="header-subtitle">{config['subtitle']}</div>
             </div>
             <div style="text-align: right;">
                 <span style="font-family:'JetBrains Mono'; font-size:0.78rem; background:rgba(56,189,248,0.15); color:#38BDF8; padding:5px 12px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); font-weight:700;">
-                    MODEL: GROQ GPT-OSS NEURAL
+                    VERTICAL: {selected_exam}
                 </span>
             </div>
         </div>
         <div class="status-badge-container">
-            <span class="status-badge badge-success">🟢 RAG NEURAL CORE: ONLINE</span>
-            <span class="status-badge badge-primary">🧠 623 MAINS MICROTOPICS ACTIVE</span>
-            <span class="status-badge badge-purple">🧘 MENTAL HEALTH & WELLNESS: ACTIVE</span>
-            <span class="status-badge badge-success">📝 MOCK TESTS & CLASSES: READY</span>
+            {badges_html}
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+def render_futuristic_header():
+    render_exam_header("UPSC")
+

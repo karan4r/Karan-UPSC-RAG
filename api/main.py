@@ -9,6 +9,7 @@ chatbot = RAGChatbot()
 
 class ChatRequest(BaseModel):
     message: str
+    exam_vertical: str = "UPSC"
 
 
 class ChatResponse(BaseModel):
@@ -19,6 +20,7 @@ class ChatResponse(BaseModel):
     mode: str
     sources: list
     signals: list = []
+    exam_vertical: str = "UPSC"
 
 
 @app.get("/health")
@@ -28,7 +30,7 @@ def health():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    result = chatbot.chat(request.message.strip())
+    result = chatbot.chat(request.message.strip(), exam_vertical=request.exam_vertical)
     return ChatResponse(
         answer=result["answer"],
         intent=result["intent"],
@@ -37,4 +39,6 @@ def chat(request: ChatRequest):
         mode=result["mode"],
         sources=result.get("sources", []),
         signals=result.get("signals", []),
+        exam_vertical=result.get("exam_vertical", request.exam_vertical),
     )
+

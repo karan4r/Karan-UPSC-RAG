@@ -2,12 +2,14 @@ import streamlit as st
 import json
 import re
 from pathlib import Path
-from generation.rag_chain import RAGChatbot, generate_academic_fallback
-from ui_components import inject_custom_css, render_futuristic_header
+from generation.rag_chain import RAGChatbot, generate_academic_fallback, generate_exam_fallback
+from ui_components import inject_custom_css, render_exam_header, render_futuristic_header, EXAM_META_CONFIG
+
+EXAM_VERTICALS = ["UPSC", "IIT-JEE", "NEET", "GATE", "CAT", "Banking", "SSC"]
 
 # Set Streamlit Page Configuration
 st.set_page_config(
-    page_title="UPSC AI Neural Copilot",
+    page_title="AI Neural Copilot - Exam Verticals",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -44,9 +46,15 @@ def save_user_progress(progress_data):
     with open(USER_DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(progress_data, f, indent=2, ensure_ascii=False)
 
-# Initialize Session State
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# Initialize Session State for Exam Verticals
+if "selected_exam" not in st.session_state:
+    st.session_state.selected_exam = "UPSC"
+
+if "exam_messages" not in st.session_state:
+    st.session_state.exam_messages = {exam: [] for exam in EXAM_VERTICALS}
+
+# Alias active messages list
+st.session_state.messages = st.session_state.exam_messages[st.session_state.selected_exam]
 
 if "chatbot" not in st.session_state or not hasattr(st.session_state.chatbot, "_generate_mental_health_syllabus_fallback"):
     st.session_state.chatbot = RAGChatbot()
@@ -59,6 +67,7 @@ if "pending_prompt" not in st.session_state:
 
 if "nav_mode" not in st.session_state:
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
+
 
 def redirect_to_copilot(prompt: str):
     st.session_state.pending_prompt = prompt
@@ -269,31 +278,69 @@ def render_assistant_message(content, idx, meta=None):
         with st.expander("🔍 System Retrieval & Context Signals"):
             st.json(meta)
 
-# Render Header Banner
-render_futuristic_header()
+# Render Exam Header Banner
+render_exam_header(st.session_state.selected_exam)
+
+# Exam Vertical Selection Hub Grid
+st.markdown("<div style='font-family: Outfit; font-size: 1.15rem; font-weight: 800; color: #38BDF8; margin-bottom: 10px;'>🎓 SELECT EXAM VERTICAL:</div>", unsafe_allow_html=True)
+col_cards = st.columns(len(EXAM_VERTICALS))
+exam_icons = {
+    "UPSC": "🏛️",
+    "IIT-JEE": "⚛️",
+    "NEET": "🩺",
+    "GATE": "⚙️",
+    "CAT": "📈",
+    "Banking": "🏦",
+    "SSC": "🏢"
+}
+
+for i, exam in enumerate(EXAM_VERTICALS):
+    with col_cards[i]:
+        is_active = (exam == st.session_state.selected_exam)
+        btn_label = f"{exam_icons[exam]} {exam}" + (" ✓" if is_active else "")
+        if st.button(btn_label, key=f"btn_exam_hub_{exam}", use_container_width=True):
+            st.session_state.selected_exam = exam
+            st.session_state.messages = st.session_state.exam_messages[exam]
+            st.rerun()
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Render Query Card
 def render_query_card(box_key: str):
+    placeholder_text = f"Type your {st.session_state.selected_exam} topic, problem statement, PYQ, or question here..."
     with st.form(f"query_form_{box_key}", clear_on_submit=True):
-        st.markdown("<div style='font-family: JetBrains Mono; font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin-bottom: 8px;'>⚡ NEURAL PROMPT INTERFACE:</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='font-family: JetBrains Mono; font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin-bottom: 8px;'>⚡ {st.session_state.selected_exam} NEURAL PROMPT INTERFACE:</div>", unsafe_allow_html=True)
         t_col1, t_col2 = st.columns([0.82, 0.18])
         with t_col1:
             q_val = st.text_input(
                 "",
-                placeholder="Type your UPSC syllabus query, PYQ question, or mental health concern here...",
+                placeholder=placeholder_text,
                 key=f"mentor_query_input_{box_key}",
                 label_visibility="collapsed"
             )
         with t_col2:
-            submitted = st.form_submit_button("🚀 Ask Copilot", use_container_width=True)
+            submitted = st.form_submit_button(f"🚀 Ask {st.session_state.selected_exam} AI", use_container_width=True)
     return submitted, q_val
 
 top_sub, top_val = render_query_card("top_main_query")
 
 # Sidebar Setup
 with st.sidebar:
+    st.markdown("<h3 style='color: #38BDF8; font-family: JetBrains Mono;'>🎓 ACTIVE EXAM VERTICAL</h3>", unsafe_allow_html=True)
+    selected_sidebar_exam = st.selectbox(
+        "Switch Active Exam:",
+        EXAM_VERTICALS,
+        index=EXAM_VERTICALS.index(st.session_state.selected_exam),
+        key="sidebar_exam_selector"
+    )
+    if selected_sidebar_exam != st.session_state.selected_exam:
+        st.session_state.selected_exam = selected_sidebar_exam
+        st.session_state.messages = st.session_state.exam_messages[selected_sidebar_exam]
+        st.rerun()
+
+    st.markdown("---")
     st.markdown("<h3 style='color: #38BDF8; font-family: JetBrains Mono;'>⚙️ NEURAL CONTROLS</h3>", unsafe_allow_html=True)
-    st.info("💡 **Cyber Tip:** Use the Curriculum Matrix to track microtopics and click '💡 Explainer' to generate high-yield AI notes.")
+    st.info(f"💡 **Exam Tip:** Ask any concept or problem for **{st.session_state.selected_exam}** to generate step-by-step solutions, key formulas & MCQs!")
     
     # Progress Summary in Sidebar
     syllabus_data = load_syllabus_data()
@@ -314,7 +361,8 @@ with st.sidebar:
     st.markdown(f"<strong style='color: #38BDF8;'>{completed_count} / {total_micros}</strong> <span style='color: #94A3B8;'>modules completed ({pct:.1f}%)</span>", unsafe_allow_html=True)
     
     st.markdown("---")
-    if st.button("🧹 Reset Neural Session", use_container_width=True):
+    if st.button(f"🧹 Reset {st.session_state.selected_exam} Session", use_container_width=True):
+        st.session_state.exam_messages[st.session_state.selected_exam] = []
         st.session_state.messages = []
         st.rerun()
 
@@ -349,15 +397,62 @@ st.session_state.nav_mode = selected_nav
 nav_mode = selected_nav
 st.markdown("<br>", unsafe_allow_html=True)
 
+# Sample Prompts per Vertical
+SAMPLE_PROMPTS = {
+    "UPSC": [
+        "🏛️ Explain the Constitutional framework of Fundamental Rights (Articles 14-32)",
+        "📜 Analyze the causes & impact of the Revolt of 1857 in Modern History",
+        "🧘 I am feeling overwhelmed by the vast UPSC syllabus, build me a study recovery plan"
+    ],
+    "IIT-JEE": [
+        "⚛️ Explain Newton's Laws of Motion with rotational dynamics equations & numerical step-by-step",
+        "🧪 Explain Chemical Bonding, Hybridization (sp, sp2, sp3) and Molecular Orbital Theory",
+        "📐 Explain Calculus Integration by parts and definite integrals shortcuts for JEE"
+    ],
+    "NEET": [
+        "🩺 Explain Photosynthesis C3 vs C4 pathways and Calvin Cycle with NCERT line-by-line breakdown",
+        "🧬 Explain DNA Replication mechanism, Okazaki fragments, and polymerases for NEET",
+        "🧪 Explain Chemical Kinetics rate laws, zero & first order reaction half-life formulas"
+    ],
+    "GATE": [
+        "⚙️ Explain Dijkstra's & Prim's algorithms with time/space complexity & Numerical Answer Type steps",
+        "💻 Explain Operating Systems Paging, Virtual Memory & Page Fault calculation",
+        "📊 Explain Control Systems Bode Plots, Nyquist Stability Criterion & Transfer Functions"
+    ],
+    "CAT": [
+        "📈 Explain Speed Math shortcuts for Ratios, Percentages & Profit-Loss problems in CAT QA",
+        "🧩 Explain DILR Set Theory 3-Venn Diagram and Maxima-Minima logic puzzles",
+        "📚 Explain VARC Reading Comprehension Main Idea vs Author Inference elimination hacks"
+    ],
+    "Banking": [
+        "🏦 Explain Syllogism Venn Diagram rules for 'Only a few' and 'Some Not' cases in IBPS PO",
+        "🧩 Explain Circular & Linear Seating Arrangement puzzle solving framework",
+        "💳 Explain RBI Monetary Policy instruments (Repo, CRR, SLR) and Banking Awareness"
+    ],
+    "SSC": [
+        "🏢 Explain SSC CGL Geometry Circle & Tangent theorems with short tricks",
+        "⚡ Explain Trigonometry value substitution tricks (0°, 45°, 90°) for fast solving",
+        "🏛️ Explain SSC General Awareness high-yield Static GK (Dynasties, Rivers & Articles)"
+    ]
+}
+
 # ==========================================
 # VIEW 1: 🤖 NEURAL AI COPILOT
 # ==========================================
 if nav_mode == "🤖 Neural AI Copilot":
-    # If NO messages yet: Render prominent Query Box at top
+    # If NO messages yet for this vertical: Render Quick Sample Prompts
     if not st.session_state.messages:
+        st.markdown(f"#### 💡 Starter Prompts for **{st.session_state.selected_exam}**:")
+        sp_cols = st.columns(3)
+        current_samples = SAMPLE_PROMPTS.get(st.session_state.selected_exam, SAMPLE_PROMPTS["UPSC"])
+        for idx, sample in enumerate(current_samples):
+            with sp_cols[idx]:
+                if st.button(sample, key=f"btn_sample_{st.session_state.selected_exam}_{idx}", use_container_width=True):
+                    st.session_state.pending_prompt = sample
+                    st.rerun()
         st.markdown("<br>", unsafe_allow_html=True)
     
-    # Display Chat Messages
+    # Display Chat Messages for Active Exam
     for idx, msg in enumerate(st.session_state.messages):
         with st.chat_message(msg["role"]):
             if msg["role"] == "assistant":
@@ -380,17 +475,24 @@ if nav_mode == "🤖 Neural AI Copilot":
             st.markdown(prompt_to_process)
 
         with st.chat_message("assistant"):
-            with st.spinner("⚡ Executing Neural RAG Matrix & Consulting Copilot..."):
+            with st.spinner(f"⚡ Executing {st.session_state.selected_exam} RAG Matrix & Consulting Copilot..."):
                 try:
-                    result = st.session_state.chatbot.chat(prompt_to_process, mh_count=mh_count)
+                    result = st.session_state.chatbot.chat(
+                        prompt_to_process,
+                        mh_count=mh_count,
+                        exam_vertical=st.session_state.selected_exam
+                    )
                 except Exception:
-                    result = st.session_state.chatbot.chat(prompt_to_process)
+                    result = st.session_state.chatbot.chat(
+                        prompt_to_process,
+                        exam_vertical=st.session_state.selected_exam
+                    )
             
             ans_content = result.get("answer", "")
             if "requires structured analysis" in ans_content or "Overview for" in ans_content:
                 clean_q = re.sub(r"(?i)^(Overview for|explain|notes on|what is|describe)\s+", "", ans_content.split("\n")[0]).strip()
                 clean_q = re.sub(r"[\*#`]", "", clean_q).strip()
-                ans_content = generate_academic_fallback(clean_q if clean_q else prompt_to_process)
+                ans_content = generate_exam_fallback(clean_q if clean_q else prompt_to_process, exam_vertical=st.session_state.selected_exam)
                 result["answer"] = ans_content
 
             meta = {
@@ -400,6 +502,7 @@ if nav_mode == "🤖 Neural AI Copilot":
                 "mode": result.get("mode", "rag+web"),
                 "signals": result.get("signals", []),
                 "sources": result.get("sources", []),
+                "exam_vertical": st.session_state.selected_exam,
             }
             
             next_idx = len(st.session_state.messages)
@@ -408,7 +511,9 @@ if nav_mode == "🤖 Neural AI Copilot":
         st.session_state.messages.append(
             {"role": "assistant", "content": ans_content, "meta": meta}
         )
+        st.session_state.exam_messages[st.session_state.selected_exam] = st.session_state.messages
         st.rerun()
+
 
 # ==========================================
 # VIEW 2: 📋 SYLLABUS NAVIGATOR

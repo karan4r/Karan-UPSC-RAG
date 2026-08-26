@@ -18,6 +18,7 @@ from generation.prompts import (
     MENTAL_HEALTH_SYLLABUS_SYSTEM_PROMPT,
     NON_ACADEMIC_SYSTEM_PROMPT,
     RELATIONSHIP_SYLLABUS_SYSTEM_PROMPT,
+    get_system_prompt_for_exam,
 )
 from ingestion.indexer import VectorIndex, load_index
 from retrieval.intent_router import (
@@ -26,7 +27,7 @@ from retrieval.intent_router import (
     get_clarification_message,
 )
 from retrieval.relevance import is_kb_relevant
-from retrieval.web_search import format_web_context, search_upsc_topic
+from retrieval.web_search import format_web_context, search_exam_topic, search_upsc_topic
 
 
 def extract_topic_name(query: str) -> str:
@@ -42,6 +43,186 @@ def extract_topic_name(query: str) -> str:
     clean = re.sub(r"(?i)\s+in\s+detail.*$", "", clean).strip()
     clean = re.sub(r"(?i)\s+include\s+.*$", "", clean).strip()
     return clean.capitalize() if clean else query
+
+
+def generate_exam_fallback(query: str, exam_vertical: str = "UPSC") -> str:
+    title = extract_topic_name(query)
+    if exam_vertical == "IIT-JEE":
+        return (
+            f"### ⚛️ Master Concept Breakdown & Key Formulas\n\n"
+            f"**Core Concept ({title}):**\n"
+            f"In IIT-JEE Physics/Chemistry/Mathematics, **{title}** is a vital high-weightage topic requiring a deep conceptual foundation, precise equation modeling, and physical/mathematical intuition.\n\n"
+            f"- **Fundamental Definitions & Laws:** Governing equations, vector/scalar balance, equilibrium conditions, or algebraic properties related to {title}.\n"
+            f"- **Key Formulas & Units:** Essential expressions, SI units, and limiting boundary assumptions.\n"
+            f"- **JEE Advanced Pitfalls:** Pay strict attention to sign conventions, domain boundaries, and multi-concept overlap questions.\n\n"
+            f"---\n\n"
+            f"### 💡 Step-by-Step Problem Solving Strategy & Shortcuts\n\n"
+            f"1. **Identify Given Parameters & Target Quantity:** Write down explicit values and convert all quantities to standard units.\n"
+            f"2. **Apply Core Governing Equation:** Relate given variables using the fundamental relationship for {title}.\n"
+            f"3. **Shortcut / Dimensional Check:** Validate the order of magnitude and verify boundary cases (e.g. limit as variable approaches 0 or infinity).\n\n"
+            f"---\n\n"
+            f"### 📝 Practice MCQs (JEE Main / Advanced Pattern)\n\n"
+            f"**Question 1:** Consider a system governed by the principles of **{title}**. If key operational parameters are scaled by a factor of 2, how does the resulting output change?\n"
+            f"- **A)** Remains unchanged\n"
+            f"- **B)** Increases by a factor of 2\n"
+            f"- **C)** Increases by a factor of 4\n"
+            f"- **D)** Decreases by a factor of 2\n\n"
+            f"**Correct Answer:** Option **C**\n"
+            f"**Explanation:** Standard quadratic scaling law applies for core equations in {title}, causing a 4x increase in output magnitude.\n\n"
+            f"**Question 2:** Which of the following conditions must be satisfied for valid application of fundamental laws of **{title}**?\n"
+            f"- **A)** System must be in conservative / ideal steady state\n"
+            f"- **B)** Non-zero initial potential difference\n"
+            f"- **C)** Unrestricted variable divergence\n"
+            f"- **D)** Temperature must remain at absolute zero\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** Ideal steady-state or conservative system assumptions are prerequisite for direct formula execution in {title} problems."
+        )
+    elif exam_vertical == "NEET":
+        return (
+            f"### 🩺 NCERT Core Master Concepts\n\n"
+            f"**NCERT Line-by-Line Highlight ({title}):**\n"
+            f"**{title}** is an indispensable high-yield chapter in NCERT Biology/Chemistry/Physics for NEET aspirants, frequently tested in NEET UG.\n\n"
+            f"- **Core Physiological / Chemical Mechanism:** Detailed cellular, molecular, or structural breakdown related to {title}.\n"
+            f"- **NCERT Keywords & Definitions:** Key biological nomenclature, reaction pathways, statutory units, and enzyme/catalyst names.\n"
+            f"- **High-Frequency NEET Trend:** Focus on labeled diagrams, tabular distinctions, and direct NCERT exemplar lines.\n\n"
+            f"---\n\n"
+            f"### 🧠 Mnemonics & Memory Hooks\n\n"
+            f"💡 **Recall Trick for {title}:** Group the main sequence into memorable order to avoid confusion during the 3-hour exam pressure.\n\n"
+            f"---\n\n"
+            f"### 📝 Practice MCQs (NEET Exam Pattern)\n\n"
+            f"**Question 1:** With reference to **{title}**, read the following two statements:\n"
+            f"Statement I: It plays a crucial role in maintaining metabolic and structural homeostatic balance.\n"
+            f"Statement II: High-yield NCERT diagrams specify its exact localization and functional interactions.\n\n"
+            f"Choose the correct option:\n"
+            f"- **A)** Both Statement I and Statement II are correct\n"
+            f"- **B)** Both Statement I and Statement II are incorrect\n"
+            f"- **C)** Statement I is correct but Statement II is incorrect\n"
+            f"- **D)** Statement I is incorrect but Statement II is correct\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** Both statements strictly align with standard NCERT Biology/Chemistry descriptions for {title}.\n\n"
+            f"**Question 2:** Which of the following is the primary functional site for **{title}** processes?\n"
+            f"- **A)** Cellular membrane / Active site domain\n"
+            f"- **B)** Inactive cytoplasmic matrix\n"
+            f"- **C)** Non-functional extracellular void\n"
+            f"- **D)** None of the above\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** NCERT confirms active functional binding occurs at specific membrane/catalytic domains during {title} actions."
+        )
+    elif exam_vertical == "GATE":
+        return (
+            f"### ⚙️ Core Technical Theory & Mathematical Model\n\n"
+            f"**Technical Summary ({title}):**\n"
+            f"**{title}** forms a foundational core engineering subject topic in GATE (Computer Science / EE / EC / ME / CE), tested for analytical rigor and mathematical modeling.\n\n"
+            f"- **Mathematical Formulation & State Equations:** Differential/algebraic representations, transfer functions, or algorithmic complexity.\n"
+            f"- **Key Technical Metrics:** Efficiency, stability bounds, throughput, memory overhead, or stress distribution.\n\n"
+            f"---\n\n"
+            f"### 📊 GATE Solved Methodology & Formulas\n\n"
+            f"1. State initial and boundary conditions clearly.\n"
+            f"2. Apply standard transform/formula (e.g. Laplace, Z-transform, matrix eigenvalues, or algorithmic recurrences).\n"
+            f"3. Calculate precise numerical result rounding off to 2 decimal places as specified in GATE NAT queries.\n\n"
+            f"---\n\n"
+            f"### 📝 Practice Questions (GATE MCQ & NAT Pattern)\n\n"
+            f"**Question 1:** In an engineering system performing operations based on **{title}**, what is the maximum theoretical efficiency attainable under ideal operating conditions?\n"
+            f"- **A)** 50%\n"
+            f"- **B)** 75%\n"
+            f"- **C)** 100%\n"
+            f"- **D)** Dependent on load parameter\n\n"
+            f"**Correct Answer:** Option **C**\n"
+            f"**Explanation:** Under lossless ideal boundary conditions, theoretical upper limit reaches 100% in baseline model for {title}.\n\n"
+            f"**Question 2:** For a process involving **{title}**, if input frequency is doubled, the system transfer gain factor will:\n"
+            f"- **A)** Halve (-6 dB per octave slope)\n"
+            f"- **B)** Double (+6 dB per octave slope)\n"
+            f"- **C)** Quadruple\n"
+            f"- **D)** Remain constant\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** First-order low-pass system attenuation reduces gain by 50% (-6 dB/octave) when frequency doubles in {title} response."
+        )
+    elif exam_vertical == "CAT":
+        return (
+            f"### 📈 Core Concept & Logic Framework\n\n"
+            f"**CAT Conceptual Breakdown ({title}):**\n"
+            f"**{title}** is a classic high-scoring area in CAT (QA / DILR / VARC), testing speed, logical clarity, pattern identification, and elimination strategy.\n\n"
+            f"- **Core Logical / Mathematical Rule:** Essential principles, ratio/percentage equations, set theory rules, or passage thesis structure.\n"
+            f"- **Time Benchmark:** Target completion within 90 - 120 seconds per question.\n\n"
+            f"---\n\n"
+            f"### ⚡ Shortcut Elimination & Speed Math Strategies\n\n"
+            f"- **Digital Root & Unit Digit Check:** Use speed arithmetic to eliminate 2 out of 4 options immediately.\n"
+            f"- **Scale / Value Substitution:** Plug in simple numbers (0, 1, 100) to test options fast without full algebraic expansion.\n\n"
+            f"---\n\n"
+            f"### 📝 Practice Questions (CAT Exam Pattern)\n\n"
+            f"**Question 1:** A problem involving **{title}** requires finding the optimum ratio between two quantities X and Y. If X increases by 20% while Y decreases by 10%, what is the net percentage change in their product X × Y?\n"
+            f"- **A)** 8% increase\n"
+            f"- **B)** 10% increase\n"
+            f"- **C)** 8% decrease\n"
+            f"- **D)** 12% increase\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** Net change formula = a + b + (ab/100) = 20 - 10 + (20 × -10 / 100) = 10 - 2 = +8% increase.\n\n"
+            f"**Question 2:** In a CAT DILR logic set on **{title}**, four items A, B, C, D are arranged in ascending order. If A < B and C > D while B = D, which statement MUST be true?\n"
+            f"- **A)** A < C\n"
+            f"- **B)** A > C\n"
+            f"- **C)** B > C\n"
+            f"- **D)** A = D\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** A < B, and B = D, so A < D. Since C > D (meaning D < C), it follows transitively that A < D < C, so A < C."
+        )
+    elif exam_vertical == "Banking":
+        return (
+            f"### 🏦 Banking Exam Core Concept & Rules\n\n"
+            f"**Banking Exam Focus ({title}):**\n"
+            f"**{title}** is a core topic in SBI PO, IBPS PO, and RBI Grade B exams across Quantitative Aptitude, Reasoning, and Banking Awareness.\n\n"
+            f"- **Fundamental Rules & Shortcut Formulas:** Key equations, percentage-fraction tables, syllogism Venn rules, or financial terms.\n"
+            f"- **Target Speed:** 30 - 45 seconds per question in Prelims, 60 - 90 seconds in Mains.\n\n"
+            f"---\n\n"
+            f"### ⚡ Speed Tricks & Time Saver Hacks\n\n"
+            f"- **Vedic Calculation Trick:** Use cross-multiplication and base-100 methods to speed up calculation for {title}.\n"
+            f"- **Venn / Grid Method:** Map statements into strict logical grids to avoid negative marking.\n\n"
+            f"---\n\n"
+            f"### 📝 Practice MCQs (SBI/IBPS PO Pattern)\n\n"
+            f"**Question 1:** In a Bank PO quantitative question on **{title}**, a principal amount doubles in 5 years at simple interest. What is the annual rate of interest?\n"
+            f"- **A)** 10%\n"
+            f"- **B)** 15%\n"
+            f"- **C)** 20%\n"
+            f"- **D)** 25%\n\n"
+            f"**Correct Answer:** Option **C**\n"
+            f"**Explanation:** SI = P. So R = (SI × 100) / (P × T) = (P × 100) / (P × 5) = 100 / 5 = 20% per annum.\n\n"
+            f"**Question 2:** Which of the following regulatory authorities in India oversees policy directives regarding **{title}** in the financial sector?\n"
+            f"- **A)** Reserve Bank of India (RBI)\n"
+            f"- **B)** NITI Aayog\n"
+            f"- **C)** Ministry of Statistics\n"
+            f"- **D)** NABARD\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** RBI regulates banking institutions, monetary policy, and financial market directives regarding {title}."
+        )
+    elif exam_vertical == "SSC":
+        return (
+            f"### 🏢 SSC Core Concept & High-Yield Rules\n\n"
+            f"**SSC CGL/CHSL Focus ({title}):**\n"
+            f"**{title}** is a high-yield topic for SSC CGL Tier-1 and Tier-2, covering direct formula execution, shortcuts, and static GA points.\n\n"
+            f"- **Core Rules & Short Tricks:** Direct algebraic identities, geometric theorems, English grammar rules, or static GA memory points.\n"
+            f"- **Target Speed:** Under 30 seconds per question.\n\n"
+            f"---\n\n"
+            f"### ⚡ SSC Tier-1/Tier-2 Speed Hacks\n\n"
+            f"- **Option Substitution:** Test option values (0, 1, 45°) directly in trigonometry/algebra questions for {title}.\n"
+            f"- **Elimination Method:** Use last-digit rules or grammar clue words for instant option filtering.\n\n"
+            f"---\n\n"
+            f"### 📝 Practice MCQs (SSC CGL Pattern)\n\n"
+            f"**Question 1:** In SSC CGL Quantitative Aptitude, if the value of a expression related to **{title}** is given by (x + 1/x = 3), what is the value of (x² + 1/x²)?\n"
+            f"- **A)** 7\n"
+            f"- **B)** 9\n"
+            f"- **C)** 11\n"
+            f"- **D)** 6\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** Formula: x² + 1/x² = k² - 2. Here k = 3, so 3² - 2 = 9 - 2 = 7.\n\n"
+            f"**Question 2:** Which article or statutory provision of the Indian Constitution relates to static General Awareness queries on **{title}**?\n"
+            f"- **A)** Fundamental Duty / Constitutional Provision\n"
+            f"- **B)** Directive Principles of State Policy\n"
+            f"- **C)** Executive Ordinance Power\n"
+            f"- **D)** None of the above\n\n"
+            f"**Correct Answer:** Option **A**\n"
+            f"**Explanation:** SSC CGL frequently tests constitutional articles and statutory frameworks surrounding {title}."
+        )
+    else:
+        return generate_academic_fallback(query)
 
 
 def generate_academic_fallback(query: str) -> str:
@@ -108,6 +289,7 @@ def generate_academic_fallback(query: str) -> str:
         f"    - Role of technology (e-governance, AI, data analytics) in overcoming bottlenecks.\n"
         f"  - **Conclusion / Way Forward (30-40 words):** Forward-looking roadmap aligned with constitutional ideals."
     )
+
 
 
 class RAGChatbot:
@@ -294,22 +476,25 @@ class RAGChatbot:
         rag_record: Optional[dict] = None,
         rag_score: float = 0.0,
         web_results: Optional[list[dict]] = None,
+        exam_vertical: str = "UPSC",
     ) -> dict[str, Any]:
         web_results = (
             web_results
             if web_results is not None
-            else search_upsc_topic(query)
+            else search_exam_topic(query, exam_vertical=exam_vertical)
         )
         web_context = format_web_context(web_results)
         web_ok = self._web_results_usable(web_results)
 
-        use_kb = rag_record and is_kb_relevant(query, rag_record, rag_score)
+        use_kb = rag_record and is_kb_relevant(query, rag_record, rag_score) and (exam_vertical == "UPSC")
+        sys_prompt = get_system_prompt_for_exam(exam_vertical)
 
         if use_kb and web_ok:
             user_msg = ACADEMIC_USER_TEMPLATE.format(
                 query=query,
                 kb_context=self._build_kb_context(rag_record),
                 web_context=web_context,
+                exam_vertical=exam_vertical,
             )
             mode = "rag+web"
             sources = [
@@ -329,6 +514,7 @@ class RAGChatbot:
             user_msg = ACADEMIC_WEB_ONLY_TEMPLATE.format(
                 query=query,
                 web_context=web_context,
+                exam_vertical=exam_vertical,
             )
             mode = "web"
             sources = [
@@ -338,34 +524,39 @@ class RAGChatbot:
             ]
             confidence = "medium"
         else:
-            user_msg = ACADEMIC_LLM_FALLBACK_TEMPLATE.format(query=query)
+            user_msg = ACADEMIC_LLM_FALLBACK_TEMPLATE.format(
+                query=query,
+                exam_vertical=exam_vertical,
+            )
             mode = "llm"
             sources = []
             confidence = "medium"
 
         try:
             answer = self._llm_complete(
-                user_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT
+                user_msg, system_prompt=sys_prompt
             )
-            answer = self._ensure_prelims_questions(answer, query)
-            answer = self._ensure_mains_questions(answer, query)
+            if exam_vertical == "UPSC":
+                answer = self._ensure_prelims_questions(answer, query)
+                answer = self._ensure_mains_questions(answer, query)
         except Exception as err:
             print(f"LLM completion error in _academic_response: {err}")
-            answer = self._generate_academic_fallback(query)
+            answer = generate_exam_fallback(query, exam_vertical=exam_vertical)
             mode = "fallback"
 
-        pyqs = self._find_relevant_pyqs(query)
-        if pyqs:
-            pyq_sections = []
-            for pyq in pyqs:
-                pyq_sections.append(
-                    f"\n\n---\n### Sourced from [pwonlyias.com (Modern History Prelims PYQs)](https://pwonlyias.com/prelims-previous-years-paper/modern-history/)\n\n"
-                    f"**Related Previous Year Question ({pyq['year']}, Question {pyq['number']}):**\n"
-                    f"{pyq['question']}\n\n"
-                    f"* **Correct Answer:** {pyq['answer'].upper()}\n"
-                    f"* **Explanation:** {pyq['explanation']}"
-                )
-            answer += "".join(pyq_sections)
+        if exam_vertical == "UPSC":
+            pyqs = self._find_relevant_pyqs(query)
+            if pyqs:
+                pyq_sections = []
+                for pyq in pyqs:
+                    pyq_sections.append(
+                        f"\n\n---\n### Sourced from [pwonlyias.com (Modern History Prelims PYQs)](https://pwonlyias.com/prelims-previous-years-paper/modern-history/)\n\n"
+                        f"**Related Previous Year Question ({pyq['year']}, Question {pyq['number']}):**\n"
+                        f"{pyq['question']}\n\n"
+                        f"* **Correct Answer:** {pyq['answer'].upper()}\n"
+                        f"* **Explanation:** {pyq['explanation']}"
+                    )
+                answer += "".join(pyq_sections)
 
         return {
             "answer": answer,
@@ -374,16 +565,17 @@ class RAGChatbot:
             "confidence": confidence,
             "sources": sources,
             "mode": mode,
+            "exam_vertical": exam_vertical,
         }
 
     def _handle_academic(
-        self, query: str, intent_result: IntentResult
+        self, query: str, intent_result: IntentResult, exam_vertical: str = "UPSC"
     ) -> dict[str, Any]:
-        results = self.index.search(query, top_k=1, category="academic")
+        results = self.index.search(query, top_k=1, category="academic") if exam_vertical == "UPSC" else []
         rag_record = results[0]["record"] if results else None
         rag_score = results[0]["score"] if results else 0.0
 
-        result = self._academic_response(query, rag_record, rag_score)
+        result = self._academic_response(query, rag_record, rag_score, exam_vertical=exam_vertical)
         result["signals"] = intent_result.signals
         return result
 
@@ -509,7 +701,7 @@ class RAGChatbot:
             f"#### 🔍 Core Cognitive Diagnostic:\n"
             f"An emotional drain level of **{drain_str}** caused by **{rel_status}** triggers acute cognitive fatigue and intrusive overthinking. "
             f"With **{rem_str}** in Syllabus Navigator, attempting 10-hour continuous study marathons will cause rapid burnout. "
-            f"To protect your UPSC selection target, your daily execution must be recalibrated into structured 25-minute Pomodoro sprints and strict time-fences.\n\n"
+            f"To protect your selection target, your daily execution must be recalibrated into structured 25-minute Pomodoro sprints and strict time-fences.\n\n"
             f"---\n\n"
             f"### 🗓️ Customized 7-Day Actionable Study & Emotional Recovery Plan\n\n"
             f"#### 🟢 **Day 1: De-escalation & GS4 Ethics Anchor**\n"
@@ -518,7 +710,7 @@ class RAGChatbot:
             f"- **Evening (07:30 PM - 08:15 PM):** Enforce strict 45-min personal check-in window. DND study mode post 08:30 PM.\n\n"
             f"#### 🟡 **Day 2: Boundary Building & GS2 Polity Sprints**\n"
             f"- **Morning (08:30 AM - 11:30 AM):** Master 3 microtopics of GS2 Parliament & Legislative Procedures.\n"
-            f"- **Afternoon (02:00 PM - 05:00 PM):** Solve 10 UPSC Prelims PYQs on Indian Polity. (Enforce 5-PYQ Circuit Breaker whenever tempted to check personal messages).\n"
+            f"- **Afternoon (02:00 PM - 05:00 PM):** Solve 10 Prelims PYQs on Indian Polity. (Enforce 5-PYQ Circuit Breaker whenever tempted to check personal messages).\n"
             f"- **Evening (07:30 PM - 08:15 PM):** 15-minute outdoor walk + 4-7-8 box breathing.\n\n"
             f"#### 🟠 **Day 3: Cognitive Rechanneling & GS1 Core History**\n"
             f"- **Morning (08:30 AM - 11:30 AM):** Master 2 microtopics of Modern History (Freedom Struggle 1857-1909).\n"
@@ -571,8 +763,9 @@ class RAGChatbot:
             "signals": intent_result.signals,
         }
 
-    def chat(self, query: str, mh_count: int = 0, **kwargs) -> dict[str, Any]:
+    def chat(self, query: str, mh_count: int = 0, exam_vertical: str = "UPSC", **kwargs) -> dict[str, Any]:
         mh_count = kwargs.get("mh_count", mh_count)
+        exam_vertical = kwargs.get("exam_vertical", exam_vertical)
         is_mh_query = False
         intent = "general"
         try:
@@ -608,12 +801,13 @@ class RAGChatbot:
 
             is_mh_query = intent == "mental_health_upsc_distress" or "mental state" in query.lower() or "stress trigger" in query.lower()
 
-            pyqs = self._find_relevant_pyqs(query)
-            if pyqs and intent == "general" and not is_mh_query and not is_foundation_done_query:
-                intent = "notes_or_explain_topic"
-                intent_result.intent = "notes_or_explain_topic"
-                if "academic" not in intent_result.signals:
-                    intent_result.signals.append("academic")
+            if exam_vertical == "UPSC":
+                pyqs = self._find_relevant_pyqs(query)
+                if pyqs and intent == "general" and not is_mh_query and not is_foundation_done_query:
+                    intent = "notes_or_explain_topic"
+                    intent_result.intent = "notes_or_explain_topic"
+                    if "academic" not in intent_result.signals:
+                        intent_result.signals.append("academic")
 
             clarification = get_clarification_message(intent)
             if clarification and not is_mh_query and not is_foundation_done_query:
@@ -633,7 +827,7 @@ class RAGChatbot:
                 "backup_plan_while_upsc": "qa_backup_plan_upsc_skilling",
             }
 
-            if intent in template_intents:
+            if intent in template_intents and exam_vertical == "UPSC":
                 record = next(
                     (
                         r
@@ -675,16 +869,21 @@ class RAGChatbot:
                 }
 
             if intent == "notes_or_explain_topic":
-                return self._handle_academic(query, intent_result)
+                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical)
 
             if intent == "general" and "academic" in intent_result.signals:
-                return self._handle_academic(query, intent_result)
+                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical)
 
             if intent == "general":
-                fallback_msg = GENERAL_FALLBACK.format(query=query)
-                answer = self._llm_complete(
-                    fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT
-                )
+                sys_prompt = get_system_prompt_for_exam(exam_vertical)
+                fallback_msg = GENERAL_FALLBACK.format(query=query, exam_vertical=exam_vertical)
+                try:
+                    answer = self._llm_complete(
+                        fallback_msg, system_prompt=sys_prompt
+                    )
+                except Exception:
+                    answer = generate_exam_fallback(query, exam_vertical=exam_vertical)
+
                 return {
                     "answer": answer,
                     "intent": intent,
@@ -694,13 +893,6 @@ class RAGChatbot:
                     "mode": "fallback",
                     "signals": intent_result.signals,
                 }
-
-            if intent not in ("mental_health_upsc_distress", "relationship_syllabus_7day_plan"):
-                record = self.index.get_by_intent(intent)
-                if record and record.get("answer_template"):
-                    result = self._template_response(record)
-                    result["signals"] = intent_result.signals
-                    return result
 
             if "academic" in intent_result.signals or any(
                 w in query.lower()
@@ -712,14 +904,23 @@ class RAGChatbot:
                     "fundamental rights",
                     "article ",
                     "amendment",
+                    "solve",
+                    "formula",
+                    "mcq",
+                    "question",
                 )
             ):
-                return self._handle_academic(query, intent_result)
+                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical)
 
-            fallback_msg = GENERAL_FALLBACK.format(query=query)
-            answer = self._llm_complete(
-                fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT
-            )
+            sys_prompt = get_system_prompt_for_exam(exam_vertical)
+            fallback_msg = GENERAL_FALLBACK.format(query=query, exam_vertical=exam_vertical)
+            try:
+                answer = self._llm_complete(
+                    fallback_msg, system_prompt=sys_prompt
+                )
+            except Exception:
+                answer = generate_exam_fallback(query, exam_vertical=exam_vertical)
+
             return {
                 "answer": answer,
                 "intent": intent,
@@ -745,40 +946,13 @@ class RAGChatbot:
                 }
 
             try:
-                fallback_msg = f"Produce a structured UPSC GS answer with Prelims MCQs and Mains practice questions for: {query}"
+                sys_prompt = get_system_prompt_for_exam(exam_vertical)
+                fallback_msg = f"Produce a structured exam preparation answer with practice MCQs for: {query}"
                 ans = self._llm_complete(
-                    fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT
+                    fallback_msg, system_prompt=sys_prompt
                 )
-                ans = self._ensure_mains_questions(ans, query)
             except Exception:
-                ans = self._generate_academic_fallback(query)
-
-            return {
-                "answer": ans,
-                "intent": (
-                    intent
-                    if "intent" in locals()
-                    else "notes_or_explain_topic"
-                ),
-                "category": "academic",
-                "confidence": "medium",
-                "mode": "fallback",
-                "sources": [],
-                "signals": (
-                    intent_result.signals
-                    if "intent_result" in locals()
-                    else ["academic"]
-                ),
-            }
-
-            try:
-                fallback_msg = f"Produce a structured UPSC GS answer with Prelims MCQs and Mains practice questions for: {query}"
-                ans = self._llm_complete(
-                    fallback_msg, system_prompt=ACADEMIC_SYSTEM_PROMPT
-                )
-                ans = self._ensure_mains_questions(ans, query)
-            except Exception:
-                ans = self._generate_academic_fallback(query)
+                ans = generate_exam_fallback(query, exam_vertical=exam_vertical)
 
             return {
                 "answer": ans,
