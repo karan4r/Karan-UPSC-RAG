@@ -608,9 +608,15 @@ elif nav_mode == "📋 Syllabus Navigator":
                     if filtered_micros:
                         st.markdown(f"<h4 style='color: #FFFFFF; margin-top: 12px;'>📌 {t_data.get('title', top_key)}</h4>", unsafe_allow_html=True)
                         for m_text, m_id, is_comp in filtered_micros:
-                            c_col1, c_col2 = st.columns([0.82, 0.18])
+                            has_saved_notes = m_id in st.session_state.progress.get("notes", {}) and bool(
+                                st.session_state.progress["notes"][m_id].get("text") or 
+                                st.session_state.progress["notes"][m_id].get("file_content")
+                            )
+                            badge_label = " 📝 [Notes Attached]" if has_saved_notes else ""
+                            
+                            c_col1, c_col2, c_col3 = st.columns([0.62, 0.18, 0.20])
                             with c_col1:
-                                checked = st.checkbox(m_text, value=is_comp, key=f"chk_fs_{m_id}")
+                                checked = st.checkbox(f"{m_text}{badge_label}", value=is_comp, key=f"chk_fs_{m_id}")
                                 if checked != is_comp:
                                     if checked and m_id not in st.session_state.progress["completed"]:
                                         st.session_state.progress["completed"].append(m_id)
@@ -619,8 +625,106 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     save_user_progress(st.session_state.progress)
                                     st.rerun()
                             with c_col2:
-                                if st.button("💡 Explainer", key=f"ask_fs_{m_id}", use_container_width=True):
-                                    redirect_to_copilot(f"Explain the UPSC Mains microtopic '{m_text}' under '{top_key}' ({selected_paper}) in detail like a UPSC exam teacher. Provide core concepts, Prelims relevance, Mains relevance, practice MCQs for Prelims, and Mains practice questions.")
+                                if st.button("💡 AI Explainer", key=f"ask_fs_{m_id}", use_container_width=True):
+                                    redirect_to_copilot(f"Explain the microtopic '{m_text}' under '{top_key}' ({selected_paper}) for {st.session_state.selected_exam} in detail like a master educator. Provide core concepts, exam relevance, practice MCQs, and step-by-step guidance.")
+                            with c_col3:
+                                toggle_notes = st.button("📝 Student Notes", key=f"btn_notes_tgl_{m_id}", use_container_width=True)
+
+                            # Toggle personal notes section
+                            notes_key = f"show_notes_{m_id}"
+                            if toggle_notes:
+                                st.session_state[notes_key] = not st.session_state.get(notes_key, False)
+                                
+                            if st.session_state.get(notes_key, False):
+                                with st.expander(f"📁 Personal Notes & Uploaded Files for: {m_text}", expanded=True):
+                                    existing_note_data = st.session_state.progress.get("notes", {}).get(m_id, {})
+                                    existing_text = existing_note_data.get("text", "")
+                                    existing_file_name = existing_note_data.get("filename", "")
+                                    existing_file_content = existing_note_data.get("file_content", "")
+                                    
+                                    st.markdown("<h5 style='color: #38BDF8;'>📤 Upload Personal Study Notes File</h5>", unsafe_allow_html=True)
+                                    up_file = st.file_uploader(
+                                        f"Upload notes file for '{m_text}' (.txt, .md, .pdf)",
+                                        type=["txt", "md", "pdf"],
+                                        key=f"uploader_file_{m_id}",
+                                        help="Upload your personal hand-written or typed study notes for this microtopic."
+                                    )
+                                    
+                                    if up_file is not None:
+                                        try:
+                                            content_str = ""
+                                            if up_file.name.endswith(".pdf"):
+                                                try:
+                                                    import pypdf
+                                                    import io
+                                                    pdf_reader = pypdf.PdfReader(io.BytesIO(up_file.read()))
+                                                    content_str = "\n".join([page.extract_text() or "" for page in pdf_reader.pages])
+                                                except Exception as pe:
+                                                    content_str = f"[PDF Extracted Content - Error: {pe}]"
+                                            else:
+                                                content_str = up_file.read().decode("utf-8", errors="ignore")
+                                            
+                                            if "notes" not in st.session_state.progress:
+                                                st.session_state.progress["notes"] = {}
+                                            
+                                            import datetime
+                                            st.session_state.progress["notes"][m_id] = {
+                                                "text": existing_text,
+                                                "filename": up_file.name,
+                                                "file_content": content_str,
+                                                "updated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+                                            }
+                                            save_user_progress(st.session_state.progress)
+                                            st.success(f"🎉 Successfully uploaded and saved '{up_file.name}'!")
+                                            st.rerun()
+                                        except Exception as ex:
+                                            st.error(f"Error processing uploaded file: {ex}")
+
+                                    st.markdown("<h5 style='color: #38BDF8; margin-top: 12px;'>✏️ Type / Edit Personal Notes</h5>", unsafe_allow_html=True)
+                                    written_text = st.text_area(
+                                        "Write your custom study notes, formulas, or revision points:",
+                                        value=existing_text,
+                                        height=140,
+                                        key=f"textarea_note_{m_id}"
+                                    )
+                                    
+                                    n_col1, n_col2 = st.columns([0.5, 0.5])
+                                    with n_col1:
+                                        if st.button("💾 Save Personal Notes", key=f"save_note_btn_{m_id}", use_container_width=True):
+                                            if "notes" not in st.session_state.progress:
+                                                st.session_state.progress["notes"] = {}
+                                            import datetime
+                                            st.session_state.progress["notes"][m_id] = {
+                                                "text": written_text.strip(),
+                                                "filename": existing_file_name,
+                                                "file_content": existing_file_content,
+                                                "updated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+                                            }
+                                            save_user_progress(st.session_state.progress)
+                                            st.success("✅ Personal notes saved successfully!")
+                                            st.rerun()
+                                    with n_col2:
+                                        if st.button("🗑️ Clear Saved Notes", key=f"del_note_btn_{m_id}", use_container_width=True):
+                                            if "notes" in st.session_state.progress and m_id in st.session_state.progress["notes"]:
+                                                del st.session_state.progress["notes"][m_id]
+                                                save_user_progress(st.session_state.progress)
+                                                st.info("🗑️ Personal notes cleared.")
+                                                st.rerun()
+
+                                    # Display Saved Notes Summary & Preview
+                                    if existing_text or existing_file_content:
+                                        st.markdown("---")
+                                        st.markdown("<h5 style='color: #34D399;'>📖 Saved Student Notes Overview</h5>", unsafe_allow_html=True)
+                                        if existing_note_data.get("updated_at"):
+                                            st.caption(f"Last updated: {existing_note_data.get('updated_at')}")
+                                        if existing_file_name:
+                                            st.markdown(f"📎 **Attached File:** `{existing_file_name}`")
+                                        if existing_text:
+                                            st.markdown(f"**Personal Summary:**\n```\n{existing_text}\n```")
+                                        if existing_file_content:
+                                            with st.expander(f"📄 Full Attached File Content ({existing_file_name})"):
+                                                st.text_area("Uploaded Notes Text", value=existing_file_content, height=200, disabled=True, key=f"prev_txt_{m_id}")
+
                         st.write("")
 
 # ==========================================
