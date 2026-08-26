@@ -5,8 +5,13 @@ from pathlib import Path
 import re
 from typing import Any, Optional
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except ImportError:
+    TfidfVectorizer = None
+    cosine_similarity = None
+
 
 from config import LLM_FALLBACK_MODELS, LLM_MODEL, get_groq_client
 from generation.prompts import (
@@ -407,7 +412,7 @@ class RAGChatbot:
         return ""
 
     def _find_relevant_pyqs(self, query: str, top_k: int = 1) -> list[dict]:
-        if not self.pyqs:
+        if not self.pyqs or TfidfVectorizer is None:
             return []
 
         texts = []
@@ -416,8 +421,8 @@ class RAGChatbot:
                 f"{pyq.get('question', '')} {pyq.get('explanation', '')}"
             )
 
-        vectorizer = TfidfVectorizer(stop_words="english")
         try:
+            vectorizer = TfidfVectorizer(stop_words="english")
             matrix = vectorizer.fit_transform(texts)
             query_vec = vectorizer.transform([query])
             scores = cosine_similarity(query_vec, matrix).flatten()

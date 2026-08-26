@@ -5,8 +5,13 @@ import pickle
 from pathlib import Path
 from typing import Any, Optional
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except ImportError:
+    TfidfVectorizer = None
+    cosine_similarity = None
+
 
 ROOT = Path(__file__).resolve().parent.parent
 CORPUS_PATH = ROOT / "data" / "qa_corpus.json"
@@ -95,11 +100,14 @@ class VectorIndex:
         self.matrix = data["matrix"]
 
     def search(self, query: str, top_k: int = 3, category: Optional[str] = None) -> list[dict]:
-        if not self.vectorizer or self.matrix is None:
-            raise RuntimeError("Index not built. Run ingestion first.")
+        if not self.vectorizer or self.matrix is None or cosine_similarity is None:
+            return []
 
-        query_vec = self.vectorizer.transform([query])
-        scores = cosine_similarity(query_vec, self.matrix).flatten()
+        try:
+            query_vec = self.vectorizer.transform([query])
+            scores = cosine_similarity(query_vec, self.matrix).flatten()
+        except Exception:
+            return []
 
         ranked = sorted(
             enumerate(scores),
