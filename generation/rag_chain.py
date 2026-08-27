@@ -44,10 +44,36 @@ def extract_topic_name(query: str) -> str:
         "",
         query,
     ).strip()
-    clean = re.sub(r"(?i)\s+under\s+.*$", "", clean).strip()
-    clean = re.sub(r"(?i)\s+in\s+detail.*$", "", clean).strip()
-    clean = re.sub(r"(?i)\s+include\s+.*$", "", clean).strip()
-    return clean.capitalize() if clean else query
+    clean = re.sub(r"[\*#`]", "", clean).strip()
+    if clean:
+        return clean
+    return query
+
+
+def format_student_profile_context(student_profile: Optional[dict]) -> str:
+    if not student_profile or not isinstance(student_profile, dict):
+        return ""
+    parts = []
+    if student_profile.get("prep_level"):
+        parts.append(f"Preparation Stage: {student_profile['prep_level']}")
+    if student_profile.get("relationship_status"):
+        parts.append(f"Relationship Status & Dynamics: {student_profile['relationship_status']}")
+    if student_profile.get("mental_state"):
+        parts.append(f"Current Mental State & Mindset: {student_profile['mental_state']}")
+    if student_profile.get("energy_level"):
+        parts.append(f"Daily Focus Energy Score: {student_profile['energy_level']}/10")
+    if student_profile.get("target_goal"):
+        parts.append(f"Primary Target Goal: {student_profile['target_goal']}")
+
+    if not parts:
+        return ""
+
+    return (
+        "\n\n---\n"
+        "### 🧑‍🎓 Student Personal Profile Context:\n" +
+        "\n".join([f"• **{p.split(':')[0]}:** {p.split(':', 1)[1].strip()}" for p in parts]) +
+        "\n\n*(Instruction for AI Mentor: Calibrate explanation depth, workload pacing, emotional empathy, and actionable guidance specifically according to this student's preparation level, relationship situation, and mental state.)*\n---\n"
+    )
 
 
 def generate_exam_fallback(query: str, exam_vertical: str = "UPSC") -> str:
@@ -482,6 +508,7 @@ class RAGChatbot:
         rag_score: float = 0.0,
         web_results: Optional[list[dict]] = None,
         exam_vertical: str = "UPSC",
+        student_profile: Optional[dict] = None,
     ) -> dict[str, Any]:
         web_results = (
             web_results
@@ -493,6 +520,7 @@ class RAGChatbot:
 
         use_kb = rag_record and is_kb_relevant(query, rag_record, rag_score) and (exam_vertical == "UPSC")
         sys_prompt = get_system_prompt_for_exam(exam_vertical)
+        profile_context = format_student_profile_context(student_profile)
 
         if use_kb and web_ok:
             user_msg = ACADEMIC_USER_TEMPLATE.format(
@@ -500,7 +528,7 @@ class RAGChatbot:
                 kb_context=self._build_kb_context(rag_record),
                 web_context=web_context,
                 exam_vertical=exam_vertical,
-            )
+            ) + profile_context
             mode = "rag+web"
             sources = [
                 {
@@ -520,7 +548,7 @@ class RAGChatbot:
                 query=query,
                 web_context=web_context,
                 exam_vertical=exam_vertical,
-            )
+            ) + profile_context
             mode = "web"
             sources = [
                 {"title": r["title"], "url": r["url"]}
@@ -532,7 +560,7 @@ class RAGChatbot:
             user_msg = ACADEMIC_LLM_FALLBACK_TEMPLATE.format(
                 query=query,
                 exam_vertical=exam_vertical,
-            )
+            ) + profile_context
             mode = "llm"
             sources = []
             confidence = "medium"
@@ -574,13 +602,13 @@ class RAGChatbot:
         }
 
     def _handle_academic(
-        self, query: str, intent_result: IntentResult, exam_vertical: str = "UPSC"
+        self, query: str, intent_result: IntentResult, exam_vertical: str = "UPSC", student_profile: Optional[dict] = None
     ) -> dict[str, Any]:
         results = self.index.search(query, top_k=1, category="academic") if exam_vertical == "UPSC" else []
         rag_record = results[0]["record"] if results else None
         rag_score = results[0]["score"] if results else 0.0
 
-        result = self._academic_response(query, rag_record, rag_score, exam_vertical=exam_vertical)
+        result = self._academic_response(query, rag_record, rag_score, exam_vertical=exam_vertical, student_profile=student_profile)
         result["signals"] = intent_result.signals
         return result
 
@@ -768,9 +796,10 @@ class RAGChatbot:
             "signals": intent_result.signals,
         }
 
-    def chat(self, query: str, mh_count: int = 0, exam_vertical: str = "UPSC", **kwargs) -> dict[str, Any]:
+    def chat(self, query: str, mh_count: int = 0, exam_vertical: str = "UPSC", student_profile: Optional[dict] = None, **kwargs) -> dict[str, Any]:
         mh_count = kwargs.get("mh_count", mh_count)
         exam_vertical = kwargs.get("exam_vertical", exam_vertical)
+        student_profile = kwargs.get("student_profile", student_profile)
         is_mh_query = False
         intent = "general"
         try:
@@ -849,9 +878,10 @@ class RAGChatbot:
             if is_mh_query:
                 is_syllabus_correlated = "syllabus navigator tracking" in query.lower() or "microtopics" in query.lower() or "mental state" in query.lower()
                 sys_prompt = MENTAL_HEALTH_SYLLABUS_SYSTEM_PROMPT if is_syllabus_correlated else NON_ACADEMIC_SYSTEM_PROMPT
+                prof_ctx = format_student_profile_context(student_profile)
                 try:
                     answer = self._llm_complete(
-                        query if is_syllabus_correlated else f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills.",
+                        (query if is_syllabus_correlated else f"As a professional psychologist specializing in competitive exam stress, provide specific psychological remedies and actionable coping strategies for this aspirant's concern: {query}. Do NOT suggest PW Skills.") + prof_ctx,
                         system_prompt=sys_prompt
                     )
                     if not answer or len(answer) < 150 or "qa_mental_health_upsc_failure" in answer:
@@ -874,14 +904,14 @@ class RAGChatbot:
                 }
 
             if intent == "notes_or_explain_topic":
-                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical)
+                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical, student_profile=student_profile)
 
             if intent == "general" and "academic" in intent_result.signals:
-                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical)
+                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical, student_profile=student_profile)
 
             if intent == "general":
                 sys_prompt = get_system_prompt_for_exam(exam_vertical)
-                fallback_msg = GENERAL_FALLBACK.format(query=query, exam_vertical=exam_vertical)
+                fallback_msg = GENERAL_FALLBACK.format(query=query, exam_vertical=exam_vertical) + format_student_profile_context(student_profile)
                 try:
                     answer = self._llm_complete(
                         fallback_msg, system_prompt=sys_prompt
@@ -915,7 +945,7 @@ class RAGChatbot:
                     "question",
                 )
             ):
-                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical)
+                return self._handle_academic(query, intent_result, exam_vertical=exam_vertical, student_profile=student_profile)
 
             sys_prompt = get_system_prompt_for_exam(exam_vertical)
             fallback_msg = GENERAL_FALLBACK.format(query=query, exam_vertical=exam_vertical)

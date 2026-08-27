@@ -59,6 +59,18 @@ st.session_state.messages = st.session_state.exam_messages[st.session_state.sele
 if "chatbot" not in st.session_state or not hasattr(st.session_state.chatbot, "_generate_mental_health_syllabus_fallback"):
     st.session_state.chatbot = RAGChatbot()
 
+if "student_profile" not in st.session_state:
+    st.session_state.student_profile = {
+        "prep_level": "Foundation Completed (1-2 years prep)",
+        "relationship_status": "Single & 100% Focused on Prep",
+        "mental_state": "Slightly Stressed but Managing ⚖️",
+        "energy_level": 7,
+        "target_goal": "Prelims Strategy & PYQs"
+    }
+
+if "show_profile_questionnaire" not in st.session_state:
+    st.session_state.show_profile_questionnaire = False
+
 if "progress" not in st.session_state:
     st.session_state.progress = load_user_progress()
 
@@ -305,6 +317,164 @@ for i, exam in enumerate(EXAM_VERTICALS):
 
 st.markdown("<br>", unsafe_allow_html=True)
 
+# Render Student Profile Questionnaire Component
+def render_student_profile_card():
+    sp = st.session_state.student_profile
+    is_open = st.session_state.show_profile_questionnaire
+    
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(192, 132, 252, 0.12) 100%); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <span style="font-family: 'Outfit'; font-size: 1.1rem; font-weight: 800; color: #38BDF8;">👋 Welcome Aspirant! Tuning Your AI Persona Profile</span>
+                <p style="color: #CBD5E1; font-size: 0.88rem; margin: 4px 0 0 0;">
+                    Share your current prep stage, relationship vibe & mental energy level so your AI Copilot gives you hyper-personalized guidance!
+                </p>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col_q1, col_q2 = st.columns([0.78, 0.22])
+    with col_q1:
+        st.markdown(f"""
+        <div style="font-size: 0.86rem; color: #94A3B8; margin-bottom: 12px; background: rgba(15, 23, 42, 0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+            ✨ <strong>Active RAG Calibration:</strong> 
+            <span style="color: #38BDF8; font-weight: 700;">{sp.get('prep_level', 'Not set')}</span> | 
+            <span style="color: #F472B6; font-weight: 700;">{sp.get('relationship_status', 'Not set')}</span> | 
+            <span style="color: #34D399; font-weight: 700;">{sp.get('mental_state', 'Not set')}</span> | 
+            <span style="color: #F59E0B; font-weight: 700;">⚡ Focus Energy {sp.get('energy_level', 7)}/10</span>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_q2:
+        btn_txt = "❌ Close Form" if is_open else "✏️ Update My Vibe"
+        if st.button(btn_txt, key="toggle_profile_questionnaire", use_container_width=True):
+            st.session_state.show_profile_questionnaire = not is_open
+            st.rerun()
+
+    if is_open:
+        with st.form("student_profiling_form", clear_on_submit=False):
+            st.markdown("<h4 style='color: #38BDF8; font-family: Outfit;'>🤗 Let's Connect! Tell Us A Bit About Yourself:</h4>", unsafe_allow_html=True)
+            st.markdown("<p style='color: #94A3B8; font-size: 0.85rem;'>Everything shared here is 100% private and used exclusively to personalize your AI study recommendations, emotional support, and solution depth.</p>", unsafe_allow_html=True)
+            
+            p_col1, p_col2 = st.columns(2)
+            with p_col1:
+                prep_level = st.selectbox(
+                    "🎓 1. What is your current preparation stage?",
+                    options=[
+                        "Fresh Beginner (Just starting out)",
+                        "Foundation Completed (1-2 years prep)",
+                        "Repeat Attempt Veteran",
+                        "Working Professional (Balancing job & prep)",
+                        "College Student (Final / 3rd Year)"
+                    ],
+                    index=0 if sp.get("prep_level") not in [
+                        "Fresh Beginner (Just starting out)",
+                        "Foundation Completed (1-2 years prep)",
+                        "Repeat Attempt Veteran",
+                        "Working Professional (Balancing job & prep)",
+                        "College Student (Final / 3rd Year)"
+                    ] else [
+                        "Fresh Beginner (Just starting out)",
+                        "Foundation Completed (1-2 years prep)",
+                        "Repeat Attempt Veteran",
+                        "Working Professional (Balancing job & prep)",
+                        "College Student (Final / 3rd Year)"
+                    ].index(sp.get("prep_level"))
+                )
+
+                relationship_status = st.selectbox(
+                    "💞 2. How is your relationship / social environment right now?",
+                    options=[
+                        "Single & 100% Focused on Prep",
+                        "In a Healthy & Supportive Relationship",
+                        "Navigating Mixed Signals / One-Sided Feelings",
+                        "Recent Breakup / Heartbreak",
+                        "Facing Family / Peer Pressure"
+                    ],
+                    index=0 if sp.get("relationship_status") not in [
+                        "Single & 100% Focused on Prep",
+                        "In a Healthy & Supportive Relationship",
+                        "Navigating Mixed Signals / One-Sided Feelings",
+                        "Recent Breakup / Heartbreak",
+                        "Facing Family / Peer Pressure"
+                    ] else [
+                        "Single & 100% Focused on Prep",
+                        "In a Healthy & Supportive Relationship",
+                        "Navigating Mixed Signals / One-Sided Feelings",
+                        "Recent Breakup / Heartbreak",
+                        "Facing Family / Peer Pressure"
+                    ].index(sp.get("relationship_status"))
+                )
+
+            with p_col2:
+                mental_state = st.selectbox(
+                    "🧘 3. How would you describe your mental vibe & mindset today?",
+                    options=[
+                        "Feeling Energetic & In Flow State 🚀",
+                        "Slightly Stressed but Managing ⚖️",
+                        "Severe Syllabus Anxiety & Overwhelm 🤯",
+                        "Burnt Out / Low Dopamine 🔋",
+                        "Feeling Lonely & Distracted 😔"
+                    ],
+                    index=0 if sp.get("mental_state") not in [
+                        "Feeling Energetic & In Flow State 🚀",
+                        "Slightly Stressed but Managing ⚖️",
+                        "Severe Syllabus Anxiety & Overwhelm 🤯",
+                        "Burnt Out / Low Dopamine 🔋",
+                        "Feeling Lonely & Distracted 😔"
+                    ] else [
+                        "Feeling Energetic & In Flow State 🚀",
+                        "Slightly Stressed but Managing ⚖️",
+                        "Severe Syllabus Anxiety & Overwhelm 🤯",
+                        "Burnt Out / Low Dopamine 🔋",
+                        "Feeling Lonely & Distracted 😔"
+                    ].index(sp.get("mental_state"))
+                )
+
+                target_goal = st.selectbox(
+                    "🎯 4. What is your primary focus right now?",
+                    options=[
+                        "Prelims Strategy & PYQs",
+                        "Mains Answer Writing & Ethics Case Studies",
+                        "Syllabus Navigator Microtopics Completion",
+                        "Building a Backup Plan / Parallel Skills"
+                    ],
+                    index=0 if sp.get("target_goal") not in [
+                        "Prelims Strategy & PYQs",
+                        "Mains Answer Writing & Ethics Case Studies",
+                        "Syllabus Navigator Microtopics Completion",
+                        "Building a Backup Plan / Parallel Skills"
+                    ] else [
+                        "Prelims Strategy & PYQs",
+                        "Mains Answer Writing & Ethics Case Studies",
+                        "Syllabus Navigator Microtopics Completion",
+                        "Building a Backup Plan / Parallel Skills"
+                    ].index(sp.get("target_goal"))
+                )
+
+            energy_level = st.slider(
+                "⚡ 5. Rate your Daily Focus Energy Score (1 = Exhausted, 10 = Supercharged):",
+                min_value=1,
+                max_value=10,
+                value=int(sp.get("energy_level", 7))
+            )
+
+            submit_profile = st.form_submit_button("✨ Save My Profile & Calibrate AI Copilot", use_container_width=True)
+            if submit_profile:
+                st.session_state.student_profile = {
+                    "prep_level": prep_level,
+                    "relationship_status": relationship_status,
+                    "mental_state": mental_state,
+                    "energy_level": energy_level,
+                    "target_goal": target_goal
+                }
+                st.session_state.show_profile_questionnaire = False
+                st.success("🎉 Profile updated! Your AI Copilot is now tuned to your vibe!")
+                st.rerun()
+
+render_student_profile_card()
+
 # Render Query Card
 def render_query_card(box_key: str):
     placeholder_text = f"Type your {st.session_state.selected_exam} topic, problem statement, PYQ, or question here..."
@@ -480,12 +650,14 @@ if nav_mode == "🤖 Neural AI Copilot":
                     result = st.session_state.chatbot.chat(
                         prompt_to_process,
                         mh_count=mh_count,
-                        exam_vertical=st.session_state.selected_exam
+                        exam_vertical=st.session_state.selected_exam,
+                        student_profile=st.session_state.student_profile
                     )
                 except Exception:
                     result = st.session_state.chatbot.chat(
                         prompt_to_process,
-                        exam_vertical=st.session_state.selected_exam
+                        exam_vertical=st.session_state.selected_exam,
+                        student_profile=st.session_state.student_profile
                     )
             
             ans_content = result.get("answer", "")
