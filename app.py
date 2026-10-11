@@ -78,13 +78,17 @@ if "pending_prompt" not in st.session_state:
     st.session_state.pending_prompt = None
 
 if "nav_mode" not in st.session_state:
-    st.session_state.nav_mode = "🤖 Neural AI Copilot"
+    st.session_state.nav_mode = "🏠 Home"
+
+if "ai_persona" not in st.session_state:
+    st.session_state.ai_persona = "Personal Mentor"
 
 
 def redirect_to_copilot(prompt: str):
     st.session_state.pending_prompt = prompt
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
     st.rerun()
+
 
 def count_previous_mental_health_turns(messages: list[dict]) -> int:
     count = 0
@@ -243,7 +247,7 @@ def render_assistant_message(content, idx, meta=None):
     
     if mcqs:
         st.write("---")
-        st.markdown("<h3 style='color: #38BDF8; font-family: Outfit; font-weight: 800; margin-bottom: 16px;'>📝 Practice Quiz & Prelims Assessment</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color: #0F172A; font-weight: 800; margin-bottom: 16px;'>📝 Practice Quiz & Assessment</h3>", unsafe_allow_html=True)
         
         for q_idx, mcq in enumerate(mcqs):
             opts = mcq.get("options", {})
@@ -253,16 +257,16 @@ def render_assistant_message(content, idx, meta=None):
             opt_d = opts.get("D", "")
             
             st.markdown(f"""
-            <div style="background: #1E293B !important; border: 1.5px solid rgba(56, 189, 248, 0.35) !important; border-radius: 16px !important; padding: 22px !important; margin-bottom: 16px !important;">
-                <div style="font-size: 1.05rem !important; font-weight: 700 !important; color: #F8FAFC !important; margin-bottom: 14px !important; line-height: 1.5 !important;">
-                    <span style="color: #38BDF8 !important;">Question {q_idx+1}:</span> {mcq['question']}
+            <div style="background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; border-radius: 16px !important; padding: 20px !important; margin-bottom: 16px !important; box-shadow: 0 1px 4px rgba(0,0,0,0.02) !important;">
+                <div style="font-size: 1.02rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 12px !important; line-height: 1.5 !important;">
+                    <span style="color: #4F46E5 !important;">Question {q_idx+1}:</span> {mcq['question']}
                 </div>
-                <div style="font-size: 0.88rem !important; font-weight: 700 !important; color: #38BDF8 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; margin-bottom: 10px !important;">Options:</div>
-                <div style="margin-left: 4px; margin-bottom: 8px;">
-                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">A)</strong> {opt_a}</div>
-                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">B)</strong> {opt_b}</div>
-                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">C)</strong> {opt_c}</div>
-                    <div style="color: #CBD5E1 !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #0F172A !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.08) !important; font-size: 0.95rem !important; font-weight: 500 !important;">• <strong style="color: #38BDF8 !important;">D)</strong> {opt_d}</div>
+                <div style="font-size: 0.82rem !important; font-weight: 700 !important; color: #64748B !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; margin-bottom: 8px !important;">Options:</div>
+                <div style="margin-left: 2px; margin-bottom: 8px;">
+                    <div style="color: #1E293B !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #F8FAFC !important; border-radius: 8px !important; border: 1px solid #E2E8F0 !important; font-size: 0.92rem !important; font-weight: 500 !important;">• <strong style="color: #4F46E5 !important;">A)</strong> {opt_a}</div>
+                    <div style="color: #1E293B !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #F8FAFC !important; border-radius: 8px !important; border: 1px solid #E2E8F0 !important; font-size: 0.92rem !important; font-weight: 500 !important;">• <strong style="color: #4F46E5 !important;">B)</strong> {opt_b}</div>
+                    <div style="color: #1E293B !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #F8FAFC !important; border-radius: 8px !important; border: 1px solid #E2E8F0 !important; font-size: 0.92rem !important; font-weight: 500 !important;">• <strong style="color: #4F46E5 !important;">C)</strong> {opt_c}</div>
+                    <div style="color: #1E293B !important; padding: 8px 14px !important; margin-bottom: 6px !important; background: #F8FAFC !important; border-radius: 8px !important; border: 1px solid #E2E8F0 !important; font-size: 0.92rem !important; font-weight: 500 !important;">• <strong style="color: #4F46E5 !important;">D)</strong> {opt_d}</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -290,32 +294,31 @@ def render_assistant_message(content, idx, meta=None):
         with st.expander("🔍 System Retrieval & Context Signals"):
             st.json(meta)
 
-# Render Exam Header Banner
-render_exam_header(st.session_state.selected_exam)
+def render_exam_selection_hub():
+    render_exam_header(st.session_state.selected_exam)
+    st.markdown("<div style='font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 6px;'>🎓 SWITCH EXAM VERTICAL:</div>", unsafe_allow_html=True)
+    col_cards = st.columns(len(EXAM_VERTICALS))
+    exam_icons = {
+        "UPSC": "🏛️",
+        "IIT-JEE": "⚛️",
+        "NEET": "🩺",
+        "GATE": "⚙️",
+        "CAT": "📈",
+        "Banking": "🏦",
+        "SSC": "🏢"
+    }
 
-# Exam Vertical Selection Hub Grid
-st.markdown("<div style='font-family: Outfit; font-size: 1.15rem; font-weight: 800; color: #38BDF8; margin-bottom: 10px;'>🎓 SELECT EXAM VERTICAL:</div>", unsafe_allow_html=True)
-col_cards = st.columns(len(EXAM_VERTICALS))
-exam_icons = {
-    "UPSC": "🏛️",
-    "IIT-JEE": "⚛️",
-    "NEET": "🩺",
-    "GATE": "⚙️",
-    "CAT": "📈",
-    "Banking": "🏦",
-    "SSC": "🏢"
-}
+    for i, exam in enumerate(EXAM_VERTICALS):
+        with col_cards[i]:
+            is_active = (exam == st.session_state.selected_exam)
+            btn_label = f"{exam_icons[exam]} {exam}" + (" ✓" if is_active else "")
+            if st.button(btn_label, key=f"btn_exam_hub_{exam}", use_container_width=True):
+                st.session_state.selected_exam = exam
+                st.session_state.messages = st.session_state.exam_messages[exam]
+                st.rerun()
 
-for i, exam in enumerate(EXAM_VERTICALS):
-    with col_cards[i]:
-        is_active = (exam == st.session_state.selected_exam)
-        btn_label = f"{exam_icons[exam]} {exam}" + (" ✓" if is_active else "")
-        if st.button(btn_label, key=f"btn_exam_hub_{exam}", use_container_width=True):
-            st.session_state.selected_exam = exam
-            st.session_state.messages = st.session_state.exam_messages[exam]
-            st.rerun()
+    st.markdown("<br>", unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
 
 # Render Student Profile Questionnaire Component
 def render_student_profile_card():
@@ -323,12 +326,12 @@ def render_student_profile_card():
     is_open = st.session_state.show_profile_questionnaire
     
     st.markdown("""
-    <div style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(192, 132, 252, 0.12) 100%); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px;">
+    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <span style="font-family: 'Outfit'; font-size: 1.1rem; font-weight: 800; color: #38BDF8;">👋 Welcome Aspirant! Tuning Your AI Persona Profile</span>
-                <p style="color: #CBD5E1; font-size: 0.88rem; margin: 4px 0 0 0;">
-                    Share your current prep stage, relationship vibe & mental energy level so your AI Copilot gives you hyper-personalized guidance!
+                <span style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">👋 Student Persona & Calibrator</span>
+                <p style="color: #64748B; font-size: 0.88rem; margin: 4px 0 0 0;">
+                    Tune your prep stage, relationship status & mental focus so your AI Copilot gives you hyper-personalized guidance!
                 </p>
             </div>
         </div>
@@ -338,12 +341,12 @@ def render_student_profile_card():
     col_q1, col_q2 = st.columns([0.78, 0.22])
     with col_q1:
         st.markdown(f"""
-        <div style="font-size: 0.86rem; color: #94A3B8; margin-bottom: 12px; background: rgba(15, 23, 42, 0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-            ✨ <strong>Active RAG Calibration:</strong> 
-            <span style="color: #38BDF8; font-weight: 700;">{sp.get('prep_level', 'Not set')}</span> | 
-            <span style="color: #F472B6; font-weight: 700;">{sp.get('relationship_status', 'Not set')}</span> | 
-            <span style="color: #34D399; font-weight: 700;">{sp.get('mental_state', 'Not set')}</span> | 
-            <span style="color: #F59E0B; font-weight: 700;">⚡ Focus Energy {sp.get('energy_level', 7)}/10</span>
+        <div style="font-size: 0.86rem; color: #475569; margin-bottom: 12px; background: #F8FAFC; padding: 10px 14px; border-radius: 10px; border: 1px solid #E2E8F0;">
+            ✨ <strong>Active Calibration:</strong> 
+            <span style="color: #2563EB; font-weight: 700;">{sp.get('prep_level', 'Not set')}</span> | 
+            <span style="color: #DB2777; font-weight: 700;">{sp.get('relationship_status', 'Not set')}</span> | 
+            <span style="color: #059669; font-weight: 700;">{sp.get('mental_state', 'Not set')}</span> | 
+            <span style="color: #D97706; font-weight: 700;">⚡ Focus Energy {sp.get('energy_level', 7)}/10</span>
         </div>
         """, unsafe_allow_html=True)
     with col_q2:
@@ -354,8 +357,8 @@ def render_student_profile_card():
 
     if is_open:
         with st.form("student_profiling_form", clear_on_submit=False):
-            st.markdown("<h4 style='color: #38BDF8; font-family: Outfit;'>🤗 Let's Connect! Tell Us A Bit About Yourself:</h4>", unsafe_allow_html=True)
-            st.markdown("<p style='color: #94A3B8; font-size: 0.85rem;'>Everything shared here is 100% private and used exclusively to personalize your AI study recommendations, emotional support, and solution depth.</p>", unsafe_allow_html=True)
+            st.markdown("<h4 style='color: #0F172A;'>🤗 Calibrate Your AI Companion</h4>", unsafe_allow_html=True)
+            st.markdown("<p style='color: #64748B; font-size: 0.85rem;'>Shared information is kept private and used exclusively to adapt AI guidance to your stage.</p>", unsafe_allow_html=True)
             
             p_col1, p_col2 = st.columns(2)
             with p_col1:
@@ -473,128 +476,492 @@ def render_student_profile_card():
                 st.success("🎉 Profile updated! Your AI Copilot is now tuned to your vibe!")
                 st.rerun()
 
-render_student_profile_card()
+import datetime
 
-# Render Query Card
-def render_query_card(box_key: str):
-    placeholder_text = f"Type your {st.session_state.selected_exam} topic, problem statement, PYQ, or question here..."
-    with st.form(f"query_form_{box_key}", clear_on_submit=True):
-        st.markdown(f"<div style='font-family: JetBrains Mono; font-size: 1.1rem; font-weight: 800; color: #38BDF8; margin-bottom: 8px;'>⚡ {st.session_state.selected_exam} NEURAL PROMPT INTERFACE:</div>", unsafe_allow_html=True)
-        t_col1, t_col2 = st.columns([0.82, 0.18])
-        with t_col1:
-            q_val = st.text_input(
-                "",
-                placeholder=placeholder_text,
-                key=f"mentor_query_input_{box_key}",
-                label_visibility="collapsed"
-            )
-        with t_col2:
-            submitted = st.form_submit_button(f"🚀 Ask {st.session_state.selected_exam} AI", use_container_width=True)
-    return submitted, q_val
-
-top_sub, top_val = render_query_card("top_main_query")
-
-# Sidebar Setup
-with st.sidebar:
-    st.markdown("<h3 style='color: #38BDF8; font-family: JetBrains Mono;'>🎓 ACTIVE EXAM VERTICAL</h3>", unsafe_allow_html=True)
-    selected_sidebar_exam = st.selectbox(
-        "Switch Active Exam:",
-        EXAM_VERTICALS,
-        index=EXAM_VERTICALS.index(st.session_state.selected_exam),
-        key="sidebar_exam_selector"
+# Clean Top Navigation Bar
+top_c1, top_c2, top_c3, top_c4 = st.columns([0.27, 0.27, 0.31, 0.15])
+with top_c1:
+    exam_options = ["UPSC CSE", "IIT-JEE", "NEET", "GATE", "CAT", "Banking", "SSC"]
+    curr_exam_display = "UPSC CSE" if st.session_state.selected_exam == "UPSC" else st.session_state.selected_exam
+    chosen_exam_display = st.selectbox(
+        "Exam Vertical",
+        exam_options,
+        index=exam_options.index(curr_exam_display) if curr_exam_display in exam_options else 0,
+        key="top_exam_selector"
     )
-    if selected_sidebar_exam != st.session_state.selected_exam:
-        st.session_state.selected_exam = selected_sidebar_exam
-        st.session_state.messages = st.session_state.exam_messages[selected_sidebar_exam]
+    new_exam = "UPSC" if chosen_exam_display == "UPSC CSE" else chosen_exam_display
+    if new_exam != st.session_state.selected_exam:
+        st.session_state.selected_exam = new_exam
+        st.session_state.messages = st.session_state.exam_messages[new_exam]
         st.rerun()
 
-    st.markdown("---")
-    st.markdown("<h3 style='color: #38BDF8; font-family: JetBrains Mono;'>⚙️ NEURAL CONTROLS</h3>", unsafe_allow_html=True)
-    st.info(f"💡 **Exam Tip:** Ask any concept or problem for **{st.session_state.selected_exam}** to generate step-by-step solutions, key formulas & MCQs!")
-    
-    # Progress Summary in Sidebar
-    syllabus_data = load_syllabus_data()
-    total_micros = 0
-    completed_set = set(st.session_state.progress.get("completed", []))
-    
-    for paper, pdata in syllabus_data.items():
-        for subj in pdata.get("subjects", {}).values():
-            for top in subj.get("topics", {}).values():
-                total_micros += len(top.get("microtopics", []))
-                
-    completed_count = len(completed_set)
-    pct = (completed_count / total_micros * 100) if total_micros > 0 else 0
-    
-    st.markdown("---")
-    st.markdown("<h3 style='color: #FFFFFF;'>📊 Matrix Progress</h3>", unsafe_allow_html=True)
-    st.progress(pct / 100.0)
-    st.markdown(f"<strong style='color: #38BDF8;'>{completed_count} / {total_micros}</strong> <span style='color: #94A3B8;'>modules completed ({pct:.1f}%)</span>", unsafe_allow_html=True)
-
-    # Exam Target Countdown & Planner Quick Status
-    st.markdown("---")
-    st.markdown("<h3 style='color: #FFFFFF;'>🗓️ Exam Countdown</h3>", unsafe_allow_html=True)
-    saved_exam_plan_sb = st.session_state.progress.get("exam_plan", {})
-    saved_exam_dt_sb = saved_exam_plan_sb.get("exam_date")
-    import datetime
-    today_sb = datetime.date.today()
-    if saved_exam_dt_sb:
-        try:
-            ex_date_obj = datetime.date.fromisoformat(saved_exam_dt_sb)
-            days_until_sb = (ex_date_obj - today_sb).days
-            target_1w_sb = ex_date_obj - datetime.timedelta(days=7)
-            if days_until_sb > 0:
-                st.markdown(f"<div style='font-size:0.88rem; color:#CBD5E1;'>Target Exam: <strong style='color:#38BDF8;'>{ex_date_obj.strftime('%d %b %Y')}</strong></div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size:0.85rem; color:#F59E0B;'>⏳ <strong>{days_until_sb} Days</strong> until Exam</div>", unsafe_allow_html=True)
-                st.markdown(f"<div style='font-size:0.82rem; color:#34D399;'>🎯 Finish by: <strong>{target_1w_sb.strftime('%d %b %Y')}</strong> (1 Wk Buffer)</div>", unsafe_allow_html=True)
-            else:
-                st.caption("Target exam date has passed. Please update.")
-        except Exception:
-            pass
-    else:
-        st.markdown("<div style='font-size:0.82rem; color:#94A3B8;'>Set exam date to get 1-week buffer study roadmap.</div>", unsafe_allow_html=True)
-
-    if st.button("🗓️ Open Exam Study Planner", key="sidebar_btn_open_planner", use_container_width=True):
-        st.session_state.nav_mode = "🗓️ Exam Countdown & Study Planner"
-        st.session_state.main_nav_radio = "🗓️ Exam Countdown & Study Planner"
+with top_c2:
+    persona_options = ["Personal Mentor", "Academic Professor", "Strict Evaluator", "Socratic Guide", "Empathetic Counselor"]
+    chosen_persona = st.selectbox(
+        "AI Persona",
+        persona_options,
+        index=persona_options.index(st.session_state.get("ai_persona", "Personal Mentor")) if st.session_state.get("ai_persona", "Personal Mentor") in persona_options else 0,
+        key="top_persona_selector"
+    )
+    if chosen_persona != st.session_state.get("ai_persona"):
+        st.session_state.ai_persona = chosen_persona
         st.rerun()
-    
-    st.markdown("---")
-    if st.button(f"🧹 Reset {st.session_state.selected_exam} Session", use_container_width=True):
-        st.session_state.exam_messages[st.session_state.selected_exam] = []
-        st.session_state.messages = []
+
+with top_c3:
+    st.markdown("""
+    <div style="height: 100%; display: flex; align-items: flex-end; padding-bottom: 6px; justify-content: flex-end;">
+        <span style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 9999px; padding: 7px 16px; font-size: 0.82rem; font-weight: 600; color: #334155; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+            <span style="color: #6366F1;">✨</span> Powered by RAG <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#22C55E; box-shadow: 0 0 6px #22C55E;"></span>
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
+
+with top_c4:
+    st.markdown("""
+    <div style="height: 100%; display: flex; align-items: flex-end; padding-bottom: 6px; justify-content: flex-end;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #EEF2FF; border: 1.5px solid #C7D2FE; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #4338CA; font-size: 0.95rem; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            K
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+# Minimalist Sidebar Setup matching Screenshot
+with st.sidebar:
+    st.markdown("""
+    <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0 20px 2px;">
+        <svg width="30" height="30" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22L12 8L17 17L20 12L25 22H4Z" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 8L15 13" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div>
+            <div style="font-size: 1.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; line-height: 1.1;">UPSC AI</div>
+            <div style="font-size: 0.72rem; color: #64748B; font-weight: 600; letter-spacing: 0.04em;">Learn · Plan · Grow</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    current_nav = st.session_state.nav_mode
+    active_nav_tag = "Home"
+    if current_nav in ["🤖 Neural AI Copilot"]:
+        active_nav_tag = "Chat"
+    elif current_nav in ["📊 Matrix Analytics"]:
+        active_nav_tag = "Matrix Progress"
+    elif current_nav in ["📋 Syllabus Navigator", "🎓 Live & Recorded Classes", "🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"]:
+        active_nav_tag = "Resources"
+    elif current_nav in ["⚙️ Settings", "➕ Custom Modules"]:
+        active_nav_tag = "Settings"
+    elif current_nav == "🏠 Home":
+        active_nav_tag = "Home"
+
+    if st.button("🏠  Home", key="sb_btn_home", use_container_width=True, type="primary" if active_nav_tag == "Home" else "secondary"):
+        st.session_state.nav_mode = "🏠 Home"
         st.rerun()
+
+    if st.button("💬  Chat", key="sb_btn_chat", use_container_width=True, type="primary" if active_nav_tag == "Chat" else "secondary"):
+        st.session_state.nav_mode = "🤖 Neural AI Copilot"
+        st.rerun()
+
+    if st.button("📊  Matrix Progress", key="sb_btn_matrix", use_container_width=True, type="primary" if active_nav_tag == "Matrix Progress" else "secondary"):
+        st.session_state.nav_mode = "📊 Matrix Analytics"
+        st.rerun()
+
+    if st.button("📖  Resources", key="sb_btn_resources", use_container_width=True, type="primary" if active_nav_tag == "Resources" else "secondary"):
+        st.session_state.nav_mode = "📋 Syllabus Navigator"
+        st.rerun()
+
+    if st.button("⚙️  Settings", key="sb_btn_settings", use_container_width=True, type="primary" if active_nav_tag == "Settings" else "secondary"):
+        st.session_state.nav_mode = "⚙️ Settings"
+        st.rerun()
+
+    st.markdown("""
+    <div style="margin-top: 240px; padding: 18px 6px 10px 6px; border-top: 1px solid #F1F5F9;">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.65; margin-bottom: 6px;">
+            <path d="M4 22L12 8L17 17L20 12L25 22H4Z" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div style="font-size: 0.78rem; font-style: italic; color: #64748B; line-height: 1.45;">
+            A better you,<br>creates a better tomorrow.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Check pending prompt redirect
 if st.session_state.get("pending_prompt"):
     st.session_state.nav_mode = "🤖 Neural AI Copilot"
-    st.session_state.main_nav_radio = "🤖 Neural AI Copilot"
 
-# Main Top Navigation Radio
-NAV_OPTIONS = [
-    "🤖 Neural AI Copilot",
-    "📋 Syllabus Navigator",
-    "🗓️ Exam Countdown & Study Planner",
-    "⚡ Productivity & Targets",
-    "💞 Relationship Management",
-    "🧘 Mental Health & Wellness",
-    "📝 Mock Tests & Assessment",
-    "🎓 Live & Recorded Classes",
-    "🚀 PW Skills Career Track"
-]
+nav_mode = st.session_state.nav_mode
+top_sub = False
+top_val = ""
 
-if "main_nav_radio" not in st.session_state:
-    st.session_state.main_nav_radio = st.session_state.nav_mode
+# ==========================================
+# HOME VIEW: 🏠 DASHBOARD (MATCHING IMAGE)
+# ==========================================
+if nav_mode == "🏠 Home":
+    main_col, side_col = st.columns([0.72, 0.28], gap="medium")
 
-selected_nav = st.radio(
-    "Navigation Tabs:",
-    NAV_OPTIONS,
-    index=NAV_OPTIONS.index(st.session_state.nav_mode) if st.session_state.nav_mode in NAV_OPTIONS else 0,
-    key="main_nav_radio",
-    horizontal=True
-)
-st.session_state.nav_mode = selected_nav
-nav_mode = selected_nav
-st.markdown("<br>", unsafe_allow_html=True)
+    with main_col:
+        # Dynamic Greeting
+        cur_hour = datetime.datetime.now().hour
+        if cur_hour < 12:
+            greet_word = "Good Morning"
+            greet_icon = "🌅"
+        elif 12 <= cur_hour < 17:
+            greet_word = "Good Afternoon"
+            greet_icon = "☀️"
+        else:
+            greet_word = "Good Evening"
+            greet_icon = "🌆"
+
+        st.markdown(f"""
+        <div class="greeting-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="max-width: 65%;">
+                    <h1 class="greeting-title">{greet_icon} {greet_word}, Karan</h1>
+                    <div class="greeting-tagline">Your AI companion for UPSC and beyond.</div>
+                    <p class="greeting-desc">Ask, learn, plan and grow — with personalized guidance, resources and support.</p>
+                </div>
+                <div style="width: 170px; height: 105px; opacity: 0.85; pointer-events: none;">
+                    <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                        <path d="M0 120L70 45L110 85L150 35L200 120H0Z" fill="url(#mtn_g1)" opacity="0.6"/>
+                        <path d="M40 120L100 60L140 95L180 50L220 120H40Z" fill="url(#mtn_g2)" opacity="0.8"/>
+                        <path d="M110 85L150 35L165 55L145 75Z" fill="#FFFFFF" opacity="0.7"/>
+                        <line x1="150" y1="35" x2="150" y2="20" stroke="#475569" stroke-width="1.5"/>
+                        <polygon points="150,20 162,24 150,28" fill="#EF4444"/>
+                        <defs>
+                            <linearGradient id="mtn_g1" x1="0" y1="40" x2="200" y2="120" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#C7D2FE" stop-opacity="0.9"/>
+                                <stop stop-color="#EEF2FF" stop-opacity="0.3"/>
+                            </linearGradient>
+                            <linearGradient id="mtn_g2" x1="40" y1="50" x2="220" y2="120" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#93C5FD" stop-opacity="0.9"/>
+                                <stop stop-color="#DBEAFE" stop-opacity="0.3"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Search Omnibar
+        with st.form("home_search_omnibar", clear_on_submit=True):
+            omni_c1, omni_c2 = st.columns([0.88, 0.12])
+            with omni_c1:
+                omni_query = st.text_input(
+                    "Ask anything about UPSC, strategy, resources, or your goals...",
+                    placeholder="✨ Ask anything about UPSC, strategy, resources, or your goals...",
+                    label_visibility="collapsed",
+                    key="omnibar_input"
+                )
+            with omni_c2:
+                omni_submit = st.form_submit_button("➔", use_container_width=True)
+
+        if omni_submit and omni_query.strip():
+            st.session_state.pending_prompt = omni_query.strip()
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+
+        # Feature Grid: Row 1
+        r1_c1, r1_c2, r1_c3, r1_c4 = st.columns(4)
+        with r1_c1:
+            st.markdown("""
+            <div class="feature-card card-copilot">
+                <div>
+                    <div class="card-icon-badge">🧠</div>
+                    <div class="card-title">Neural AI Co-pilot</div>
+                    <div class="card-desc">Get instant, personalized answers and guidance powered by AI.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Co-pilot ➔", key="btn_card_copilot", use_container_width=True):
+                st.session_state.nav_mode = "🤖 Neural AI Copilot"
+                st.rerun()
+
+        with r1_c2:
+            st.markdown("""
+            <div class="feature-card card-syllabus">
+                <div>
+                    <div class="card-icon-badge">📖</div>
+                    <div class="card-title">Syllabus Navigator</div>
+                    <div class="card-desc">Explore syllabus, topics, priorities and subject-wise roadmap.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Syllabus ➔", key="btn_card_syllabus", use_container_width=True):
+                st.session_state.nav_mode = "📋 Syllabus Navigator"
+                st.rerun()
+
+        with r1_c3:
+            st.markdown("""
+            <div class="feature-card card-planner">
+                <div>
+                    <div class="card-icon-badge">🗓️</div>
+                    <div class="card-title">Exam countdown & study planner</div>
+                    <div class="card-desc">Track your exam date, create study plans and stay on schedule.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Planner ➔", key="btn_card_planner", use_container_width=True):
+                st.session_state.nav_mode = "🗓️ Exam Countdown & Study Planner"
+                st.rerun()
+
+        with r1_c4:
+            st.markdown("""
+            <div class="feature-card card-productivity">
+                <div>
+                    <div class="card-icon-badge">🎯</div>
+                    <div class="card-title">Productivity & targets</div>
+                    <div class="card-desc">Set goals, track habits, manage time and boost productivity.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Targets ➔", key="btn_card_productivity", use_container_width=True):
+                st.session_state.nav_mode = "⚡ Productivity & Targets"
+                st.rerun()
+
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+        # Feature Grid: Row 2
+        r2_c1, r2_c2, r2_c3, r2_c4 = st.columns(4)
+        with r2_c1:
+            st.markdown("""
+            <div class="feature-card card-relationship">
+                <div>
+                    <div class="card-icon-badge">👥</div>
+                    <div class="card-title">Relationship management</div>
+                    <div class="card-desc">Get guidance on relationships, communication and life balance.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Guidance ➔", key="btn_card_relationship", use_container_width=True):
+                st.session_state.nav_mode = "💞 Relationship Management"
+                st.rerun()
+
+        with r2_c2:
+            st.markdown("""
+            <div class="feature-card card-wellness">
+                <div>
+                    <div class="card-icon-badge">🪷</div>
+                    <div class="card-title">Mental health & wellness</div>
+                    <div class="card-desc">Talk, reflect, and get support for a healthier, happier you.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Wellness ➔", key="btn_card_wellness", use_container_width=True):
+                st.session_state.nav_mode = "🧘 Mental Health & Wellness"
+                st.rerun()
+
+        with r2_c3:
+            st.markdown("""
+            <div class="feature-card card-mock">
+                <div>
+                    <div class="card-icon-badge">📄</div>
+                    <div class="card-title">Mock test & assessment</div>
+                    <div class="card-desc">Practice with real exam pattern tests and analyze your performance.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Mocks ➔", key="btn_card_mocks", use_container_width=True):
+                st.session_state.nav_mode = "📝 Mock Tests & Assessment"
+                st.rerun()
+
+        with r2_c4:
+            st.markdown("""
+            <div class="feature-card card-classes">
+                <div>
+                    <div class="card-icon-badge">▶️</div>
+                    <div class="card-title">Live & recorded classes</div>
+                    <div class="card-desc">Attend live sessions or watch recorded lectures anytime, anywhere.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Classes ➔", key="btn_card_classes", use_container_width=True):
+                st.session_state.nav_mode = "🎓 Live & Recorded Classes"
+                st.rerun()
+
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+        # Feature Grid: Row 3
+        r3_c1, r3_c2 = st.columns([0.25, 0.75])
+        with r3_c1:
+            st.markdown("""
+            <div class="feature-card card-pwskills">
+                <div>
+                    <div class="card-icon-badge">💼</div>
+                    <div class="card-title">PW Skills career track</div>
+                    <div class="card-desc">Build in-demand skills, get certified and shape your career.</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button("Open Career ➔", key="btn_card_pwskills", use_container_width=True):
+                st.session_state.nav_mode = "🚀 PW Skills Career Track"
+                st.rerun()
+
+        with r3_c2:
+            st.markdown("""
+            <div class="mission-banner">
+                <div>
+                    <div class="mission-tag">YOUR GOALS. OUR MISSION.</div>
+                    <div class="mission-headline">Dream &nbsp;→&nbsp; Prepare &nbsp;→&nbsp; Achieve</div>
+                </div>
+                <div style="width: 140px; height: 80px; opacity: 0.9;">
+                    <svg viewBox="0 0 160 90" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                        <path d="M10 90L65 25L100 65L125 20L160 90H10Z" fill="#C7D2FE" opacity="0.6"/>
+                        <path d="M40 90L85 35L120 70L145 30L170 90H40Z" fill="#93C5FD" opacity="0.8"/>
+                        <line x1="125" y1="20" x2="125" y2="8" stroke="#1E293B" stroke-width="1.5"/>
+                        <polygon points="125,8 135,11 125,14" fill="#1E293B"/>
+                    </svg>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    with side_col:
+        # Widget 1: Matrix Progress
+        syllabus_data = load_syllabus_data()
+        total_micros = 0
+        completed_set = set(st.session_state.progress.get("completed", []))
+        for paper, pdata in syllabus_data.items():
+            for subj in pdata.get("subjects", {}).values():
+                for top in subj.get("topics", {}).values():
+                    total_micros += len(top.get("microtopics", []))
+        completed_count = len(completed_set)
+        computed_pct = int((completed_count / total_micros * 100) if total_micros > 0 else 68)
+        display_pct = computed_pct if computed_pct > 0 else 68
+
+        st.markdown(f"""
+        <div class="widget-panel-card">
+            <div class="widget-panel-title">
+                <span>✨ Your Matrix Progress</span>
+                <span style="font-size: 0.85rem; color: #64748B;">›</span>
+            </div>
+            <div class="progress-matrix-container">
+                <div class="progress-donut-wrapper">
+                    <svg width="76" height="76" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#F1F5F9" stroke-width="3"></circle>
+                        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#0EA5E9" stroke-width="3" stroke-dasharray="{display_pct} {100-display_pct}" stroke-dashoffset="25" stroke-linecap="round"></circle>
+                        <text x="18" y="20.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" text-anchor="middle" fill="#0F172A">{display_pct}%</text>
+                    </svg>
+                </div>
+                <div style="flex-grow: 1;">
+                    <div class="progress-list-item">
+                        <span><span class="progress-dot" style="background: #22C55E;"></span>Syllabus</span>
+                        <span style="font-weight: 700; color: #0F172A;">72%</span>
+                    </div>
+                    <div class="progress-list-item">
+                        <span><span class="progress-dot" style="background: #3B82F6;"></span>Tests</span>
+                        <span style="font-weight: 700; color: #0F172A;">58%</span>
+                    </div>
+                    <div class="progress-list-item">
+                        <span><span class="progress-dot" style="background: #A855F7;"></span>Current Affairs</span>
+                        <span style="font-weight: 700; color: #0F172A;">83%</span>
+                    </div>
+                    <div class="progress-list-item">
+                        <span><span class="progress-dot" style="background: #EAB308;"></span>Revision</span>
+                        <span style="font-weight: 700; color: #0F172A;">55%</span>
+                    </div>
+                    <div class="progress-list-item">
+                        <span><span class="progress-dot" style="background: #0284C7;"></span>Overall</span>
+                        <span style="font-weight: 700; color: #0F172A;">{display_pct}%</span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #F1F5F9;">
+                <div style="font-size: 0.78rem; color: #64748B; font-style: italic;">
+                    Keep going, you're closer than you think.
+                </div>
+                <div style="width: 42px; height: 24px; opacity: 0.8;">
+                    <svg viewBox="0 0 42 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 24L18 6L28 16L34 8L42 24H2Z" fill="#93C5FD"/>
+                        <polygon points="34,8 39,10 34,12" fill="#1E293B"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("View Full Progress Matrix ➔", key="btn_side_matrix", use_container_width=True):
+            st.session_state.nav_mode = "📊 Matrix Analytics"
+            st.rerun()
+
+        # Widget 2: Quick Actions
+        st.markdown("""
+        <div class="widget-panel-card">
+            <div class="widget-panel-title">
+                <span>⚡ Quick Actions</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("▶️  Resume from last session", key="qa_resume", use_container_width=True):
+            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+            st.rerun()
+        if st.button("🗓️  View study planner", key="qa_planner", use_container_width=True):
+            st.session_state.nav_mode = "🗓️ Exam Countdown & Study Planner"
+            st.rerun()
+        if st.button("📥  Download resources", key="qa_resources", use_container_width=True):
+            st.session_state.nav_mode = "📋 Syllabus Navigator"
+            st.rerun()
+        if st.button("🔔  Check latest updates", key="qa_updates", use_container_width=True):
+            st.toast("📢 Latest updates: High-yield UPSC microtopics active!")
+
+        # Widget 3: Persona Card
+        active_persona = st.session_state.get("ai_persona", "Personal Mentor")
+        st.markdown(f"""
+        <div class="widget-panel-card">
+            <div class="widget-panel-title">
+                <span>👤 Your AI Persona</span>
+                <span style="font-size: 0.85rem; color: #64748B;">›</span>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 1.1rem; color: #6366F1;">〰️</span>
+                    <div style="font-weight: 700; color: #0F172A; font-size: 0.95rem;">{active_persona}</div>
+                </div>
+                <div style="font-size: 0.76rem; color: #64748B; margin-top: 4px;">
+                    Supportive · Motivational · Result-driven
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Change Persona ➔", key="btn_side_change_persona", use_container_width=True):
+            st.session_state.nav_mode = "⚙️ Settings"
+            st.rerun()
+
+        # Widget 4: Today's Focus
+        today_date_str = datetime.date.today().strftime("%d %b %Y")
+        if "today_focus_tasks" not in st.session_state:
+            st.session_state.today_focus_tasks = [
+                {"task": "Answer writing practice (GS 2)", "done": True},
+                {"task": "Revise Modern History", "done": True},
+                {"task": "Daily current affairs (1 hour)", "done": False},
+                {"task": "Gym / Health", "done": False},
+            ]
+
+        st.markdown(f"""
+        <div class="widget-panel-card">
+            <div class="widget-panel-title">
+                <span>🎯 Today's Focus</span>
+                <span style="font-size: 0.8rem; font-weight: 600; color: #64748B;">{today_date_str}</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        for t_idx, item in enumerate(st.session_state.today_focus_tasks):
+            c_done = st.checkbox(item["task"], value=item["done"], key=f"focus_chk_{t_idx}")
+            st.session_state.today_focus_tasks[t_idx]["done"] = c_done
+
+else:
+    # Inner page breadcrumb
+    b_col1, b_col2 = st.columns([0.22, 0.78])
+    with b_col1:
+        if st.button("← Back to Home", key="btn_back_home_top", use_container_width=True):
+            st.session_state.nav_mode = "🏠 Home"
+            st.rerun()
+    with b_col2:
+        st.markdown(f"<div style='font-size: 1.25rem; font-weight: 800; color: #0F172A; padding-top: 5px;'>{st.session_state.nav_mode}</div>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 10px 0 20px 0; border: none; border-top: 1px solid #E2E8F0;'>", unsafe_allow_html=True)
+
 
 # Sample Prompts per Vertical
 SAMPLE_PROMPTS = {
@@ -639,6 +1006,7 @@ SAMPLE_PROMPTS = {
 # VIEW 1: 🤖 NEURAL AI COPILOT
 # ==========================================
 if nav_mode == "🤖 Neural AI Copilot":
+    render_exam_selection_hub()
     # If NO messages yet for this vertical: Render Quick Sample Prompts
     if not st.session_state.messages:
         st.markdown(f"#### 💡 Starter Prompts for **{st.session_state.selected_exam}**:")
@@ -660,10 +1028,13 @@ if nav_mode == "🤖 Neural AI Copilot":
                 st.markdown(msg["content"])
 
     # Determine prompt to process
+    chat_prompt = st.chat_input(f"Ask {st.session_state.selected_exam} AI anything about syllabus, strategy, MCQs...")
     prompt_to_process = None
     if st.session_state.pending_prompt:
         prompt_to_process = st.session_state.pending_prompt
         st.session_state.pending_prompt = None
+    elif chat_prompt and chat_prompt.strip():
+        prompt_to_process = chat_prompt.strip()
     elif top_sub and top_val.strip():
         prompt_to_process = top_val.strip()
 
@@ -2891,21 +3262,67 @@ elif nav_mode == "➕ Custom Modules":
 # VIEW 5: 📊 MATRIX ANALYTICS
 # ==========================================
 elif nav_mode == "📊 Matrix Analytics":
-    st.markdown("<h3 style='color: #FFFFFF;'>📊 UPSC Matrix Analytics</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Visual breakdown of syllabus coverage across GS1, GS2, GS3, and GS4.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A;'>📊 UPSC Matrix Analytics</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748B;'>Visual breakdown of syllabus coverage across GS1, GS2, GS3, and GS4.</p>", unsafe_allow_html=True)
     
     a_col1, a_col2 = st.columns(2)
     
     with a_col1:
-        st.markdown("<h4 style='color: #FFFFFF;'>📊 Paper-wise Workload</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A;'>📊 Paper-wise Workload</h4>", unsafe_allow_html=True)
         p_counts = {"GS Paper 1": 386, "GS Paper 2": 89, "GS Paper 3": 73, "GS Paper 4": 69}
         for p_name, count in p_counts.items():
             completed_p = sum(1 for m_id in st.session_state.progress.get("completed", []) if m_id.startswith(p_name))
             p_pct = (completed_p / count * 100) if count > 0 else 0
-            st.markdown(f"<strong style='color: #38BDF8;'>{p_name}</strong> <span style='color: #94A3B8;'>({completed_p}/{count} completed)</span>", unsafe_allow_html=True)
+            st.markdown(f"<strong style='color: #0284C7;'>{p_name}</strong> <span style='color: #64748B;'>({completed_p}/{count} completed)</span>", unsafe_allow_html=True)
             st.progress(p_pct / 100.0)
             
     with a_col2:
-        st.markdown("<h4 style='color: #FFFFFF;'>🎯 Focus Area Recommendations</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A;'>🎯 Focus Area Recommendations</h4>", unsafe_allow_html=True)
         st.info("📍 **Recommended Priority:** Complete **GS Paper 1 (Culture & Modern History)** and **GS Paper 2 (Polity & Constitution)** first as they have high weightage in Prelims & Mains overlap.")
         st.success("✅ **Study Tip:** Click '💡 Explainer' next to any pending microtopic in the Curriculum Navigator to generate high-yield structured notes.")
+
+# ==========================================
+# VIEW 6: ⚙️ SETTINGS & PERSONA TUNING
+# ==========================================
+elif nav_mode == "⚙️ Settings":
+    st.markdown("<h3 style='color: #0F172A;'>⚙️ Aspirant Settings & Calibration</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748B;'>Calibrate your preparation stage, persona vibe, emotional goals, and session cache.</p>", unsafe_allow_html=True)
+    
+    st.markdown("#### 👤 Student Profile & Prep Stage")
+    render_student_profile_card()
+    
+    st.markdown("---")
+    st.markdown("#### 🧠 Active AI Persona Style")
+    set_col1, set_col2 = st.columns([0.6, 0.4])
+    with set_col1:
+        cur_p = st.session_state.get("ai_persona", "Personal Mentor")
+        p_list = ["Personal Mentor", "Academic Professor", "Strict Evaluator", "Socratic Guide", "Empathetic Counselor"]
+        new_p = st.selectbox(
+            "Select AI Persona:",
+            p_list,
+            index=p_list.index(cur_p) if cur_p in p_list else 0,
+            key="settings_persona_select"
+        )
+        if new_p != cur_p:
+            st.session_state.ai_persona = new_p
+            st.success(f"Updated persona to **{new_p}**!")
+            st.rerun()
+    with set_col2:
+        st.info("💡 **Persona Style:** Customizes answer depth, tone, motivational nudges, and exam feedback.")
+
+    st.markdown("---")
+    st.markdown("#### 🧹 Session & Storage Management")
+    r_col1, r_col2 = st.columns(2)
+    with r_col1:
+        if st.button(f"🧹 Clear Chat History for {st.session_state.selected_exam}", key="btn_clear_chat_settings", use_container_width=True):
+            st.session_state.exam_messages[st.session_state.selected_exam] = []
+            st.session_state.messages = []
+            st.success(f"Cleared chat history for {st.session_state.selected_exam}!")
+            st.rerun()
+    with r_col2:
+        if st.button("🔄 Reset All Progress & Daily Tasks", key="btn_reset_all_settings", use_container_width=True):
+            st.session_state.progress = {"completed": [], "notes": {}, "custom_microtopics": []}
+            save_user_progress(st.session_state.progress)
+            st.success("User progress reset to default!")
+            st.rerun()
+

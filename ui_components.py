@@ -5,314 +5,689 @@ from pathlib import Path
 def inject_custom_css():
     st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-    /* Global Background - Deep Navy #0F172A */
+    /* Global Background - Minimalist Crisp Light Canvas */
     .stApp {
-        background-color: #0F172A !important;
+        background-color: #F8FAFC !important;
         background-image: none !important;
-        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
-        color: #F8FAFC !important;
-    }
-
-    /* Secondary Text - Light Gray #CBD5E1 */
-    html, body, p, span, div, li, label, td, th, .stMarkdown, .stMarkdown p, .stMarkdown span {
-        color: #CBD5E1 !important;
-    }
-
-    /* Primary Text - Off White #F8FAFC */
-    h1, h2, h3, h4, h5, h6, strong, b, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
-        color: #F8FAFC !important;
-        font-family: 'Outfit', sans-serif !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.3px !important;
-    }
-
-    /* Accent Labels - Cyan #38BDF8 */
-    label, div[data-testid="stWidgetLabel"] p, div[data-testid="stWidgetLabel"] span {
-        color: #38BDF8 !important;
-        font-weight: 700 !important;
-        font-size: 0.95rem !important;
-        letter-spacing: 0.3px !important;
-        font-family: 'JetBrains Mono', monospace !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        color: #1E293B !important;
     }
 
     /* Main Container Layout */
     .block-container {
-        padding-top: 1.5rem !important;
-        padding-bottom: 3.5rem !important;
-        max-width: 1280px !important;
+        padding-top: 1.2rem !important;
+        padding-bottom: 3rem !important;
+        max-width: 1380px !important;
     }
 
-    /* Sidebar - Deep Navy #0F172A */
+    /* Clean Light Sidebar */
     section[data-testid="stSidebar"] {
-        background-color: #0F172A !important;
-        border-right: 1px solid rgba(56, 189, 248, 0.25) !important;
+        background-color: #FFFFFF !important;
+        border-right: 1px solid #E2E8F0 !important;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02) !important;
     }
 
     section[data-testid="stSidebar"] * {
-        color: #CBD5E1 !important;
+        color: #334155 !important;
     }
 
-    /* Header Banner - Slate #1E293B */
-    .futuristic-header {
-        background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.35) !important;
-        border-radius: 16px !important;
-        padding: 26px 32px !important;
-        margin-bottom: 24px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-        position: relative !important;
-        overflow: hidden !important;
+    section[data-testid="stSidebar"] .stSelectbox label,
+    section[data-testid="stSidebar"] .stRadio label {
+        color: #475569 !important;
+        font-weight: 600 !important;
     }
 
-    .futuristic-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: #38BDF8 !important;
+    /* Typography Defaults */
+    html, body, p, span, div, li, label, td, th {
+        color: #334155;
+        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
     }
 
-    .header-title {
-        font-family: 'Outfit', sans-serif !important;
-        font-size: 2.2rem !important;
-        font-weight: 800 !important;
-        color: #F8FAFC !important;
-        margin: 0 !important;
+    h1, h2, h3, h4, h5, h6 {
+        color: #0F172A !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.02em !important;
     }
 
-    .header-subtitle {
-        font-size: 0.95rem !important;
-        color: #CBD5E1 !important;
-        margin-top: 6px !important;
-        font-weight: 500 !important;
-    }
-
-    /* Badges */
-    .status-badge-container {
+    /* Minimalist Top Bar */
+    .minimal-topbar {
         display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 18px;
+        justify-content: space-between;
+        align-items: center;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 18px;
+        padding: 12px 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
-    .status-badge {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.78rem;
-        padding: 6px 14px;
+    .topbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .topbar-logo-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+    }
+
+    .topbar-logo-sub {
+        font-size: 0.72rem;
+        color: #64748B;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+
+    /* Greeting Hero Banner */
+    .greeting-card {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
         border-radius: 20px;
+        padding: 28px 34px;
+        margin-bottom: 22px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+    }
+
+    .greeting-title {
+        font-family: 'Playfair Display', Georgia, serif !important;
+        font-size: 2.2rem !important;
+        font-weight: 600 !important;
+        color: #0F172A !important;
+        margin: 0 0 6px 0 !important;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .greeting-tagline {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #334155;
+        margin: 0 0 4px 0;
+    }
+
+    .greeting-desc {
+        font-size: 0.92rem;
+        color: #64748B;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Search Omnibar */
+    .omnibar-wrapper {
+        margin-bottom: 24px;
+    }
+
+    /* Search Omnibar */
+    div[data-testid="stForm"]:has(input[aria-label*="omnibar"]),
+    div[data-testid="stForm"]:has(input[placeholder*="Ask anything about UPSC"]) {
+        background: #FFFFFF !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 9999px !important;
+        padding: 4px 10px 4px 20px !important;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04) !important;
+        transition: all 0.2s ease !important;
+    }
+
+    div[data-testid="stForm"]:has(input[placeholder*="Ask anything about UPSC"]):focus-within {
+        border-color: #6366F1 !important;
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.12) !important;
+    }
+
+    div[data-testid="stForm"]:has(input[placeholder*="Ask anything about UPSC"]) input {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        font-size: 0.96rem !important;
+        color: #1E293B !important;
+    }
+
+    div[data-testid="stForm"]:has(input[placeholder*="Ask anything about UPSC"]) .stButton > button {
+        background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 9999px !important;
+        width: 38px !important;
+        height: 38px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+        font-size: 1.1rem !important;
+    }
+
+    div[data-testid="stForm"]:has(input[placeholder*="Ask anything about UPSC"]) .stButton > button:hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4) !important;
+    }
+
+    /* Grid of Pastel Minimalist Cards */
+    .feature-card {
+        border-radius: 18px;
+        padding: 20px 22px;
+        min-height: 145px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Column buttons below feature cards */
+    div[data-testid="stColumn"]:has(.feature-card) .stButton > button {
+        border-radius: 9999px !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        padding: 6px 14px !important;
+        margin-top: 4px !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+    }
+
+    div[data-testid="stColumn"]:has(.feature-card) .stButton > button:hover {
+        background: #0F172A !important;
+        color: #FFFFFF !important;
+        border-color: #0F172A !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Card Themes */
+    .card-copilot {
+        background-color: #F0F6FF;
+        border: 1px solid #DBEAFE;
+    }
+    .card-syllabus {
+        background-color: #F0FDF4;
+        border: 1px solid #DCFCE7;
+    }
+    .card-planner {
+        background-color: #FFFBEB;
+        border: 1px solid #FEF3C7;
+    }
+    .card-productivity {
+        background-color: #F0F9FF;
+        border: 1px solid #E0F2FE;
+    }
+    .card-relationship {
+        background-color: #FFF1F2;
+        border: 1px solid #FFE4E6;
+    }
+    .card-wellness {
+        background-color: #F0FDFA;
+        border: 1px solid #CCFBF1;
+    }
+    .card-mock {
+        background-color: #FAF5FF;
+        border: 1px solid #F3E8FF;
+    }
+    .card-classes {
+        background-color: #FDF2F8;
+        border: 1px solid #FCE7F3;
+    }
+    .card-pwskills {
+        background-color: #F0F9FF;
+        border: 1px solid #E0F2FE;
+    }
+
+    .card-icon-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-bottom: 14px;
+        background: #FFFFFF;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-title {
+        font-size: 1.02rem;
         font-weight: 700;
+        color: #0F172A;
+        margin: 0 0 6px 0;
+        line-height: 1.3;
     }
 
-    .badge-primary {
-        background: rgba(56, 189, 248, 0.15) !important;
-        color: #38BDF8 !important;
-        border: 1px solid #38BDF8 !important;
+    .card-desc {
+        font-size: 0.83rem;
+        color: #64748B;
+        margin: 0 0 12px 0;
+        line-height: 1.45;
+        flex-grow: 1;
     }
 
-    .badge-success {
-        background: rgba(52, 211, 153, 0.15) !important;
-        color: #34D399 !important;
-        border: 1px solid #34D399 !important;
+    .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 
-    .badge-purple {
-        background: rgba(192, 132, 252, 0.15) !important;
-        color: #C084FC !important;
-        border: 1px solid #C084FC !important;
+    .card-arrow {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748B;
+        font-size: 0.85rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
     }
 
-    /* Surface Cards - Slate #1E293B */
-    form[key="top_query_form"], form[key^="query_form_"], div[data-testid="stForm"] {
-        background-color: #1E293B !important;
-        border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
-        border-radius: 16px !important;
-        padding: 22px 26px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-        margin-bottom: 24px !important;
+    .feature-card:hover .card-arrow {
+        background: #0F172A;
+        color: #FFFFFF;
+        transform: translateX(2px);
     }
 
-    form[key^="query_form_"] input, div[data-testid="stForm"] input {
-        border: 1.5px solid rgba(56, 189, 248, 0.4) !important;
-        background-color: #0F172A !important;
-        color: #F8FAFC !important;
-        font-size: 1.02rem !important;
-        font-weight: 500 !important;
-        border-radius: 12px !important;
-        padding: 12px 18px !important;
+    /* Wide Mission Banner */
+    .mission-banner {
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+        border: 1px solid #E2E8F0;
+        border-radius: 18px;
+        padding: 24px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
     }
 
-    form[key^="query_form_"] input:focus, div[data-testid="stForm"] input:focus {
-        border-color: #38BDF8 !important;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.4) !important;
+    .mission-tag {
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #64748B;
+        text-transform: uppercase;
+        margin-bottom: 6px;
     }
 
-    /* Buttons - Cyan #38BDF8 Accent */
+    .mission-headline {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 1.65rem;
+        font-weight: 600;
+        color: #0F172A;
+        margin: 0;
+    }
+
+    /* Right Widget Column Cards */
+    .widget-panel-card {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 18px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .widget-panel-title {
+        font-size: 0.96rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin: 0 0 14px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Progress Donut Chart Styling */
+    .progress-matrix-container {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 14px;
+    }
+
+    .progress-donut-wrapper {
+        position: relative;
+        width: 82px;
+        height: 82px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-donut-text {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #0F172A;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .progress-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.82rem;
+        margin-bottom: 6px;
+    }
+
+    .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    /* Focus Checklist Items */
+    .focus-task-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        font-size: 0.88rem;
+        color: #334155;
+        border-bottom: 1px solid #F1F5F9;
+    }
+
+    .focus-task-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Clean Streamlit Buttons */
     .stButton>button {
         border-radius: 12px !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-weight: 700 !important;
-        background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-        border: 1px solid #38BDF8 !important;
-        color: #FFFFFF !important;
-        padding: 10px 22px !important;
-        box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3) !important;
+        font-weight: 600 !important;
+        font-size: 0.92rem !important;
+        padding: 8px 18px !important;
         transition: all 0.2s ease !important;
+        border: 1px solid #E2E8F0 !important;
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
     }
 
     .stButton>button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 25px rgba(56, 189, 248, 0.5) !important;
-        background: #0284C7 !important;
+        background: #F8FAFC !important;
+        border-color: #CBD5E1 !important;
+        color: #0F172A !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04) !important;
     }
 
-    /* Radio Navigation Tabs */
-    div[data-testid="stRadio"] > div,
-    div[data-testid="stRadio"] [role="radiogroup"],
-    div[data-testid="stWidgetGroup"] {
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        gap: 8px !important;
-        background-color: #1E293B !important;
-        padding: 8px !important;
-        border-radius: 14px !important;
-        border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
-        width: 100% !important;
+    .stButton>button:active {
+        transform: translateY(0) !important;
     }
 
-    div[data-testid="stRadio"] label,
-    div[role="radiogroup"] label {
-        background-color: #0F172A !important;
-        border-radius: 10px !important;
-        padding: 10px 18px !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-size: 0.92rem !important;
-        font-weight: 600 !important;
-        color: #CBD5E1 !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        margin: 2px !important;
-        display: inline-flex !important;
-        align-items: center !important;
+    /* Primary Accent Buttons */
+    div[data-testid="stForm"] .stButton>button,
+    button[kind="primary"],
+    .primary-btn button {
+        background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%) !important;
+        color: #FFFFFF !important;
+        border: 1px solid #4338CA !important;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
     }
 
-    div[data-testid="stRadio"] label:hover,
-    div[role="radiogroup"] label:hover {
-        color: #F8FAFC !important;
-        border-color: #38BDF8 !important;
+    div[data-testid="stForm"] .stButton>button:hover,
+    button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #4338CA 0%, #3730A3 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35) !important;
     }
 
-    div[data-testid="stRadio"] label[data-checked="true"],
-    div[role="radiogroup"] label[aria-checked="true"],
-    div[role="radiogroup"] label:has(input:checked) {
-        background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-        color: #F8FAFC !important;
-        border: 1px solid #38BDF8 !important;
-        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35) !important;
-    }
-
-    div[data-testid="stRadio"] label p,
-    div[role="radiogroup"] label p,
-    div[data-testid="stRadio"] label span,
-    div[role="radiogroup"] label span {
-        color: inherit !important;
-        font-weight: inherit !important;
-        font-size: 0.92rem !important;
-    }
-
-    /* Chat Messages */
-    div[data-testid="stChatMessage"] {
-        background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    /* Minimalist Inputs & Forms */
+    div[data-testid="stForm"] {
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
         border-radius: 16px !important;
-        padding: 20px 24px !important;
-        margin-bottom: 16px !important;
+        padding: 22px !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
     }
 
-    div[data-testid="stChatMessage"] p, div[data-testid="stChatMessage"] span, div[data-testid="stChatMessage"] li {
-        color: #F8FAFC !important;
-        font-size: 0.98rem !important;
-        line-height: 1.65 !important;
+    input, textarea, div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        border-color: #CBD5E1 !important;
+        border-radius: 10px !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    input:focus, textarea:focus {
+        border-color: #6366F1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    }
+
+    /* Clean Chat Messages */
+    div[data-testid="stChatMessage"] {
+        border-radius: 16px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 14px !important;
     }
 
     div[data-testid="stChatMessage"]:has(div[aria-label="Chat message from user"]) {
-        background-color: #1E293B !important;
-        border: 1.5px solid #38BDF8 !important;
+        background-color: #EEF2FF !important;
+        border: 1px solid #E0E7FF !important;
     }
 
-    /* Expanders */
+    div[data-testid="stChatMessage"]:has(div[aria-label="Chat message from assistant"]) {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+    }
+
+    div[data-testid="stChatMessage"] p, 
+    div[data-testid="stChatMessage"] span, 
+    div[data-testid="stChatMessage"] li {
+        color: #1E293B !important;
+        line-height: 1.65 !important;
+    }
+
+    /* Clean Expanders */
     div[data-testid="stExpander"] {
-        background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
         border-radius: 14px !important;
-        margin-bottom: 16px !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+        margin-bottom: 12px !important;
     }
 
     div[data-testid="stExpander"] summary {
-        color: #38BDF8 !important;
-        font-weight: 700 !important;
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        padding: 12px 16px !important;
     }
 
-    /* Metric Cards - Slate #1E293B */
+    /* Clean Metric Cards */
     .metric-card {
-        background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
         border-radius: 16px !important;
-        padding: 20px 24px !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+        padding: 18px 20px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
     }
 
     .metric-value {
-        font-family: 'Outfit', sans-serif !important;
-        font-size: 2.2rem !important;
+        font-size: 1.85rem !important;
         font-weight: 800 !important;
-        color: #38BDF8 !important;
+        color: #0F172A !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
     }
 
     .metric-label {
-        font-size: 0.85rem !important;
-        color: #CBD5E1 !important;
-        font-weight: 700 !important;
+        font-size: 0.8rem !important;
+        color: #64748B !important;
+        font-weight: 600 !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0.04em !important;
+        margin-bottom: 4px !important;
     }
 
-    /* Surface Cards - Slate #1E293B */
+    /* Clean Progress Bars */
+    div[data-testid="stProgress"] > div > div > div {
+        background: linear-gradient(90deg, #4F46E5 0%, #6366F1 100%) !important;
+        border-radius: 9999px !important;
+    }
+
+    div[data-testid="stProgress"] > div > div {
+        background-color: #E2E8F0 !important;
+        border-radius: 9999px !important;
+        height: 8px !important;
+    }
+
+    /* Minimalist Pill Badges */
+    .status-badge {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 0.78rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .badge-primary {
+        background: #EFF6FF !important;
+        color: #2563EB !important;
+        border: 1px solid #BFDBFE !important;
+    }
+
+    .badge-success {
+        background: #F0FDF4 !important;
+        color: #16A34A !important;
+        border: 1px solid #BBF7D0 !important;
+    }
+
+    .badge-purple {
+        background: #FAF5FF !important;
+        color: #9333EA !important;
+        border: 1px solid #E9D5FF !important;
+    }
+
+    .badge-amber {
+        background: #FFFBEB !important;
+        color: #D97706 !important;
+        border: 1px solid #FDE68A !important;
+    }
+
+    /* Minimalist Header Banner for Inner Pages */
+    .minimal-page-header {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 18px 24px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .minimal-page-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #0F172A;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .minimal-page-desc {
+        font-size: 0.88rem;
+        color: #64748B;
+        margin: 4px 0 0 0;
+    }
+
+    /* Hide redundant Streamlit UI chrome */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header[data-testid="stHeader"] {
+        background-color: transparent !important;
+        z-index: 100 !important;
+    }
+
+    /* Navigation Radio Pills */
+    div[data-testid="stRadio"] [role="radiogroup"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+
+    div[data-testid="stRadio"] label {
+        background-color: transparent !important;
+        border-radius: 10px !important;
+        padding: 8px 14px !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        cursor: pointer !important;
+        border: none !important;
+        transition: all 0.15s ease !important;
+    }
+
+    div[data-testid="stRadio"] label:hover {
+        background-color: #F1F5F9 !important;
+        color: #0F172A !important;
+    }
+
+    div[data-testid="stRadio"] label:has(input:checked) {
+        background-color: #EEF2FF !important;
+        color: #4338CA !important;
+        font-weight: 700 !important;
+    }
+
+    /* PW Skills Card Minimalist */
     .pwskills-card {
-        background-color: #1E293B !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
         border-radius: 16px !important;
-        padding: 22px !important;
-        margin-bottom: 16px !important;
+        padding: 20px !important;
+        margin-bottom: 14px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
         transition: all 0.2s ease !important;
     }
 
     .pwskills-card:hover {
-        border-color: #38BDF8 !important;
-        box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25) !important;
+        border-color: #CBD5E1 !important;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04) !important;
     }
 
     .pwskills-title {
-        font-family: 'Outfit', sans-serif !important;
-        font-size: 1.15rem !important;
+        font-size: 1.05rem !important;
         font-weight: 700 !important;
-        color: #38BDF8 !important;
+        color: #0F172A !important;
     }
 
     .pwskills-desc {
-        font-size: 0.95rem !important;
-        color: #CBD5E1 !important;
+        font-size: 0.88rem !important;
+        color: #64748B !important;
         margin-top: 6px !important;
-        line-height: 1.55 !important;
+        line-height: 1.5 !important;
     }
 
     .pwskills-link {
-        color: #38BDF8 !important;
-        font-weight: 700 !important;
+        color: #4F46E5 !important;
+        font-weight: 600 !important;
         text-decoration: none !important;
     }
 
@@ -322,102 +697,131 @@ def inject_custom_css():
     </style>
     """, unsafe_allow_html=True)
 
+
 EXAM_META_CONFIG = {
     "UPSC": {
-        "title": "⚡ UPSC AI NEURAL COPILOT",
-        "subtitle": "Civil Services Examination (IAS / IPS / IFS) · Quantum RAG Neural Engine",
+        "title": "UPSC Civil Services Examination",
+        "subtitle": "IAS / IPS / IFS · High-Yield GS Microtopics & RAG Mentor",
+        "tag": "UPSC CSE",
         "badges": [
-            ("🟢 RAG NEURAL CORE: ONLINE", "badge-success"),
-            ("🧠 623 MAINS MICROTOPICS ACTIVE", "badge-primary"),
-            ("🧘 MENTAL HEALTH & WELLNESS: ACTIVE", "badge-purple"),
-            ("📝 PRELIMS & MAINS MOCKS: READY", "badge-success")
+            ("🟢 RAG Core Active", "badge-success"),
+            ("🧠 623 Microtopics", "badge-primary"),
+            ("🧘 Wellness Active", "badge-purple"),
+            ("📝 Prelims & Mains Ready", "badge-amber")
         ]
     },
     "IIT-JEE": {
-        "title": "⚛️ IIT-JEE AI NEURAL MENTOR",
-        "subtitle": "Engineering Entrance (Physics, Chemistry & Mathematics) · Step-by-Step Problem Solving Engine",
+        "title": "IIT-JEE Engineering Copilot",
+        "subtitle": "JEE Main & Advanced · Physics, Chemistry & Mathematics",
+        "tag": "IIT-JEE",
         "badges": [
-            ("🟢 JEE MAIN & ADVANCED CORE: ONLINE", "badge-success"),
-            ("📐 FORMULAS & DERIVATIONS ACTIVE", "badge-primary"),
-            ("💡 SHORTCUT & STEP-BY-STEP SOLVER", "badge-purple"),
-            ("🎯 HIGH-YIELD JEE MOCKS: READY", "badge-success")
+            ("🟢 JEE Engine Active", "badge-success"),
+            ("📐 Formulas Active", "badge-primary"),
+            ("💡 Step-by-Step Solver", "badge-purple"),
+            ("🎯 High-Yield Mocks", "badge-amber")
         ]
     },
     "NEET": {
-        "title": "🩺 NEET UG MEDICAL COPILOT",
-        "subtitle": "National Eligibility cum Entrance Test (NCERT Bio, Chem & Physics) · NCERT Line-by-Line Engine",
+        "title": "NEET UG Medical Copilot",
+        "subtitle": "National Eligibility cum Entrance Test · NCERT Line-by-Line Engine",
+        "tag": "NEET UG",
         "badges": [
-            ("🟢 NCERT MASTER MATRIX: ONLINE", "badge-success"),
-            ("🧬 BIOLOGY, CHEM & PHYSICS HIGH-YIELD", "badge-primary"),
-            ("🔬 ASSERTION-REASON PRACTICE: ACTIVE", "badge-purple"),
-            ("💡 MNEMONIC & RECALL ENGINE: READY", "badge-success")
+            ("🟢 NCERT Matrix Online", "badge-success"),
+            ("🧬 High-Yield Bio & Chem", "badge-primary"),
+            ("🔬 Assertion-Reason", "badge-purple"),
+            ("💡 Mnemonic Engine", "badge-amber")
         ]
     },
     "GATE": {
-        "title": "⚙️ GATE ENGINEERING AI COPILOT",
-        "subtitle": "Graduate Aptitude Test in Engineering (CS, EE, EC, ME, CE) · Numerical & Algorithmic Solver",
+        "title": "GATE Engineering AI Copilot",
+        "subtitle": "Graduate Aptitude Test in Engineering · Numerical Solver",
+        "tag": "GATE",
         "badges": [
-            ("🟢 GATE TECHNICAL ENGINE: ONLINE", "badge-success"),
-            ("📊 NUMERICAL ANSWER TYPE (NAT) READY", "badge-primary"),
-            ("💻 CORE SUBJECT & ALGO MATRIX", "badge-purple"),
-            ("⚡ STEP-BY-STEP DERIVATIONS: ACTIVE", "badge-success")
+            ("🟢 Technical Core Online", "badge-success"),
+            ("📊 NAT Answer Solver", "badge-primary"),
+            ("💻 Core Matrix", "badge-purple"),
+            ("⚡ Step-by-Step Logic", "badge-amber")
         ]
     },
     "CAT": {
-        "title": "📈 CAT APTITUDE & DILR MASTER",
-        "subtitle": "Common Admission Test for IIMs (QA, DILR, VARC) · Speed Math & Logical Breakdown Engine",
+        "title": "CAT Aptitude & DILR Master",
+        "subtitle": "Common Admission Test · Speed Math & Logical Breakdown",
+        "tag": "CAT IIM",
         "badges": [
-            ("🟢 CAT STRATEGY MATRIX: ONLINE", "badge-success"),
-            ("⚡ SPEED MATH & SHORTCUT ELIMINATION", "badge-primary"),
-            ("🧩 DILR PUZZLE MATRIX ACTIVE", "badge-purple"),
-            ("📚 VARC PASSAGE ANALYSIS: READY", "badge-success")
+            ("🟢 Strategy Matrix Online", "badge-success"),
+            ("⚡ Speed Math Shortcuts", "badge-primary"),
+            ("🧩 DILR Puzzle Matrix", "badge-purple"),
+            ("📚 VARC Passage Analysis", "badge-amber")
         ]
     },
     "Banking": {
-        "title": "🏦 BANKING EXAM AI COPILOT",
-        "subtitle": "IBPS PO/Clerk, SBI PO/Clerk & RBI Grade B · Speed Aptitude & Financial Awareness Engine",
+        "title": "Banking Exam AI Copilot",
+        "subtitle": "IBPS & SBI PO/Clerk · Speed Aptitude & Financial Awareness",
+        "tag": "Banking PO",
         "badges": [
-            ("🟢 BANKING SPEED ENGINE: ONLINE", "badge-success"),
-            ("⚡ 30-SEC CALCULATION TRICKS", "badge-primary"),
-            ("🧩 SYLLOGISM & SEATING ARRANGEMENT", "badge-purple"),
-            ("💳 FINANCIAL AWARENESS: ACTIVE", "badge-success")
+            ("🟢 Speed Engine Online", "badge-success"),
+            ("⚡ Calculation Tricks", "badge-primary"),
+            ("🧩 Seating Arrangements", "badge-purple"),
+            ("💳 Financial Awareness", "badge-amber")
         ]
     },
     "SSC": {
-        "title": "🏢 SSC CGL & CHSL PREP COPILOT",
-        "subtitle": "Staff Selection Commission Tier-1 & Tier-2 · Quant, Reasoning, English & GA Speed Engine",
+        "title": "SSC CGL & CHSL Prep Copilot",
+        "subtitle": "Staff Selection Commission · Quant, Reasoning & General Awareness",
+        "tag": "SSC CGL",
         "badges": [
-            ("🟢 SSC TIER-1 & TIER-2 CORE: ONLINE", "badge-success"),
-            ("⚡ SPEED HACKS & OPTION SUBSTITUTION", "badge-primary"),
-            ("🏛️ STATIC GA MEMORY MATRIX", "badge-purple"),
-            ("📝 PATTERN MOCKS & REASONING: READY", "badge-success")
+            ("🟢 Tier 1 & 2 Core Online", "badge-success"),
+            ("⚡ Speed Hacks Active", "badge-primary"),
+            ("🏛️ Static GK Matrix", "badge-purple"),
+            ("📝 Pattern Mocks Ready", "badge-amber")
         ]
     }
 }
 
+
+def render_minimal_topbar(selected_exam: str = "UPSC", persona: str = "Personal Mentor"):
+    """Renders the top selector bar matching the screenshot with exam pill and persona pill."""
+    st.markdown(f"""
+    <div class="minimal-topbar">
+        <div class="topbar-brand">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 22L12 8L17 17L20 12L25 22H4Z" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 8L15 13" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div>
+                <div class="topbar-logo-title">UPSC AI</div>
+                <div class="topbar-logo-sub">Learn · Plan · Grow</div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 9999px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 6px;">
+                <span style="color: #6366F1;">✨</span> Powered by RAG <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#22C55E;"></span>
+            </div>
+            <div style="width: 34px; height: 34px; border-radius: 50%; background: #EEF2FF; border: 1.5px solid #C7D2FE; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #4338CA; font-size: 0.88rem;">
+                K
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
 def render_exam_header(selected_exam: str = "UPSC"):
+    """Clean minimal header for inner feature views."""
     config = EXAM_META_CONFIG.get(selected_exam, EXAM_META_CONFIG["UPSC"])
     badges_html = "".join([f'<span class="status-badge {b[1]}">{b[0]}</span>' for b in config["badges"]])
     
     st.markdown(f"""
-    <div class="futuristic-header">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-                <h1 class="header-title">{config['title']}</h1>
-                <div class="header-subtitle">{config['subtitle']}</div>
-            </div>
-            <div style="text-align: right;">
-                <span style="font-family:'JetBrains Mono'; font-size:0.78rem; background:rgba(56,189,248,0.15); color:#38BDF8; padding:5px 12px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); font-weight:700;">
-                    VERTICAL: {selected_exam}
-                </span>
-            </div>
+    <div class="minimal-page-header">
+        <div>
+            <div class="minimal-page-title">{config['title']}</div>
+            <div class="minimal-page-desc">{config['subtitle']}</div>
         </div>
-        <div class="status-badge-container">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
             {badges_html}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
+
 def render_futuristic_header():
     render_exam_header("UPSC")
-
