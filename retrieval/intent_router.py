@@ -208,6 +208,18 @@ def classify_intent(query: str) -> IntentResult:
     if any(k in text for k in rel_keywords) and any(p in text for p in plan_keywords):
         return IntentResult("relationship_syllabus_7day_plan", 0.98, signals + ["relationship_plan"])
 
+    # High Priority: Exam Date & 1-Week Buffer Study Plan requests
+    exam_plan_keywords = (
+        "exam date", "countdown", "1 week before", "one week before",
+        "finish 1 week", "finish one week", "complete syllabus 1 week",
+        "complete the entire syllabus 1 week", "finish syllabus 1 week",
+        "exam roadmap", "days until exam", "target exam date",
+        "detailed plan so that", "plan so that the student completes",
+        "completes the entire syllabus 1 week before"
+    )
+    if any(k in text for k in exam_plan_keywords) or (("study plan" in text or "syllabus plan" in text or "preparation plan" in text) and ("exam" in text or "date" in text or "week" in text)):
+        return IntentResult("exam_date_study_plan", 0.98, signals + ["exam_date_plan"])
+
     # Priority: mental health > fresh grad course > backup > academic
     # Note: If academic signal is present and no personal distress indicators (e.g. 'i', 'me', 'my', 'feeling', 'am') exist, prioritize academic.
     has_personal_distress = any(w in text.split() for w in ("i", "me", "my", "feeling", "am", "feel", "i'm"))

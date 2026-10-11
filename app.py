@@ -529,6 +529,34 @@ with st.sidebar:
     st.markdown("<h3 style='color: #FFFFFF;'>📊 Matrix Progress</h3>", unsafe_allow_html=True)
     st.progress(pct / 100.0)
     st.markdown(f"<strong style='color: #38BDF8;'>{completed_count} / {total_micros}</strong> <span style='color: #94A3B8;'>modules completed ({pct:.1f}%)</span>", unsafe_allow_html=True)
+
+    # Exam Target Countdown & Planner Quick Status
+    st.markdown("---")
+    st.markdown("<h3 style='color: #FFFFFF;'>🗓️ Exam Countdown</h3>", unsafe_allow_html=True)
+    saved_exam_plan_sb = st.session_state.progress.get("exam_plan", {})
+    saved_exam_dt_sb = saved_exam_plan_sb.get("exam_date")
+    import datetime
+    today_sb = datetime.date.today()
+    if saved_exam_dt_sb:
+        try:
+            ex_date_obj = datetime.date.fromisoformat(saved_exam_dt_sb)
+            days_until_sb = (ex_date_obj - today_sb).days
+            target_1w_sb = ex_date_obj - datetime.timedelta(days=7)
+            if days_until_sb > 0:
+                st.markdown(f"<div style='font-size:0.88rem; color:#CBD5E1;'>Target Exam: <strong style='color:#38BDF8;'>{ex_date_obj.strftime('%d %b %Y')}</strong></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-size:0.85rem; color:#F59E0B;'>⏳ <strong>{days_until_sb} Days</strong> until Exam</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='font-size:0.82rem; color:#34D399;'>🎯 Finish by: <strong>{target_1w_sb.strftime('%d %b %Y')}</strong> (1 Wk Buffer)</div>", unsafe_allow_html=True)
+            else:
+                st.caption("Target exam date has passed. Please update.")
+        except Exception:
+            pass
+    else:
+        st.markdown("<div style='font-size:0.82rem; color:#94A3B8;'>Set exam date to get 1-week buffer study roadmap.</div>", unsafe_allow_html=True)
+
+    if st.button("🗓️ Open Exam Study Planner", key="sidebar_btn_open_planner", use_container_width=True):
+        st.session_state.nav_mode = "🗓️ Exam Countdown & Study Planner"
+        st.session_state.main_nav_radio = "🗓️ Exam Countdown & Study Planner"
+        st.rerun()
     
     st.markdown("---")
     if st.button(f"🧹 Reset {st.session_state.selected_exam} Session", use_container_width=True):
@@ -545,6 +573,7 @@ if st.session_state.get("pending_prompt"):
 NAV_OPTIONS = [
     "🤖 Neural AI Copilot",
     "📋 Syllabus Navigator",
+    "🗓️ Exam Countdown & Study Planner",
     "⚡ Productivity & Targets",
     "💞 Relationship Management",
     "🧘 Mental Health & Wellness",
@@ -898,6 +927,648 @@ elif nav_mode == "📋 Syllabus Navigator":
                                                 st.text_area("Uploaded Notes Text", value=existing_file_content, height=200, disabled=True, key=f"prev_txt_{m_id}")
 
                         st.write("")
+
+# ==========================================
+# VIEW: 🗓️ EXAM COUNTDOWN & STUDY PLANNER
+# ==========================================
+elif nav_mode == "🗓️ Exam Countdown & Study Planner":
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, rgba(13, 17, 32, 0.95) 0%, rgba(8, 11, 23, 0.98) 100%); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-family: 'JetBrains Mono'; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3);">
+                    🎯 STRATEGIC TIMELINE ENGINE
+                </span>
+                <h2 style="color: #FFFFFF; font-size: 1.85rem; margin-top: 8px; margin-bottom: 4px; font-family: 'Outfit'; font-weight: 800;">
+                    🗓️ Exam Date Roadmap & 1-Week Buffer Study Planner
+                </h2>
+                <div style="color: #CBD5E1; font-size: 0.95rem;">
+                    Analyze real-time syllabus completion (topics done vs remaining) and calculate an optimized daily velocity roadmap engineered to <strong>finish 100% of the syllabus exactly 1 week before the exam</strong>.
+                </div>
+            </div>
+            <div style="background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 12px; padding: 10px 16px; text-align: center;">
+                <div style="color: #34D399; font-weight: 800; font-size: 0.85rem; font-family: 'JetBrains Mono';">🛡️ 1-WEEK BUFFER PRINCIPLE</div>
+                <div style="color: #F8FAFC; font-size: 0.82rem; margin-top: 2px;">Final 7 days reserved for Mocks & Micro-Revision</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    import datetime
+    today = datetime.date.today()
+    
+    # 1. LIVE PREPARATION LEVEL AUDIT (Topics completed, topics left)
+    syllabus_data = load_syllabus_data()
+    total_micros = 623
+    completed_set = set(st.session_state.progress.get("completed", []))
+    completed_cnt = len(completed_set)
+    completed_pct = (completed_cnt / total_micros * 100) if total_micros > 0 else 0.0
+    left_cnt = max(0, total_micros - completed_cnt)
+    left_pct = max(0.0, 100.0 - completed_pct)
+
+    gs1_total, gs1_done = 386, sum(1 for m in completed_set if m.startswith("GS Paper 1"))
+    gs2_total, gs2_done = 89, sum(1 for m in completed_set if m.startswith("GS Paper 2"))
+    gs3_total, gs3_done = 73, sum(1 for m in completed_set if m.startswith("GS Paper 3"))
+    gs4_total, gs4_done = 69, sum(1 for m in completed_set if m.startswith("GS Paper 4"))
+
+    gs1_left = max(0, gs1_total - gs1_done)
+    gs2_left = max(0, gs2_total - gs2_done)
+    gs3_left = max(0, gs3_total - gs3_done)
+    gs4_left = max(0, gs4_total - gs4_done)
+
+    st.markdown("<h4 style='color: #38BDF8;'>📊 1. Current Preparation Level & Syllabus Audit</h4>", unsafe_allow_html=True)
+    st.caption("Real-time tracking of syllabus microtopics completed vs left across General Studies papers:")
+
+    # Top Metrics Cards Row
+    m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+    with m_col1:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">📚 Total Curriculum</div>
+            <div class="metric-value">{total_micros}</div>
+            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">GS 1-4 Microtopics</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col2:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">✅ Topics Completed</div>
+            <div class="metric-value" style="color: #34D399;">{completed_cnt}</div>
+            <div style="color: #34D399; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{completed_pct:.1f}% Covered</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col3:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">⏳ Topics Left (Remaining)</div>
+            <div class="metric-value" style="color: #F59E0B;">{left_cnt}</div>
+            <div style="color: #EF4444; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{left_pct:.1f}% Remaining to Finish</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m_col4:
+        stage_label = "🏁 Revision Master" if left_cnt == 0 else ("🚀 Advanced Sprint" if completed_pct >= 50 else ("⚡ Core Foundation" if completed_pct >= 20 else "🌱 Early Setup"))
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">🎯 Prep Stage Status</div>
+            <div class="metric-value" style="font-size: 1.6rem; color: #C084FC;">{stage_label}</div>
+            <div style="color: #CBD5E1; font-size: 0.82rem; font-weight: 600; margin-top: 4px;">Active Learning Phase</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Paper-by-Paper Progress Meters
+    pp_col1, pp_col2 = st.columns(2)
+    with pp_col1:
+        gs1_pct = (gs1_done / gs1_total * 100) if gs1_total > 0 else 0
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="pwskills-title">🏛️ GS Paper 1: Heritage, History, Geography, Society</span>
+                <span style="color:#38BDF8; font-weight:700;">{gs1_done}/{gs1_total} Done</span>
+            </div>
+            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs1_left} microtopics</strong> ({100-gs1_pct:.1f}% left)</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.progress(gs1_pct / 100.0)
+
+        gs2_pct = (gs2_done / gs2_total * 100) if gs2_total > 0 else 0
+        st.markdown(f"""
+        <div class="pwskills-card" style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="pwskills-title">⚖️ GS Paper 2: Polity, Constitution, Governance, IR</span>
+                <span style="color:#38BDF8; font-weight:700;">{gs2_done}/{gs2_total} Done</span>
+            </div>
+            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs2_left} microtopics</strong> ({100-gs2_pct:.1f}% left)</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.progress(gs2_pct / 100.0)
+
+    with pp_col2:
+        gs3_pct = (gs3_done / gs3_total * 100) if gs3_total > 0 else 0
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="pwskills-title">📈 GS Paper 3: Economy, Environment, Sci-Tech, Security</span>
+                <span style="color:#38BDF8; font-weight:700;">{gs3_done}/{gs3_total} Done</span>
+            </div>
+            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs3_left} microtopics</strong> ({100-gs3_pct:.1f}% left)</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.progress(gs3_pct / 100.0)
+
+        gs4_pct = (gs4_done / gs4_total * 100) if gs4_total > 0 else 0
+        st.markdown(f"""
+        <div class="pwskills-card" style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="pwskills-title">🧘 GS Paper 4: Ethics, Integrity, Aptitude & Case Studies</span>
+                <span style="color:#38BDF8; font-weight:700;">{gs4_done}/{gs4_total} Done</span>
+            </div>
+            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs4_left} microtopics</strong> ({100-gs4_pct:.1f}% left)</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.progress(gs4_pct / 100.0)
+
+    st.markdown("---")
+
+    # 2. EXAM DATE CONFIGURATION & TARGET FINISH DEADLINE
+    st.markdown("<h4 style='color: #38BDF8;'>🗓️ 2. Input Exam Conduct Date & Target Buffer Calibration</h4>", unsafe_allow_html=True)
+    st.caption("Tell the system the exact date on which the exam will be conducted. The engine enforces the 1-Week Pre-Exam Finish rule:")
+
+    saved_plan = st.session_state.progress.setdefault("exam_plan", {})
+    saved_exam_date_str = saved_plan.get("exam_date")
+
+    default_exam_date = today + datetime.timedelta(days=90)
+    if saved_exam_date_str:
+        try:
+            parsed_saved_date = datetime.date.fromisoformat(saved_exam_date_str)
+            if parsed_saved_date > today:
+                default_exam_date = parsed_saved_date
+        except Exception:
+            pass
+
+    with st.form("exam_date_planner_form", clear_on_submit=False):
+        f_col1, f_col2, f_col3 = st.columns([1.3, 1, 1])
+        with f_col1:
+            exam_input_date = st.date_input(
+                "📅 When will your exam be conducted?",
+                value=default_exam_date,
+                min_value=today + datetime.timedelta(days=1),
+                help="Select the scheduled or expected date of the exam."
+            )
+        with f_col2:
+            daily_hours_input = st.slider(
+                "⏱️ Daily Study Capacity:",
+                min_value=4.0,
+                max_value=14.0,
+                value=float(saved_plan.get("daily_hours", 8.0)),
+                step=0.5,
+                help="Average deep work study hours available each day."
+            )
+        with f_col3:
+            rest_schedule = st.selectbox(
+                "🗓️ Weekly Buffer / Rest Schedule:",
+                options=["1 Day / Week (Recommended for Anti-Burnout)", "0.5 Day / Week (Intensive)", "0 Days (Strict Daily Sprint)"],
+                index=0 if saved_plan.get("rest_schedule") not in ["1 Day / Week (Recommended for Anti-Burnout)", "0.5 Day / Week (Intensive)", "0 Days (Strict Daily Sprint)"] else ["1 Day / Week (Recommended for Anti-Burnout)", "0.5 Day / Week (Intensive)", "0 Days (Strict Daily Sprint)"].index(saved_plan.get("rest_schedule")),
+                help="Allocate rest days for cognitive reset."
+            )
+
+        f_rev1, f_rev2 = st.columns([1.3, 1.7])
+        with f_rev1:
+            rev_ratio = st.slider(
+                "🔄 Daily Revision Allocation (% of study time):",
+                min_value=15,
+                max_value=40,
+                value=int(saved_plan.get("rev_ratio", 25)),
+                step=5,
+                format="%d%%",
+                help="Recommended 25% to consolidate active recall."
+            )
+        with f_rev2:
+            st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+            submit_exam_plan = st.form_submit_button("⚡ Analyze & Generate Detailed 1-Week Buffer Study Plan", use_container_width=True)
+
+        if submit_exam_plan:
+            st.session_state.progress["exam_plan"] = {
+                "exam_date": exam_input_date.isoformat(),
+                "daily_hours": daily_hours_input,
+                "rest_schedule": rest_schedule,
+                "rev_ratio": rev_ratio
+            }
+            save_user_progress(st.session_state.progress)
+            st.success(f"✅ Target Exam Date set to {exam_input_date.strftime('%B %d, %Y')}! Plan calibrated.")
+            st.rerun()
+
+    # Calculate active timelines
+    active_exam_date = exam_input_date
+    total_days_until_exam = (active_exam_date - today).days
+    target_finish_date = active_exam_date - datetime.timedelta(days=7)  # 1 WEEK BEFORE EXAM
+    prep_days_available = (target_finish_date - today).days
+
+    rest_factor = 1.0 / 7.0 if "1 Day" in rest_schedule else (0.5 / 7.0 if "0.5 Day" in rest_schedule else 0.0)
+    net_active_prep_days = max(1, prep_days_available - int(prep_days_available * rest_factor))
+    daily_quota_needed = round(left_cnt / max(1, net_active_prep_days), 2)
+    weekly_quota_needed = round(daily_quota_needed * (7 - (1 if '1 Day' in rest_schedule else 0)), 1)
+    study_hrs_per_topic = round((daily_hours_input * (1 - rev_ratio / 100.0)) / max(0.1, daily_quota_needed), 1)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 3. ANALYTICAL TIMELINE & VELOCITY ENGINE
+    st.markdown("<h4 style='color: #38BDF8;'>📈 3. Strategic Buffer & Pacing Analytics</h4>", unsafe_allow_html=True)
+
+    # Check for date feasibility edge cases
+    if prep_days_available <= 0:
+        st.warning(f"⚠️ **Urgent Alert:** The exam date ({active_exam_date.strftime('%d %b %Y')}) is less than 7 days away ({total_days_until_exam} days remaining). Under the **1-Week Buffer Principle**, **NO NEW TOPICS** should be started now. Activate Full-Simulation Mock and Formula Sheet Revision mode immediately!")
+    else:
+        v_col1, v_col2, v_col3, v_col4 = st.columns(4)
+        with v_col1:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">📅 Days to Official Exam</div>
+                <div class="metric-value">{total_days_until_exam} Days</div>
+                <div style="color: #38BDF8; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">Conduct Date: {active_exam_date.strftime('%d %b %Y')}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with v_col2:
+            st.markdown(f"""
+            <div class="metric-card" style="border-color: #34D399 !important;">
+                <div class="metric-label">🎯 100% Finish Deadline</div>
+                <div class="metric-value" style="color: #34D399; font-size: 1.8rem;">{target_finish_date.strftime('%d %b %Y')}</div>
+                <div style="color: #34D399; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">Exactly 1 Week Before Exam!</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with v_col3:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">⏳ Active Study Window</div>
+                <div class="metric-value" style="color: #F59E0B;">{prep_days_available} Days</div>
+                <div style="color: #CBD5E1; font-size: 0.82rem; font-weight: 600; margin-top: 4px;">{net_active_prep_days} net study days ({rest_schedule.split(' ')[0]})</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with v_col4:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">⚡ Daily Microtopic Quota</div>
+                <div class="metric-value" style="color: #38BDF8;">{daily_quota_needed} / day</div>
+                <div style="color: #C084FC; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">~{weekly_quota_needed} topics / week</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Velocity Diagnosis Banner
+        if daily_quota_needed <= 2.5:
+            diag_badge = "🟢 HIGH RETENTION PACE (COMFORTABLE & THOROUGH)"
+            diag_color = "#34D399"
+            diag_msg = f"With **{daily_quota_needed} microtopics/day**, you have abundant time to read standard reference books (Laxmikanth, NCERTs), prepare crisp 1-page notes, and complete 2 comprehensive revision cycles before the 7-day buffer begins!"
+        elif daily_quota_needed <= 4.5:
+            diag_badge = "🟡 BALANCED HIGH-YIELD SPRINT (STANDARD ASPIRANT VELOCITY)"
+            diag_color = "#38BDF8"
+            diag_msg = f"With **{daily_quota_needed} microtopics/day** (~{study_hrs_per_topic} hrs/topic), you are on a prime civil services schedule. Allocate your morning 3-hour deep work block to complete 2 topics, and afternoon for the rest + Prelims MCQs."
+        elif daily_quota_needed <= 6.5:
+            diag_badge = "🟠 INTENSIVE SPRINT (FOCUSED 9-11 HOUR CAPACITY REQUIRED)"
+            diag_color = "#F59E0B"
+            diag_msg = f"With **{daily_quota_needed} microtopics/day**, velocity is demanding. Strictly utilize syllabus summaries, short notes, and avoid opening multiple secondary sources. Stick to NCERTs + high-yield PYQ themes."
+        else:
+            diag_badge = "🔴 EMERGENCY TRIAGE SPRINT (PARETO 80/20 ESSENTIALS)"
+            diag_color = "#EF4444"
+            diag_msg = f"With **{daily_quota_needed} microtopics/day**, prioritize high-frequency Prelims and Mains themes: Polity (Art 12-51A, Parliament), Modern History (1857-1947), Economy (Inflation, Banking, Budget), and Environment."
+
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: {diag_color} !important;">
+            <div style="color: {diag_color}; font-weight: 800; font-size: 0.95rem; font-family: 'JetBrains Mono';">{diag_badge}</div>
+            <div style="color: #F8FAFC; font-size: 0.92rem; margin-top: 6px; line-height: 1.55;">
+                {diag_msg}
+            </div>
+            <div style="margin-top: 10px; font-size: 0.85rem; color: #CBD5E1;">
+                🛡️ <strong>Guaranteed Buffer:</strong> By reaching 100% on <strong>{target_finish_date.strftime('%B %d, %Y')}</strong>, you safeguard the entire final week ({target_finish_date.strftime('%d %b')} to {active_exam_date.strftime('%d %b')}) exclusively for full-length mocks, error analysis, and mental composure.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Graphical Timeline Burn-Down
+        try:
+            import pandas as pd
+            num_weeks = max(2, (prep_days_available // 7) + 1)
+            burn_timeline = []
+            cur_topics_left = left_cnt
+            cur_date = today
+            decrement = left_cnt / max(1, num_weeks)
+            
+            for w in range(num_weeks + 1):
+                burn_timeline.append({
+                    "Date / Milestone": cur_date.strftime("%d %b"),
+                    "Remaining Microtopics": max(0, int(cur_topics_left)),
+                    "Completed Microtopics": min(total_micros, int(completed_cnt + (left_cnt - cur_topics_left)))
+                })
+                cur_topics_left = max(0, cur_topics_left - decrement)
+                cur_date = cur_date + datetime.timedelta(days=7)
+                if cur_date > target_finish_date:
+                    cur_date = target_finish_date
+            
+            # Add final exam date milestone with 0 remaining
+            burn_timeline.append({
+                "Date / Milestone": f"{active_exam_date.strftime('%d %b')} (Exam Day)",
+                "Remaining Microtopics": 0,
+                "Completed Microtopics": total_micros
+            })
+            
+            df_burn = pd.DataFrame(burn_timeline).set_index("Date / Milestone")
+            st.markdown("<h5 style='color: #FFFFFF; margin-top: 16px;'>📈 Projected Syllabus Burn-Down Curve (Reaches 0 One Week Before Exam)</h5>", unsafe_allow_html=True)
+            st.line_chart(df_burn[["Remaining Microtopics", "Completed Microtopics"]], height=240)
+        except Exception:
+            pass
+
+    st.markdown("---")
+
+    # 4. DETAILED PHASE-BY-PHASE ROADMAP
+    st.markdown("<h4 style='color: #38BDF8;'>🗺️ 4. Phase-by-Phase Execution Roadmap (100% Syllabus Finish 1 Week Pre-Exam)</h4>", unsafe_allow_html=True)
+    st.caption("Engineered roadmap splitting your available timeline into distinct mastery phases, culminating in the 7-Day Buffer Week:")
+
+    p1_days = max(2, int(prep_days_available * 0.35))
+    p2_days = max(2, int(prep_days_available * 0.40))
+    p3_days = max(1, prep_days_available - p1_days - p2_days)
+
+    p1_end = today + datetime.timedelta(days=p1_days)
+    p2_end = p1_end + datetime.timedelta(days=p2_days)
+    p3_end = target_finish_date
+
+    phase_col1, phase_col2 = st.columns(2)
+    with phase_col1:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#34D399; font-weight:800;">
+                PHASE 1: {today.strftime('%d %b')} - {p1_end.strftime('%d %b')} ({p1_days} DAYS)
+            </div>
+            <div class="pwskills-title" style="margin-top:4px; color:#34D399 !important;">
+                🟢 Core Foundation & GS1/GS2 Backlog Clearance
+            </div>
+            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+                • <strong>Target Papers:</strong> Complete pending microtopics in <strong>GS Paper 1</strong> (Modern Indian History 1857-1947, Physical Geography) and <strong>GS Paper 2</strong> (Articles 1-51A, Parliament, Supreme Court Judgments).<br>
+                • <strong>Daily Quota:</strong> {daily_quota_needed} microtopics daily.<br>
+                • <strong>Testing Routine:</strong> 15 topic-specific Prelims MCQs after completing each microtopic.<br>
+                • <strong>Milestone:</strong> Clear 35% of remaining topics with 1-page condensed micro-sheets.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="pwskills-card" style="margin-top:14px;">
+            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#38BDF8; font-weight:800;">
+                PHASE 3: {p2_end.strftime('%d %b')} - {p3_end.strftime('%d %b')} ({p3_days} DAYS)
+            </div>
+            <div class="pwskills-title" style="margin-top:4px; color:#38BDF8 !important;">
+                🔵 Final Syllabus Clearance & Micro-Notes Consolidation
+            </div>
+            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+                • <strong>Target Papers:</strong> Clear remaining microtopics in Science & Tech, Disaster Management, Internal Security, and International Treaties.<br>
+                • <strong>Consolidation:</strong> Audit all microtopics in Syllabus Navigator and mark 100% complete.<br>
+                • <strong>Hard Stop Milestone:</strong> <span style="color:#34D399; font-weight:700;">On {target_finish_date.strftime('%B %d, %Y')}, exactly 1 week before the exam, 100% of the entire syllabus is finished!</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with phase_col2:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#F59E0B; font-weight:800;">
+                PHASE 2: {p1_end.strftime('%d %b')} - {p2_end.strftime('%d %b')} ({p2_days} DAYS)
+            </div>
+            <div class="pwskills-title" style="margin-top:4px; color:#F59E0B !important;">
+                🟡 Applied Governance, Economy & Ethics Case Studies
+            </div>
+            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+                • <strong>Target Papers:</strong> Complete pending microtopics in <strong>GS Paper 3</strong> (Macroeconomics, Monetary Policy, Biodiversity, Climate Conventions) and <strong>GS Paper 4</strong> (Ethics in Public Administration, Emotional Intelligence).<br>
+                • <strong>Answer Writing:</strong> 2 timed Mains answers daily (10-markers, 150 words).<br>
+                • <strong>Revision:</strong> Weekly active recall of Phase 1 flashcards to lock retention.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="pwskills-card" style="border-color: #38BDF8 !important; background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%); margin-top:14px;">
+            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#C084FC; font-weight:800;">
+                PHASE 4: {target_finish_date.strftime('%d %b')} - {active_exam_date.strftime('%d %b')} (FINAL 7 DAYS)
+            </div>
+            <div class="pwskills-title" style="margin-top:4px; color:#C084FC !important;">
+                🛡️ The 7-Day Pre-Exam Buffer Protocol
+            </div>
+            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+                • <strong>Zero New Topics:</strong> Strictly no new syllabus reading allowed.<br>
+                • <strong>Mocks:</strong> 2 Full Simulation GS Mocks + 1 CSAT Mock under strict exam hall timings (09:30-11:30 AM & 02:30-04:30 PM).<br>
+                • <strong>Error Rectification:</strong> Review personal error log & high-frequency factual sheets.<br>
+                • <strong>Peak Calm:</strong> Circadian sleep alignment for peak cognitive energy on exam day!
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # 5. THE 7-DAY BUFFER DAY-BY-DAY ACTION PROTOCOL
+    st.markdown("""
+    <div style="background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(192, 132, 252, 0.4); border-radius: 16px; padding: 22px; margin-bottom: 24px;">
+        <h4 style="color: #C084FC; margin-top: 0; font-family: 'Outfit';">🛡️ The Day-by-Day Final 7-Day Buffer Schedule (Zero-Backlog Week)</h4>
+        <div style="color: #CBD5E1; font-size: 0.92rem; margin-bottom: 14px;">
+            Because your entire syllabus is 100% completed by Day -7, you utilize these final 7 days like a top ranker:
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #38BDF8;">
+                <strong style="color: #38BDF8;">Day -7 (7 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Full-Length GS Simulation Mock 1 (09:30 - 11:30 AM). Negative marking audit by evening.</span>
+            </div>
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #34D399;">
+                <strong style="color: #34D399;">Day -6 (6 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Full-Length CSAT Simulation Mock (02:30 - 04:30 PM). Comprehension rules & Speed Math review.</span>
+            </div>
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #F59E0B;">
+                <strong style="color: #F59E0B;">Day -5 (5 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Rapid Sheet Revision GS1 & GS2: Articles 1-51A, Landmark Cases, Modern History Chronology.</span>
+            </div>
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #C084FC;">
+                <strong style="color: #C084FC;">Day -4 (4 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Rapid Sheet Revision GS3 & GS4: Budget Key Ratios, Environment Conventions, Thinkers & Quotes.</span>
+            </div>
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #38BDF8;">
+                <strong style="color: #38BDF8;">Day -3 (3 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Final Light Mock (50 MCQs). Light review of recurring traps. Mental confidence building.</span>
+            </div>
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #34D399;">
+                <strong style="color: #34D399;">Day -2 (2 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Personal Error Log review only. Zero new concepts. 4-7-8 box breathing, evening walk, early sleep.</span>
+            </div>
+            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #EF4444;">
+                <strong style="color: #EF4444;">Day -1 (Exam Eve):</strong><br>
+                <span style="font-size: 0.88rem; color: #CBD5E1;">Books closed at 05:00 PM. Admit card & photo ID kit check. Sleep by 21:30 for 8+ hours restorative rest.</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 6. DAILY 24-HOUR TIME-TABLE BLUEPRINT
+    st.markdown("<h4 style='color: #38BDF8;'>⏰ 5. Daily 24-Hour Time-Table Blueprint (Calibrated for " + str(daily_hours_input) + " Hours)</h4>", unsafe_allow_html=True)
+    st.caption("Structured schedule designed to maintain velocity while preventing cognitive burnout:")
+
+    tt_col1, tt_col2 = st.columns(2)
+    with tt_col1:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div style="font-weight:700; color:#34D399;">🌅 Morning Deep Work Session (06:30 - 09:30 AM) · 3.0 Hrs</div>
+            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+                • Peak cortisol & focus window: Master 1-2 new heavy microtopics (GS2 Polity or GS3 Economy).<br>
+                • Prepare 1-page bullet summary. No phone notifications.
+            </div>
+        </div>
+        <div class="pwskills-card" style="margin-top:10px;">
+            <div style="font-weight:700; color:#38BDF8;">☀️ Midday Study Session (10:30 AM - 01:00 PM) · 2.5 Hrs</div>
+            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+                • Second microtopic coverage (GS1 History or GS4 Ethics).<br>
+                • Read key source / class lecture notes and summarize definitions.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with tt_col2:
+        st.markdown(f"""
+        <div class="pwskills-card">
+            <div style="font-weight:700; color:#F59E0B;">🌤️ Afternoon Testing & Application (02:30 - 05:00 PM) · 2.5 Hrs</div>
+            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+                • Solve 20 Prelims MCQs on today's topics (exam timing simulation).<br>
+                • Write 1 Mains 10-marker answer draft. Analyze errors and update error log.
+            </div>
+        </div>
+        <div class="pwskills-card" style="margin-top:10px;">
+            <div style="font-weight:700; color:#C084FC;">🌙 Evening Active Recall & Revision (06:00 - 08:30 PM) · 2.0 Hrs</div>
+            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+                • Review today's 1-page notes using active recall / flashcards.<br>
+                • Review yesterday's topics to seal synaptic retention. Sleep by 10:30 PM.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # 7. ONE-CLICK ACTION HUB & INTEGRATIONS
+    st.markdown("<h4 style='color: #38BDF8;'>🚀 6. Action Hub: 1-Click Plan Integrations</h4>", unsafe_allow_html=True)
+    st.caption("Apply this plan directly into your active dashboard targets or consult the AI Copilot:")
+
+    act_col1, act_col2, act_col3 = st.columns(3)
+
+    with act_col1:
+        if st.button("🎯 Auto-Populate Targets into 'Productivity' Tab", key="btn_auto_populate_targets", use_container_width=True):
+            if "targets" not in st.session_state.progress:
+                st.session_state.progress["targets"] = []
+            
+            # Generate sample targets mapped to remaining syllabus
+            new_plan_targets = [
+                {
+                    "id": f"tgt_plan_d1_{int(datetime.datetime.now().timestamp())}",
+                    "title": f"Daily Target: Complete {int(daily_quota_needed)} microtopics (GS1/GS2)",
+                    "timeframe": "Daily",
+                    "paper": "GS Paper 2",
+                    "subject": "Polity & Constitution",
+                    "microtopic_id": None,
+                    "microtopic_title": "Daily Quota from Exam Roadmap Planner",
+                    "goal_type": "Note Making 📝",
+                    "hours_est": float(daily_hours_input * 0.4),
+                    "completed": False,
+                    "created_at": today.isoformat()
+                },
+                {
+                    "id": f"tgt_plan_d2_{int(datetime.datetime.now().timestamp())}",
+                    "title": f"Daily Practice: Solve 20 Prelims PYQs + 1 Mains Answer Draft",
+                    "timeframe": "Daily",
+                    "paper": "GS Paper 2",
+                    "subject": "Polity & Governance",
+                    "microtopic_id": None,
+                    "microtopic_title": "Daily PYQ & Answer Writing Quota",
+                    "goal_type": "PYQ Practice 🎯",
+                    "hours_est": float(daily_hours_input * 0.3),
+                    "completed": False,
+                    "created_at": today.isoformat()
+                },
+                {
+                    "id": f"tgt_plan_w1_{int(datetime.datetime.now().timestamp())}",
+                    "title": f"Weekly Milestone: Complete ~{int(weekly_quota_needed)} microtopics + Sectional Mock 1",
+                    "timeframe": "Weekly",
+                    "paper": "GS Paper 1",
+                    "subject": "Modern History & Geography",
+                    "microtopic_id": None,
+                    "microtopic_title": "Weekly Roadmap Milestone",
+                    "goal_type": "Revision 🔄",
+                    "hours_est": float(daily_hours_input * 5),
+                    "completed": False,
+                    "created_at": today.isoformat()
+                }
+            ]
+            st.session_state.progress["targets"].extend(new_plan_targets)
+            save_user_progress(st.session_state.progress)
+            st.success(f"🎉 Successfully populated {len(new_plan_targets)} daily and weekly targets into '⚡ Productivity & Targets' tab!")
+            st.info("Switch to '⚡ Productivity & Targets' tab above to view and check off your live targets.")
+
+    with act_col2:
+        planner_copilot_prompt = (
+            f"I am preparing for {st.session_state.selected_exam}. My exam will be conducted on '{active_exam_date.strftime('%Y-%m-%d')}'. "
+            f"According to my Syllabus Navigator, I have completed {completed_cnt} microtopics ({completed_pct:.1f}%) and have {left_cnt} microtopics remaining ({left_pct:.1f}%). "
+            f"My daily study capacity is {daily_hours_input} hours/day. "
+            f"Please give me a detailed, day-by-day and phase-by-phase study plan so that I complete the entire syllabus exactly 1 week before the exam date ({target_finish_date.strftime('%Y-%m-%d')}), "
+            f"leaving the final 7 days completely free as a buffer for full-length simulation tests, error audits, and rapid formula/micro-notes recall."
+        )
+        if st.button("🤖 Launch AI Strategy Consultation in Copilot", key="btn_open_copilot_planner", use_container_width=True):
+            redirect_to_copilot(planner_copilot_prompt)
+
+    with act_col3:
+        plan_export_md = f"""# {st.session_state.selected_exam} Customized Exam Study Plan (1-Week Buffer Rule)
+Generated on: {today.strftime('%B %d, %Y')}
+
+## 1. Executive Summary & Timeline Audit
+- **Official Exam Conduct Date:** {active_exam_date.strftime('%B %d, %Y')} ({total_days_until_exam} days remaining)
+- **100% Syllabus Finish Deadline:** {target_finish_date.strftime('%B %d, %Y')} (Exactly 1 week before exam)
+- **Net Preparation Days:** {prep_days_available} days ({net_active_prep_days} net study days)
+- **Current Preparation Status:** {completed_cnt}/{total_micros} completed ({completed_pct:.1f}%) | {left_cnt} remaining ({left_pct:.1f}%)
+- **Required Velocity:** {daily_quota_needed} microtopics/day (~{weekly_quota_needed} topics/week)
+- **Daily Study Capacity:** {daily_hours_input} hours/day ({rev_ratio}% allocated to daily revision)
+
+## 2. Phase-by-Phase Roadmap
+- **Phase 1 ({today.strftime('%d %b')} - {p1_end.strftime('%d %b')}):** Core Foundation & GS1/GS2 Backlog Clearance ({p1_days} days).
+- **Phase 2 ({p1_end.strftime('%d %b')} - {p2_end.strftime('%d %b')}):** Applied Governance, Economy & Ethics Case Studies ({p2_days} days).
+- **Phase 3 ({p2_end.strftime('%d %b')} - {p3_end.strftime('%d %b')}):** Final Syllabus Clearance & Micro-Notes Consolidation ({p3_days} days).
+- **Hard Stop Milestone:** 100% of entire syllabus completed on {target_finish_date.strftime('%B %d, %Y')}!
+
+## 3. The 7-Day Pre-Exam Buffer Protocol (Zero New Topics)
+- **Day -7:** Full-Length GS Simulation Mock 1 (09:30-11:30 AM) + Error log audit.
+- **Day -6:** Full-Length CSAT Simulation Mock (02:30-04:30 PM) + Speed Math shortcuts.
+- **Day -5:** GS1 & GS2 Rapid Sheet Revision (Articles 1-51A, Modern History Timelines).
+- **Day -4:** GS3 & GS4 Rapid Sheet Revision (Budget Ratios, Environment Conventions, Ethics Quotes).
+- **Day -3:** Final Light Simulation Mock + Mental calm reinforcement.
+- **Day -2:** Review Personal Error Log only. Light walking, early sleep.
+- **Day -1:** Complete rest after 5 PM. Check admit card, photo IDs, pens. Early bedtime.
+
+## 4. Daily Schedule Template
+- 06:30 - 09:30 AM: Morning Deep Work Session (Microtopic 1)
+- 10:30 AM - 01:00 PM: Midday Session (Microtopic 2)
+- 02:30 - 05:00 PM: Afternoon Testing (20 MCQs + 1 Mains Answer Draft)
+- 06:00 - 08:30 PM: Evening Active Recall & Daily Revision
+"""
+        st.download_button(
+            label="📥 Download Study Plan (Markdown)",
+            data=plan_export_md,
+            file_name=f"UPSC_Exam_Study_Plan_{active_exam_date.strftime('%Y%m%d')}.md",
+            mime="text/markdown",
+            use_container_width=True
+        )
+
+    st.markdown("---")
+
+    # 8. INTERACTIVE REMAINING TOPICS EXPLORER
+    with st.expander(f"🔍 Browse Unfinished Topics Left to Study ({left_cnt} Remaining Modules)", expanded=False):
+        st.markdown("<p style='color: #CBD5E1;'>Directly inspect which microtopics are still pending per paper, mark them completed as you study, or click '💡 AI Explainer' to study them with your AI Copilot:</p>", unsafe_allow_html=True)
+        
+        sel_paper_browse = st.selectbox("Select GS Paper to Inspect:", ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4"], key="planner_browse_paper_select")
+        if sel_paper_browse in syllabus_data:
+            p_subjects = syllabus_data[sel_paper_browse].get("subjects", {})
+            for s_key, s_data in p_subjects.items():
+                s_topics = s_data.get("topics", {})
+                pending_micros_in_subj = []
+                for t_key, t_data in s_topics.items():
+                    for m in t_data.get("microtopics", []):
+                        m_id = f"{sel_paper_browse}_{s_key}_{t_key}_{m}"
+                        if m_id not in completed_set:
+                            pending_micros_in_subj.append((m, m_id, t_key))
+                
+                if pending_micros_in_subj:
+                    with st.expander(f"📚 {s_data.get('title', s_key)} ({len(pending_micros_in_subj)} topics left)", expanded=False):
+                        for m_title, m_id, top_key in pending_micros_in_subj[:15]:
+                            b_c1, b_c2 = st.columns([0.75, 0.25])
+                            with b_c1:
+                                chk_p = st.checkbox(f"{m_title} `[{top_key}]`", value=False, key=f"chk_plan_exp_{m_id}")
+                                if chk_p:
+                                    if m_id not in st.session_state.progress["completed"]:
+                                        st.session_state.progress["completed"].append(m_id)
+                                        save_user_progress(st.session_state.progress)
+                                        st.rerun()
+                            with b_c2:
+                                if st.button("💡 AI Explainer", key=f"btn_plan_ai_{m_id}", use_container_width=True):
+                                    redirect_to_copilot(f"Explain the microtopic '{m_title}' under '{top_key}' ({sel_paper_browse}) for {st.session_state.selected_exam} in detail. Provide core concepts, key facts, Prelims MCQs, and Mains answer writing approaches.")
 
 # ==========================================
 # VIEW: ⚡ PRODUCTIVITY & TARGETS

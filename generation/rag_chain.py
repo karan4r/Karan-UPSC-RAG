@@ -19,6 +19,7 @@ from generation.prompts import (
     ACADEMIC_SYSTEM_PROMPT,
     ACADEMIC_USER_TEMPLATE,
     ACADEMIC_WEB_ONLY_TEMPLATE,
+    EXAM_DATE_PLAN_SYSTEM_PROMPT,
     GENERAL_FALLBACK,
     MENTAL_HEALTH_SYLLABUS_SYSTEM_PROMPT,
     NON_ACADEMIC_SYSTEM_PROMPT,
@@ -796,6 +797,105 @@ class RAGChatbot:
             "signals": intent_result.signals,
         }
 
+    def _generate_exam_date_study_plan_fallback(self, query: str, exam_vertical: str = "UPSC") -> str:
+        date_match = re.search(r"exam (?:conduct )?date is '([^']+)'|conducted on '([^']+)'|exam on '([^']+)'|exam date: '([^']+)'", query, re.I)
+        raw_date_str = None
+        if date_match:
+            raw_date_str = next(g for g in date_match.groups() if g)
+
+        comp_match = re.search(r"completed (\d+) (?:microtopics|topics)", query, re.I)
+        comp_count = int(comp_match.group(1)) if comp_match else 12
+
+        rem_match = re.search(r"have (\d+) (?:microtopics|topics) remaining|(\d+) (?:microtopics|topics) left", query, re.I)
+        rem_count = int(next(g for g in rem_match.groups() if g)) if rem_match else 611
+
+        days_match = re.search(r"(\d+) days until|within (\d+) days|in (\d+) days", query, re.I)
+        total_days = int(next(g for g in days_match.groups() if g)) if days_match else 90
+
+        buffer_days = 7
+        prep_days = max(1, total_days - buffer_days)
+        daily_pace = round(rem_count / prep_days, 1)
+
+        exam_date_display = raw_date_str if raw_date_str else "Target Exam Date"
+
+        return (
+            f"### 📊 1. Current Preparation Audit & Velocity Analysis\n\n"
+            f"• **Target Exam Conduct Date:** `{exam_date_display}` ({total_days} Days Remaining)\n"
+            f"• **Current Preparation Status:** `{comp_count} topics completed` | `{rem_count} topics remaining`\n"
+            f"• **Hard Stop Buffer Deadline:** Exactly **7 Days Before Exam** (Leaving {buffer_days} Days 100% Free)\n"
+            f"• **Net Active Study Window:** `{prep_days} Preparation Days`\n"
+            f"• **Required Daily Velocity:** `{daily_pace} microtopics / day` to achieve 100% syllabus completion 1 week prior!\n\n"
+            f"#### 🔍 Pacing & Feasibility Diagnosis:\n"
+            f"To finish all {rem_count} remaining syllabus topics with zero backlog 1 week prior, you need to clear **{daily_pace} microtopics daily**. "
+            f"The final 7-day buffer is **non-negotiable**—it ensures you peak in mental clarity, take 2 full simulation mocks, and enter the examination hall in a state of calm mastery.\n\n"
+            f"---\n\n"
+            f"### 🗓️ 2. Phase-by-Phase Roadmap (100% Completion 1 Week Before Exam)\n\n"
+            f"#### 🟢 **Phase 1: High-Yield Foundation Clearance (First ~35% of Preparation Days)**\n"
+            f"- **Core Focus:** GS Paper 1 (Modern History, Physical Geography) and GS Paper 2 (Polity Articles 1-51A, Parliament, Judiciary).\n"
+            f"- **Daily Target:** {daily_pace} microtopics/day.\n"
+            f"- **Prelims Practice:** 15 MCQs daily mapped directly to the day's completed microtopics.\n"
+            f"- **Weekly Checkpoint:** Mini-Mock 1 on completed GS1 & GS2 topics.\n\n"
+            f"#### 🟡 **Phase 2: Applied Governance, Economy & Ethics Consolidation (~36% to ~75% of Preparation Days)**\n"
+            f"- **Core Focus:** GS Paper 3 (Macroeconomics, Union Budget, Environment & Ecology) and GS Paper 4 (Ethics Principles, Emotional Intelligence, Case Studies).\n"
+            f"- **Daily Target:** {daily_pace} microtopics/day + 2 timed Mains answer writing questions (10 marks each).\n"
+            f"- **Active Recall:** Weekly revision of 1-page condensed micro-sheets for all completed modules.\n\n"
+            f"#### 🔵 **Phase 3: Final Syllabus Clearance & Micro-Notes Wrap-Up (~76% to Day -7)**\n"
+            f"- **Core Focus:** Science & Tech, Disaster Management, International Relations, and remaining microtopics.\n"
+            f"- **Hard Stop Milestone:** Exactly on **Day -7 (1 week before exam)**, all {rem_count} topics are marked 100% COMPLETE!\n"
+            f"- **Consolidation:** Finalize personal error logs and one-page formula/article recall sheets.\n\n"
+            f"---\n\n"
+            f"### 🛡️ 3. The 7-Day Pre-Exam Buffer Protocol (Day -7 to Day -1)\n\n"
+            f"*(Strict Rule: ZERO NEW TOPICS ALLOWED during this week. Dedicated exclusively to peak exam conditioning.)*\n\n"
+            f"• **Day -7 (7 Days Out):** Full-Length GS Simulation Mock 1 (09:30 AM - 11:30 AM). Strict exam conditions. Complete negative marking error analysis by evening.\n"
+            f"• **Day -6 (6 Days Out):** Full-Length CSAT Simulation Mock (02:30 PM - 04:30 PM). Practice speed math shortcuts and reading comprehension elimination rules.\n"
+            f"• **Day -5 (5 Days Out):** GS Paper 1 & GS Paper 2 Rapid Sheet Revision (Articles 1-51A, Landmark Supreme Court Judgments, Modern History Timelines).\n"
+            f"• **Day -4 (4 Days Out):** GS Paper 3 & GS Paper 4 Rapid Sheet Revision (Economic Survey key numbers, International Environmental Conventions, Thinkers & Quotes).\n"
+            f"• **Day -3 (3 Days Out):** Final Light Simulation Mock + Mental calm reinforcement. Light study only post 06:00 PM.\n"
+            f"• **Day -2 (2 Days Out):** Review Personal Error Log & high-frequency factual flashcards. Light walking, 4-7-8 box breathing, early dinner by 20:00.\n"
+            f"• **Day -1 (Exam Eve):** Complete relaxation after 05:00 PM. Check admit card, photo IDs, black ballpoint pens, wristwatch. Bedtime by 21:30 for 8+ hours deep rest.\n\n"
+            f"---\n\n"
+            f"### ⏰ 4. Daily 24-Hour Study Time-Table Blueprint (8-10 Hours Routine)\n\n"
+            f"• **06:30 AM - 09:30 AM (Block 1 - 3 Hours):** Deep Work on Fresh Microtopic (Polity / Economy). Peak morning focus.\n"
+            f"• **09:30 AM - 10:30 AM:** Healthy Breakfast, Hydration & 15-min Mental Reset.\n"
+            f"• **10:30 AM - 01:00 PM (Block 2 - 2.5 Hours):** Second Microtopic Coverage + One-Page Summary Notes.\n"
+            f"• **01:00 PM - 02:30 PM:** Balanced Lunch & 20-min Power Nap.\n"
+            f"• **02:30 PM - 05:00 PM (Block 3 - 2.5 Hours):** Practice & Testing (20 Prelims PYQ MCQs + 1 Mains Answer Draft).\n"
+            f"• **05:00 PM - 06:00 PM:** Outdoor Walk / Tea Break (Zero screens).\n"
+            f"• **06:00 PM - 08:30 PM (Block 4 - 2.5 Hours):** Active Recall & Daily Revision of today's and yesterday's concepts.\n"
+            f"• **08:30 PM - 09:30 PM:** Light Dinner & Relaxation.\n"
+            f"• **09:30 PM - 10:15 PM:** Quick Error-Log Review & Tomorrow's Microtopic Planning.\n"
+            f"• **10:30 PM:** Digital Shutdown & Sleep.\n\n"
+            f"---\n\n"
+            f"### 💡 5. Four Golden Rules for 100% Success\n\n"
+            f"1. **Protect the 7-Day Buffer at all costs:** Never postpone topics into the final week.\n"
+            f"2. **Daily Topic Velocity is King:** Complete {daily_pace} microtopics every day regardless of mood.\n"
+            f"3. **Active Recall over Passive Reading:** Spend 25% of each study session testing yourself rather than just highlighting.\n"
+            f"4. **Error Log Rectification:** Every mistake in MCQs must be added to your error sheet—this is where your extra 20 marks will come from!"
+        )
+
+    def _handle_exam_date_study_plan(
+        self, query: str, intent_result: IntentResult, exam_vertical: str = "UPSC"
+    ) -> dict[str, Any]:
+        try:
+            answer = self._llm_complete(
+                query, system_prompt=EXAM_DATE_PLAN_SYSTEM_PROMPT
+            )
+            if not answer or len(answer) < 150:
+                answer = self._generate_exam_date_study_plan_fallback(query, exam_vertical=exam_vertical)
+        except Exception as e:
+            print(f"LLM exam date plan error: {e}")
+            answer = self._generate_exam_date_study_plan_fallback(query, exam_vertical=exam_vertical)
+
+        return {
+            "answer": answer,
+            "intent": "exam_date_study_plan",
+            "category": "non_academic",
+            "confidence": "high",
+            "mode": "exam_date_roadmap_planner",
+            "sources": [],
+            "signals": intent_result.signals,
+        }
+
     def chat(self, query: str, mh_count: int = 0, exam_vertical: str = "UPSC", student_profile: Optional[dict] = None, **kwargs) -> dict[str, Any]:
         mh_count = kwargs.get("mh_count", mh_count)
         exam_vertical = kwargs.get("exam_vertical", exam_vertical)
@@ -832,6 +932,15 @@ class RAGChatbot:
 
             if is_rel_plan_query:
                 return self._handle_relationship_syllabus_plan(query, intent_result)
+
+            is_exam_date_plan_query = (
+                intent == "exam_date_study_plan"
+                or any(k in query.lower() for k in ("exam conduct date", "1 week before", "one week before", "complete syllabus 1 week", "entire syllabus 1 week", "exam roadmap"))
+                or ("exam" in query.lower() and "plan" in query.lower() and ("week" in query.lower() or "date" in query.lower() or "syllabus" in query.lower()))
+            )
+
+            if is_exam_date_plan_query:
+                return self._handle_exam_date_study_plan(query, intent_result, exam_vertical=exam_vertical)
 
             is_mh_query = intent == "mental_health_upsc_distress" or "mental state" in query.lower() or "stress trigger" in query.lower()
 
