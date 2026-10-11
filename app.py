@@ -819,64 +819,110 @@ if nav_mode == "🏠 Home":
             """, unsafe_allow_html=True)
 
     with side_col:
-        # Widget 1: Matrix Progress
+        # Widget 1: Matrix Progress (Dynamically calculated from syllabus completion status)
         syllabus_data = load_syllabus_data()
-        total_micros = 0
         completed_set = set(st.session_state.progress.get("completed", []))
-        for paper, pdata in syllabus_data.items():
-            for subj in pdata.get("subjects", {}).values():
-                for top in subj.get("topics", {}).values():
-                    total_micros += len(top.get("microtopics", []))
+        custom_micros = st.session_state.progress.get("custom_microtopics", [])
+
+        # Calculate dynamic paper-wise counts
+        p_counts = {"GS Paper 1": 386, "GS Paper 2": 89, "GS Paper 3": 73, "GS Paper 4": 69}
+        if syllabus_data:
+            for p_name in list(p_counts.keys()):
+                p_info = syllabus_data.get(p_name, {})
+                c = sum(len(top.get("microtopics", [])) for subj in p_info.get("subjects", {}).values() for top in subj.get("topics", {}).values())
+                if c > 0:
+                    p_counts[p_name] = c
+
+        total_micros = sum(p_counts.values()) + len(custom_micros)
         completed_count = len(completed_set)
-        computed_pct = int((completed_count / total_micros * 100) if total_micros > 0 else 68)
-        display_pct = computed_pct if computed_pct > 0 else 68
+
+        # Paper-wise completion counts & percentages
+        gs1_done = sum(1 for m in completed_set if m.startswith("GS Paper 1"))
+        gs2_done = sum(1 for m in completed_set if m.startswith("GS Paper 2"))
+        gs3_done = sum(1 for m in completed_set if m.startswith("GS Paper 3"))
+        gs4_done = sum(1 for m in completed_set if m.startswith("GS Paper 4"))
+
+        gs1_pct = (gs1_done / p_counts["GS Paper 1"] * 100) if p_counts["GS Paper 1"] > 0 else 0.0
+        gs2_pct = (gs2_done / p_counts["GS Paper 2"] * 100) if p_counts["GS Paper 2"] > 0 else 0.0
+        gs3_pct = (gs3_done / p_counts["GS Paper 3"] * 100) if p_counts["GS Paper 3"] > 0 else 0.0
+        gs4_pct = (gs4_done / p_counts["GS Paper 4"] * 100) if p_counts["GS Paper 4"] > 0 else 0.0
+
+        overall_pct = (completed_count / total_micros * 100) if total_micros > 0 else 0.0
+
+        # Formatted percentage strings
+        display_overall_text = "0%" if completed_count == 0 else (f"{overall_pct:.1f}%" if overall_pct < 1.0 else f"{int(round(overall_pct))}%")
+        gs1_pct_str = "0%" if gs1_done == 0 else (f"{gs1_pct:.1f}%" if gs1_pct < 1.0 else f"{int(round(gs1_pct))}%")
+        gs2_pct_str = "0%" if gs2_done == 0 else (f"{gs2_pct:.1f}%" if gs2_pct < 1.0 else f"{int(round(gs2_pct))}%")
+        gs3_pct_str = "0%" if gs3_done == 0 else (f"{gs3_pct:.1f}%" if gs3_pct < 1.0 else f"{int(round(gs3_pct))}%")
+        gs4_pct_str = "0%" if gs4_done == 0 else (f"{gs4_pct:.1f}%" if gs4_pct < 1.0 else f"{int(round(gs4_pct))}%")
+
+        # SVG Donut stroke calculation
+        if completed_count == 0:
+            donut_dash = "0.0 100.0"
+        else:
+            arc_val = max(1.5, min(100.0, float(overall_pct)))
+            donut_dash = f"{arc_val:.1f} {100.0 - arc_val:.1f}"
+
+        # Dynamic motivational quote based on actual completion
+        if completed_count == 0:
+            quote_text = "Start ticking topics in Syllabus Navigator"
+        elif overall_pct < 25:
+            quote_text = "Good start! Small daily steps build mastery"
+        elif overall_pct < 50:
+            quote_text = "Solid pace! Core syllabus in progress"
+        elif overall_pct < 75:
+            quote_text = "Over halfway through the matrix!"
+        elif overall_pct < 100:
+            quote_text = "Almost complete! High exam readiness"
+        else:
+            quote_text = "Full curriculum mastered! Ready for exam"
 
         st.markdown(f"""
         <div class="widget-panel-card">
             <div class="widget-panel-title">
                 <span>✨ Your Matrix Progress</span>
-                <span style="font-size: 0.85rem; color: #64748B;">›</span>
+                <span style="font-size: 0.72rem; font-weight: 700; color: #0284C7; background: #F0F9FF; border: 1px solid #BAE6FD; padding: 2px 8px; border-radius: 9999px;">
+                    {completed_count}/{total_micros} Covered
+                </span>
             </div>
             <div class="progress-matrix-container">
                 <div class="progress-donut-wrapper">
                     <svg width="76" height="76" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#F1F5F9" stroke-width="3"></circle>
-                        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#0EA5E9" stroke-width="3" stroke-dasharray="{display_pct} {100-display_pct}" stroke-dashoffset="25" stroke-linecap="round"></circle>
-                        <text x="18" y="20.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" text-anchor="middle" fill="#0F172A">{display_pct}%</text>
+                        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#F1F5F9" stroke-width="3.2"></circle>
+                        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#0EA5E9" stroke-width="3.2" stroke-dasharray="{donut_dash}" stroke-dashoffset="25" stroke-linecap="round"></circle>
+                        <text x="18" y="20.5" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="800" text-anchor="middle" fill="#0F172A">{display_overall_text}</text>
                     </svg>
                 </div>
                 <div style="flex-grow: 1;">
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #22C55E;"></span>Syllabus</span>
-                        <span style="font-weight: 700; color: #0F172A;">72%</span>
+                        <span><span class="progress-dot" style="background: #22C55E;"></span>GS 1 History & Geo</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs1_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs1_done}/{p_counts['GS Paper 1']})</span></span>
                     </div>
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #3B82F6;"></span>Tests</span>
-                        <span style="font-weight: 700; color: #0F172A;">58%</span>
+                        <span><span class="progress-dot" style="background: #3B82F6;"></span>GS 2 Polity & Gov</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs2_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs2_done}/{p_counts['GS Paper 2']})</span></span>
                     </div>
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #A855F7;"></span>Current Affairs</span>
-                        <span style="font-weight: 700; color: #0F172A;">83%</span>
+                        <span><span class="progress-dot" style="background: #A855F7;"></span>GS 3 Economy & Env</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs3_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs3_done}/{p_counts['GS Paper 3']})</span></span>
                     </div>
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #EAB308;"></span>Revision</span>
-                        <span style="font-weight: 700; color: #0F172A;">55%</span>
+                        <span><span class="progress-dot" style="background: #EAB308;"></span>GS 4 Ethics & Case</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs4_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs4_done}/{p_counts['GS Paper 4']})</span></span>
                     </div>
-                    <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #0284C7;"></span>Overall</span>
-                        <span style="font-weight: 700; color: #0F172A;">{display_pct}%</span>
+                    <div class="progress-list-item" style="border-top: 1px dashed #E2E8F0; padding-top: 4px; margin-top: 4px;">
+                        <span><span class="progress-dot" style="background: #0284C7;"></span>Overall Syllabus</span>
+                        <span style="font-weight: 700; color: #0284C7;">{display_overall_text} <span style="font-weight: 500; font-size: 0.72rem; color: #64748B;">({completed_count}/{total_micros})</span></span>
                     </div>
                 </div>
             </div>
             <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #F1F5F9;">
                 <div style="font-size: 0.78rem; color: #64748B; font-style: italic;">
-                    Keep going, you're closer than you think.
+                    {quote_text}
                 </div>
-                <div style="width: 42px; height: 24px; opacity: 0.8;">
-                    <svg viewBox="0 0 42 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 24L18 6L28 16L34 8L42 24H2Z" fill="#93C5FD"/>
-                        <polygon points="34,8 39,10 34,12" fill="#1E293B"/>
-                    </svg>
+                <div style="font-size: 0.75rem; font-weight: 600; color: #22C55E; display: flex; align-items: center; gap: 4px;">
+                    <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22C55E;"></span>
+                    Live Sync
                 </div>
             </div>
         </div>
@@ -3263,13 +3309,49 @@ elif nav_mode == "➕ Custom Modules":
 # ==========================================
 elif nav_mode == "📊 Matrix Analytics":
     st.markdown("<h3 style='color: #0F172A;'>📊 UPSC Matrix Analytics</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748B;'>Visual breakdown of syllabus coverage across GS1, GS2, GS3, and GS4.</p>", unsafe_allow_html=True)
-    
+    st.markdown("<p style='color: #64748B;'>Real-time visual breakdown of syllabus coverage across GS1, GS2, GS3, and GS4.</p>", unsafe_allow_html=True)
+
+    p_counts = {"GS Paper 1": 386, "GS Paper 2": 89, "GS Paper 3": 73, "GS Paper 4": 69}
+    completed_all = len(st.session_state.progress.get("completed", []))
+    total_curriculum = sum(p_counts.values()) + len(st.session_state.progress.get("custom_microtopics", []))
+    overall_completion_pct = (completed_all / total_curriculum * 100) if total_curriculum > 0 else 0.0
+
+    m1, m2, m3, m4 = st.columns(4)
+    with m1:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">Total Microtopics</div>
+            <div class="metric-value">{total_curriculum}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m2:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">Completed Topics</div>
+            <div class="metric-value" style="color: #22C55E;">{completed_all}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m3:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">Overall Completion</div>
+            <div class="metric-value" style="color: #0284C7;">{overall_completion_pct:.1f}%</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with m4:
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-label">Remaining Topics</div>
+            <div class="metric-value" style="color: #64748B;">{max(0, total_curriculum - completed_all)}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     a_col1, a_col2 = st.columns(2)
     
     with a_col1:
         st.markdown("<h4 style='color: #0F172A;'>📊 Paper-wise Workload</h4>", unsafe_allow_html=True)
-        p_counts = {"GS Paper 1": 386, "GS Paper 2": 89, "GS Paper 3": 73, "GS Paper 4": 69}
         for p_name, count in p_counts.items():
             completed_p = sum(1 for m_id in st.session_state.progress.get("completed", []) if m_id.startswith(p_name))
             p_pct = (completed_p / count * 100) if count > 0 else 0
