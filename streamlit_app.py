@@ -895,29 +895,29 @@ if nav_mode == "🏠 Home":
                 </div>
                 <div style="flex-grow: 1;">
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #22C55E;"></span>GS 1 History & Geo</span>
-                        <span style="font-weight: 700; color: #0F172A;">{gs1_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs1_done}/{p_counts['GS Paper 1']})</span></span>
+                        <span><span class="progress-dot" style="background: #16A34A;"></span>GS 1 History & Geo</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs1_pct_str} <span style="font-weight: 500; font-size: 0.72rem; color: #475569;">({gs1_done}/{p_counts['GS Paper 1']})</span></span>
                     </div>
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #3B82F6;"></span>GS 2 Polity & Gov</span>
-                        <span style="font-weight: 700; color: #0F172A;">{gs2_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs2_done}/{p_counts['GS Paper 2']})</span></span>
+                        <span><span class="progress-dot" style="background: #2563EB;"></span>GS 2 Polity & Gov</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs2_pct_str} <span style="font-weight: 500; font-size: 0.72rem; color: #475569;">({gs2_done}/{p_counts['GS Paper 2']})</span></span>
                     </div>
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #A855F7;"></span>GS 3 Economy & Env</span>
-                        <span style="font-weight: 700; color: #0F172A;">{gs3_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs3_done}/{p_counts['GS Paper 3']})</span></span>
+                        <span><span class="progress-dot" style="background: #9333EA;"></span>GS 3 Economy & Env</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs3_pct_str} <span style="font-weight: 500; font-size: 0.72rem; color: #475569;">({gs3_done}/{p_counts['GS Paper 3']})</span></span>
                     </div>
                     <div class="progress-list-item">
-                        <span><span class="progress-dot" style="background: #EAB308;"></span>GS 4 Ethics & Case</span>
-                        <span style="font-weight: 700; color: #0F172A;">{gs4_pct_str} <span style="font-weight: 400; font-size: 0.72rem; color: #94A3B8;">({gs4_done}/{p_counts['GS Paper 4']})</span></span>
+                        <span><span class="progress-dot" style="background: #D97706;"></span>GS 4 Ethics & Case</span>
+                        <span style="font-weight: 700; color: #0F172A;">{gs4_pct_str} <span style="font-weight: 500; font-size: 0.72rem; color: #475569;">({gs4_done}/{p_counts['GS Paper 4']})</span></span>
                     </div>
                     <div class="progress-list-item" style="border-top: 1px dashed #E2E8F0; padding-top: 4px; margin-top: 4px;">
                         <span><span class="progress-dot" style="background: #0284C7;"></span>Overall Syllabus</span>
-                        <span style="font-weight: 700; color: #0284C7;">{display_overall_text} <span style="font-weight: 500; font-size: 0.72rem; color: #64748B;">({completed_count}/{total_micros})</span></span>
+                        <span style="font-weight: 700; color: #0284C7;">{display_overall_text} <span style="font-weight: 600; font-size: 0.72rem; color: #475569;">({completed_count}/{total_micros})</span></span>
                     </div>
                 </div>
             </div>
             <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #F1F5F9;">
-                <div style="font-size: 0.78rem; color: #64748B; font-style: italic;">
+                <div style="font-size: 0.78rem; color: #475569; font-style: italic;">
                     {quote_text}
                 </div>
                 <div style="font-size: 0.75rem; font-weight: 600; color: #22C55E; display: flex; align-items: center; gap: 4px;">
@@ -1137,8 +1137,8 @@ if nav_mode == "🤖 Neural AI Copilot":
 # VIEW 2: 📋 SYLLABUS NAVIGATOR
 # ==========================================
 elif nav_mode == "📋 Syllabus Navigator":
-    st.markdown("<h3 style='color: #FFFFFF;'>📋 GS Mains Curriculum & Microtopic Navigator</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Browse microtopics parsed from official GS Mains syllabus, track completion, and generate AI notes.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>📋 GS Mains Curriculum & Microtopic Navigator</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Browse microtopics parsed from official GS Mains syllabus, track completion, and generate AI notes.</p>", unsafe_allow_html=True)
     
     # Dashboard Metrics Row
     m_col1, m_col2, m_col3, m_col4 = st.columns(4)
@@ -1192,14 +1192,14 @@ elif nav_mode == "📋 Syllabus Navigator":
             key="dash_subj_select_fs"
         )
     with f_col3:
-        st.markdown("<div style='margin-bottom: -6px;'><strong style='color: #38BDF8;'>🔍 Search Microtopics / Keywords:</strong></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom: -6px;'><strong style='color: #0284C7;'>🔍 Search Microtopics / Keywords:</strong></div>", unsafe_allow_html=True)
         search_query = st.text_input("", placeholder="e.g. Fundamental Rights, Music, Economy...", key="dash_search_input_fs", label_visibility="collapsed").lower().strip()
 
     st.markdown("---")
     
     if selected_paper in syllabus:
         p_info = syllabus[selected_paper]
-        st.markdown(f"<h3 style='color: #38BDF8;'>📖 {p_info.get('title', selected_paper)}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: #0F172A; font-weight: 800;'>📖 {p_info.get('title', selected_paper)}</h3>", unsafe_allow_html=True)
         
         subjects_dict = p_info.get("subjects", {})
         subjects_to_display = [selected_subject] if selected_subject != "All Subjects" else list(subjects_dict.keys())
@@ -1224,7 +1224,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                         filtered_micros.append((m, m_id, is_completed))
                         
                     if filtered_micros:
-                        st.markdown(f"<h4 style='color: #FFFFFF; margin-top: 12px;'>📌 {t_data.get('title', top_key)}</h4>", unsafe_allow_html=True)
+                        st.markdown(f"<h4 style='color: #0F172A; font-weight: 700; margin-top: 12px;'>📌 {t_data.get('title', top_key)}</h4>", unsafe_allow_html=True)
                         for m_text, m_id, is_comp in filtered_micros:
                             has_saved_notes = m_id in st.session_state.progress.get("notes", {}) and bool(
                                 st.session_state.progress["notes"][m_id].get("text") or 
@@ -1260,7 +1260,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     existing_file_name = existing_note_data.get("filename", "")
                                     existing_file_content = existing_note_data.get("file_content", "")
                                     
-                                    st.markdown("<h5 style='color: #38BDF8;'>📤 Upload Personal Study Notes File</h5>", unsafe_allow_html=True)
+                                    st.markdown("<h5 style='color: #0F172A; font-weight: 700;'>📤 Upload Personal Study Notes File</h5>", unsafe_allow_html=True)
                                     up_file = st.file_uploader(
                                         f"Upload notes file for '{m_text}' (.txt, .md, .pdf)",
                                         type=["txt", "md", "pdf"],
@@ -1298,7 +1298,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                                         except Exception as ex:
                                             st.error(f"Error processing uploaded file: {ex}")
 
-                                    st.markdown("<h5 style='color: #38BDF8; margin-top: 12px;'>✏️ Type / Edit Personal Notes</h5>", unsafe_allow_html=True)
+                                    st.markdown("<h5 style='color: #0F172A; font-weight: 700; margin-top: 12px;'>✏️ Type / Edit Personal Notes</h5>", unsafe_allow_html=True)
                                     written_text = st.text_area(
                                         "Write your custom study notes, formulas, or revision points:",
                                         value=existing_text,
@@ -1332,7 +1332,7 @@ elif nav_mode == "📋 Syllabus Navigator":
                                     # Display Saved Notes Summary & Preview
                                     if existing_text or existing_file_content:
                                         st.markdown("---")
-                                        st.markdown("<h5 style='color: #34D399;'>📖 Saved Student Notes Overview</h5>", unsafe_allow_html=True)
+                                        st.markdown("<h5 style='color: #059669; font-weight: 700;'>📖 Saved Student Notes Overview</h5>", unsafe_allow_html=True)
                                         if existing_note_data.get("updated_at"):
                                             st.caption(f"Last updated: {existing_note_data.get('updated_at')}")
                                         if existing_file_name:
@@ -1350,22 +1350,22 @@ elif nav_mode == "📋 Syllabus Navigator":
 # ==========================================
 elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     st.markdown("""
-    <div style="background: linear-gradient(135deg, rgba(13, 17, 32, 0.95) 0%, rgba(8, 11, 23, 0.98) 100%); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-            <div>
-                <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-family: 'JetBrains Mono'; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3);">
+    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 14px;">
+            <div style="max-width: 72%;">
+                <span style="background: #EFF6FF; color: #2563EB; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px; border: 1px solid #BFDBFE;">
                     🎯 STRATEGIC TIMELINE ENGINE
                 </span>
-                <h2 style="color: #FFFFFF; font-size: 1.85rem; margin-top: 8px; margin-bottom: 4px; font-family: 'Outfit'; font-weight: 800;">
+                <h2 style="color: #0F172A; font-size: 1.85rem; margin-top: 10px; margin-bottom: 6px; font-weight: 800; letter-spacing: -0.02em;">
                     🗓️ Exam Date Roadmap & 1-Week Buffer Study Planner
                 </h2>
-                <div style="color: #CBD5E1; font-size: 0.95rem;">
-                    Analyze real-time syllabus completion (topics done vs remaining) and calculate an optimized daily velocity roadmap engineered to <strong>finish 100% of the syllabus exactly 1 week before the exam</strong>.
+                <div style="color: #475569; font-size: 0.95rem; line-height: 1.55;">
+                    Analyze real-time syllabus completion (topics done vs remaining) and calculate an optimized daily velocity roadmap engineered to <strong style="color: #0F172A;">finish 100% of the syllabus exactly 1 week before the exam</strong>.
                 </div>
             </div>
-            <div style="background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 12px; padding: 10px 16px; text-align: center;">
-                <div style="color: #34D399; font-weight: 800; font-size: 0.85rem; font-family: 'JetBrains Mono';">🛡️ 1-WEEK BUFFER PRINCIPLE</div>
-                <div style="color: #F8FAFC; font-size: 0.82rem; margin-top: 2px;">Final 7 days reserved for Mocks & Micro-Revision</div>
+            <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 14px; padding: 12px 18px; text-align: center;">
+                <div style="color: #16A34A; font-weight: 800; font-size: 0.82rem; font-family: 'JetBrains Mono', monospace;">🛡️ 1-WEEK BUFFER PRINCIPLE</div>
+                <div style="color: #334155; font-size: 0.82rem; margin-top: 3px; font-weight: 500;">Final 7 days reserved for Mocks & Micro-Revision</div>
             </div>
         </div>
     </div>
@@ -1393,7 +1393,7 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     gs3_left = max(0, gs3_total - gs3_done)
     gs4_left = max(0, gs4_total - gs4_done)
 
-    st.markdown("<h4 style='color: #38BDF8;'>📊 1. Current Preparation Level & Syllabus Audit</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📊 1. Current Preparation Level & Syllabus Audit</h4>", unsafe_allow_html=True)
     st.caption("Real-time tracking of syllabus microtopics completed vs left across General Studies papers:")
 
     # Top Metrics Cards Row
@@ -1403,23 +1403,23 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         <div class="metric-card">
             <div class="metric-label">📚 Total Curriculum</div>
             <div class="metric-value">{total_micros}</div>
-            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">GS 1-4 Microtopics</div>
+            <div style="color: #0284C7; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">GS 1-4 Microtopics</div>
         </div>
         """, unsafe_allow_html=True)
     with m_col2:
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-label">✅ Topics Completed</div>
-            <div class="metric-value" style="color: #34D399;">{completed_cnt}</div>
-            <div style="color: #34D399; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{completed_pct:.1f}% Covered</div>
+            <div class="metric-value" style="color: #059669;">{completed_cnt}</div>
+            <div style="color: #059669; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{completed_pct:.1f}% Covered</div>
         </div>
         """, unsafe_allow_html=True)
     with m_col3:
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-label">⏳ Topics Left (Remaining)</div>
-            <div class="metric-value" style="color: #F59E0B;">{left_cnt}</div>
-            <div style="color: #EF4444; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{left_pct:.1f}% Remaining to Finish</div>
+            <div class="metric-value" style="color: #D97706;">{left_cnt}</div>
+            <div style="color: #DC2626; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{left_pct:.1f}% Remaining to Finish</div>
         </div>
         """, unsafe_allow_html=True)
     with m_col4:
@@ -1427,8 +1427,8 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         st.markdown(f"""
         <div class="metric-card">
             <div class="metric-label">🎯 Prep Stage Status</div>
-            <div class="metric-value" style="font-size: 1.6rem; color: #C084FC;">{stage_label}</div>
-            <div style="color: #CBD5E1; font-size: 0.82rem; font-weight: 600; margin-top: 4px;">Active Learning Phase</div>
+            <div class="metric-value" style="font-size: 1.6rem; color: #7C3AED;">{stage_label}</div>
+            <div style="color: #475569; font-size: 0.82rem; font-weight: 600; margin-top: 4px;">Active Learning Phase</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1442,9 +1442,9 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         <div class="pwskills-card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="pwskills-title">🏛️ GS Paper 1: Heritage, History, Geography, Society</span>
-                <span style="color:#38BDF8; font-weight:700;">{gs1_done}/{gs1_total} Done</span>
+                <span style="color:#0284C7; font-weight:700;">{gs1_done}/{gs1_total} Done</span>
             </div>
-            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs1_left} microtopics</strong> ({100-gs1_pct:.1f}% left)</div>
+            <div style="font-size:0.85rem; color:#475569; margin:6px 0;">Remaining: <strong style="color:#D97706;">{gs1_left} microtopics</strong> ({100-gs1_pct:.1f}% left)</div>
         </div>
         """, unsafe_allow_html=True)
         st.progress(gs1_pct / 100.0)
@@ -1454,9 +1454,9 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         <div class="pwskills-card" style="margin-top:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="pwskills-title">⚖️ GS Paper 2: Polity, Constitution, Governance, IR</span>
-                <span style="color:#38BDF8; font-weight:700;">{gs2_done}/{gs2_total} Done</span>
+                <span style="color:#0284C7; font-weight:700;">{gs2_done}/{gs2_total} Done</span>
             </div>
-            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs2_left} microtopics</strong> ({100-gs2_pct:.1f}% left)</div>
+            <div style="font-size:0.85rem; color:#475569; margin:6px 0;">Remaining: <strong style="color:#D97706;">{gs2_left} microtopics</strong> ({100-gs2_pct:.1f}% left)</div>
         </div>
         """, unsafe_allow_html=True)
         st.progress(gs2_pct / 100.0)
@@ -1467,9 +1467,9 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         <div class="pwskills-card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="pwskills-title">📈 GS Paper 3: Economy, Environment, Sci-Tech, Security</span>
-                <span style="color:#38BDF8; font-weight:700;">{gs3_done}/{gs3_total} Done</span>
+                <span style="color:#0284C7; font-weight:700;">{gs3_done}/{gs3_total} Done</span>
             </div>
-            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs3_left} microtopics</strong> ({100-gs3_pct:.1f}% left)</div>
+            <div style="font-size:0.85rem; color:#475569; margin:6px 0;">Remaining: <strong style="color:#D97706;">{gs3_left} microtopics</strong> ({100-gs3_pct:.1f}% left)</div>
         </div>
         """, unsafe_allow_html=True)
         st.progress(gs3_pct / 100.0)
@@ -1479,9 +1479,9 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         <div class="pwskills-card" style="margin-top:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span class="pwskills-title">🧘 GS Paper 4: Ethics, Integrity, Aptitude & Case Studies</span>
-                <span style="color:#38BDF8; font-weight:700;">{gs4_done}/{gs4_total} Done</span>
+                <span style="color:#0284C7; font-weight:700;">{gs4_done}/{gs4_total} Done</span>
             </div>
-            <div style="font-size:0.85rem; color:#CBD5E1; margin:6px 0;">Remaining: <strong style="color:#F59E0B;">{gs4_left} microtopics</strong> ({100-gs4_pct:.1f}% left)</div>
+            <div style="font-size:0.85rem; color:#475569; margin:6px 0;">Remaining: <strong style="color:#D97706;">{gs4_left} microtopics</strong> ({100-gs4_pct:.1f}% left)</div>
         </div>
         """, unsafe_allow_html=True)
         st.progress(gs4_pct / 100.0)
@@ -1489,7 +1489,7 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     st.markdown("---")
 
     # 2. EXAM DATE CONFIGURATION & TARGET FINISH DEADLINE
-    st.markdown("<h4 style='color: #38BDF8;'>🗓️ 2. Input Exam Conduct Date & Target Buffer Calibration</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🗓️ 2. Input Exam Conduct Date & Target Buffer Calibration</h4>", unsafe_allow_html=True)
     st.caption("Tell the system the exact date on which the exam will be conducted. The engine enforces the 1-Week Pre-Exam Finish rule:")
 
     saved_plan = st.session_state.progress.setdefault("exam_plan", {})
@@ -1571,7 +1571,7 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 3. ANALYTICAL TIMELINE & VELOCITY ENGINE
-    st.markdown("<h4 style='color: #38BDF8;'>📈 3. Strategic Buffer & Pacing Analytics</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📈 3. Strategic Buffer & Pacing Analytics</h4>", unsafe_allow_html=True)
 
     # Check for date feasibility edge cases
     if prep_days_available <= 0:
@@ -1583,31 +1583,31 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
             <div class="metric-card">
                 <div class="metric-label">📅 Days to Official Exam</div>
                 <div class="metric-value">{total_days_until_exam} Days</div>
-                <div style="color: #38BDF8; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">Conduct Date: {active_exam_date.strftime('%d %b %Y')}</div>
+                <div style="color: #0284C7; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">Conduct Date: {active_exam_date.strftime('%d %b %Y')}</div>
             </div>
             """, unsafe_allow_html=True)
         with v_col2:
             st.markdown(f"""
-            <div class="metric-card" style="border-color: #34D399 !important;">
+            <div class="metric-card" style="border-color: #10B981 !important;">
                 <div class="metric-label">🎯 100% Finish Deadline</div>
-                <div class="metric-value" style="color: #34D399; font-size: 1.8rem;">{target_finish_date.strftime('%d %b %Y')}</div>
-                <div style="color: #34D399; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">Exactly 1 Week Before Exam!</div>
+                <div class="metric-value" style="color: #059669; font-size: 1.8rem;">{target_finish_date.strftime('%d %b %Y')}</div>
+                <div style="color: #059669; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">Exactly 1 Week Before Exam!</div>
             </div>
             """, unsafe_allow_html=True)
         with v_col3:
             st.markdown(f"""
             <div class="metric-card">
                 <div class="metric-label">⏳ Active Study Window</div>
-                <div class="metric-value" style="color: #F59E0B;">{prep_days_available} Days</div>
-                <div style="color: #CBD5E1; font-size: 0.82rem; font-weight: 600; margin-top: 4px;">{net_active_prep_days} net study days ({rest_schedule.split(' ')[0]})</div>
+                <div class="metric-value" style="color: #D97706;">{prep_days_available} Days</div>
+                <div style="color: #475569; font-size: 0.82rem; font-weight: 600; margin-top: 4px;">{net_active_prep_days} net study days ({rest_schedule.split(' ')[0]})</div>
             </div>
             """, unsafe_allow_html=True)
         with v_col4:
             st.markdown(f"""
             <div class="metric-card">
                 <div class="metric-label">⚡ Daily Microtopic Quota</div>
-                <div class="metric-value" style="color: #38BDF8;">{daily_quota_needed} / day</div>
-                <div style="color: #C084FC; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">~{weekly_quota_needed} topics / week</div>
+                <div class="metric-value" style="color: #0284C7;">{daily_quota_needed} / day</div>
+                <div style="color: #7C3AED; font-size: 0.82rem; font-weight: 700; margin-top: 4px;">~{weekly_quota_needed} topics / week</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1616,28 +1616,28 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         # Velocity Diagnosis Banner
         if daily_quota_needed <= 2.5:
             diag_badge = "🟢 HIGH RETENTION PACE (COMFORTABLE & THOROUGH)"
-            diag_color = "#34D399"
+            diag_color = "#059669"
             diag_msg = f"With **{daily_quota_needed} microtopics/day**, you have abundant time to read standard reference books (Laxmikanth, NCERTs), prepare crisp 1-page notes, and complete 2 comprehensive revision cycles before the 7-day buffer begins!"
         elif daily_quota_needed <= 4.5:
             diag_badge = "🟡 BALANCED HIGH-YIELD SPRINT (STANDARD ASPIRANT VELOCITY)"
-            diag_color = "#38BDF8"
+            diag_color = "#0284C7"
             diag_msg = f"With **{daily_quota_needed} microtopics/day** (~{study_hrs_per_topic} hrs/topic), you are on a prime civil services schedule. Allocate your morning 3-hour deep work block to complete 2 topics, and afternoon for the rest + Prelims MCQs."
         elif daily_quota_needed <= 6.5:
             diag_badge = "🟠 INTENSIVE SPRINT (FOCUSED 9-11 HOUR CAPACITY REQUIRED)"
-            diag_color = "#F59E0B"
+            diag_color = "#D97706"
             diag_msg = f"With **{daily_quota_needed} microtopics/day**, velocity is demanding. Strictly utilize syllabus summaries, short notes, and avoid opening multiple secondary sources. Stick to NCERTs + high-yield PYQ themes."
         else:
             diag_badge = "🔴 EMERGENCY TRIAGE SPRINT (PARETO 80/20 ESSENTIALS)"
-            diag_color = "#EF4444"
+            diag_color = "#DC2626"
             diag_msg = f"With **{daily_quota_needed} microtopics/day**, prioritize high-frequency Prelims and Mains themes: Polity (Art 12-51A, Parliament), Modern History (1857-1947), Economy (Inflation, Banking, Budget), and Environment."
 
         st.markdown(f"""
         <div class="pwskills-card" style="border-color: {diag_color} !important;">
             <div style="color: {diag_color}; font-weight: 800; font-size: 0.95rem; font-family: 'JetBrains Mono';">{diag_badge}</div>
-            <div style="color: #F8FAFC; font-size: 0.92rem; margin-top: 6px; line-height: 1.55;">
+            <div style="color: #1E293B; font-size: 0.92rem; margin-top: 6px; line-height: 1.55;">
                 {diag_msg}
             </div>
-            <div style="margin-top: 10px; font-size: 0.85rem; color: #CBD5E1;">
+            <div style="margin-top: 10px; font-size: 0.85rem; color: #475569;">
                 🛡️ <strong>Guaranteed Buffer:</strong> By reaching 100% on <strong>{target_finish_date.strftime('%B %d, %Y')}</strong>, you safeguard the entire final week ({target_finish_date.strftime('%d %b')} to {active_exam_date.strftime('%d %b')}) exclusively for full-length mocks, error analysis, and mental composure.
             </div>
         </div>
@@ -1671,7 +1671,7 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
             })
             
             df_burn = pd.DataFrame(burn_timeline).set_index("Date / Milestone")
-            st.markdown("<h5 style='color: #FFFFFF; margin-top: 16px;'>📈 Projected Syllabus Burn-Down Curve (Reaches 0 One Week Before Exam)</h5>", unsafe_allow_html=True)
+            st.markdown("<h5 style='color: #0F172A; font-weight: 700; margin-top: 16px;'>📈 Projected Syllabus Burn-Down Curve (Reaches 0 One Week Before Exam)</h5>", unsafe_allow_html=True)
             st.line_chart(df_burn[["Remaining Microtopics", "Completed Microtopics"]], height=240)
         except Exception:
             pass
@@ -1679,7 +1679,7 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     st.markdown("---")
 
     # 4. DETAILED PHASE-BY-PHASE ROADMAP
-    st.markdown("<h4 style='color: #38BDF8;'>🗺️ 4. Phase-by-Phase Execution Roadmap (100% Syllabus Finish 1 Week Pre-Exam)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🗺️ 4. Phase-by-Phase Execution Roadmap (100% Syllabus Finish 1 Week Pre-Exam)</h4>", unsafe_allow_html=True)
     st.caption("Engineered roadmap splitting your available timeline into distinct mastery phases, culminating in the 7-Day Buffer Week:")
 
     p1_days = max(2, int(prep_days_available * 0.35))
@@ -1694,13 +1694,13 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     with phase_col1:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#34D399; font-weight:800;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#059669; font-weight:800;">
                 PHASE 1: {today.strftime('%d %b')} - {p1_end.strftime('%d %b')} ({p1_days} DAYS)
             </div>
-            <div class="pwskills-title" style="margin-top:4px; color:#34D399 !important;">
+            <div class="pwskills-title" style="margin-top:4px; color:#059669 !important;">
                 🟢 Core Foundation & GS1/GS2 Backlog Clearance
             </div>
-            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+            <div style="color:#334155; font-size:0.9rem; margin-top:8px; line-height:1.55;">
                 • <strong>Target Papers:</strong> Complete pending microtopics in <strong>GS Paper 1</strong> (Modern Indian History 1857-1947, Physical Geography) and <strong>GS Paper 2</strong> (Articles 1-51A, Parliament, Supreme Court Judgments).<br>
                 • <strong>Daily Quota:</strong> {daily_quota_needed} microtopics daily.<br>
                 • <strong>Testing Routine:</strong> 15 topic-specific Prelims MCQs after completing each microtopic.<br>
@@ -1711,16 +1711,16 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
 
         st.markdown(f"""
         <div class="pwskills-card" style="margin-top:14px;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#38BDF8; font-weight:800;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#0284C7; font-weight:800;">
                 PHASE 3: {p2_end.strftime('%d %b')} - {p3_end.strftime('%d %b')} ({p3_days} DAYS)
             </div>
-            <div class="pwskills-title" style="margin-top:4px; color:#38BDF8 !important;">
+            <div class="pwskills-title" style="margin-top:4px; color:#0284C7 !important;">
                 🔵 Final Syllabus Clearance & Micro-Notes Consolidation
             </div>
-            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+            <div style="color:#334155; font-size:0.9rem; margin-top:8px; line-height:1.55;">
                 • <strong>Target Papers:</strong> Clear remaining microtopics in Science & Tech, Disaster Management, Internal Security, and International Treaties.<br>
                 • <strong>Consolidation:</strong> Audit all microtopics in Syllabus Navigator and mark 100% complete.<br>
-                • <strong>Hard Stop Milestone:</strong> <span style="color:#34D399; font-weight:700;">On {target_finish_date.strftime('%B %d, %Y')}, exactly 1 week before the exam, 100% of the entire syllabus is finished!</span>
+                • <strong>Hard Stop Milestone:</strong> <span style="color:#059669; font-weight:700;">On {target_finish_date.strftime('%B %d, %Y')}, exactly 1 week before the exam, 100% of the entire syllabus is finished!</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1728,13 +1728,13 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     with phase_col2:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#F59E0B; font-weight:800;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#D97706; font-weight:800;">
                 PHASE 2: {p1_end.strftime('%d %b')} - {p2_end.strftime('%d %b')} ({p2_days} DAYS)
             </div>
-            <div class="pwskills-title" style="margin-top:4px; color:#F59E0B !important;">
+            <div class="pwskills-title" style="margin-top:4px; color:#D97706 !important;">
                 🟡 Applied Governance, Economy & Ethics Case Studies
             </div>
-            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+            <div style="color:#334155; font-size:0.9rem; margin-top:8px; line-height:1.55;">
                 • <strong>Target Papers:</strong> Complete pending microtopics in <strong>GS Paper 3</strong> (Macroeconomics, Monetary Policy, Biodiversity, Climate Conventions) and <strong>GS Paper 4</strong> (Ethics in Public Administration, Emotional Intelligence).<br>
                 • <strong>Answer Writing:</strong> 2 timed Mains answers daily (10-markers, 150 words).<br>
                 • <strong>Revision:</strong> Weekly active recall of Phase 1 flashcards to lock retention.
@@ -1743,14 +1743,14 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
-        <div class="pwskills-card" style="border-color: #38BDF8 !important; background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%); margin-top:14px;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.8rem; color:#C084FC; font-weight:800;">
+        <div class="pwskills-card" style="border-color: #E9D5FF !important; background: #FAF5FF; margin-top:14px;">
+            <div style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:#7C3AED; font-weight:800;">
                 PHASE 4: {target_finish_date.strftime('%d %b')} - {active_exam_date.strftime('%d %b')} (FINAL 7 DAYS)
             </div>
-            <div class="pwskills-title" style="margin-top:4px; color:#C084FC !important;">
+            <div class="pwskills-title" style="margin-top:4px; color:#7C3AED !important;">
                 🛡️ The 7-Day Pre-Exam Buffer Protocol
             </div>
-            <div style="color:#CBD5E1; font-size:0.9rem; margin-top:8px; line-height:1.55;">
+            <div style="color:#334155; font-size:0.9rem; margin-top:8px; line-height:1.55;">
                 • <strong>Zero New Topics:</strong> Strictly no new syllabus reading allowed.<br>
                 • <strong>Mocks:</strong> 2 Full Simulation GS Mocks + 1 CSAT Mock under strict exam hall timings (09:30-11:30 AM & 02:30-04:30 PM).<br>
                 • <strong>Error Rectification:</strong> Review personal error log & high-frequency factual sheets.<br>
@@ -1763,61 +1763,61 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
 
     # 5. THE 7-DAY BUFFER DAY-BY-DAY ACTION PROTOCOL
     st.markdown("""
-    <div style="background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(192, 132, 252, 0.4); border-radius: 16px; padding: 22px; margin-bottom: 24px;">
-        <h4 style="color: #C084FC; margin-top: 0; font-family: 'Outfit';">🛡️ The Day-by-Day Final 7-Day Buffer Schedule (Zero-Backlog Week)</h4>
-        <div style="color: #CBD5E1; font-size: 0.92rem; margin-bottom: 14px;">
+    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 22px 26px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);">
+        <h4 style="color: #7C3AED; margin-top: 0; font-weight: 700;">🛡️ The Day-by-Day Final 7-Day Buffer Schedule (Zero-Backlog Week)</h4>
+        <div style="color: #475569; font-size: 0.92rem; margin-bottom: 14px;">
             Because your entire syllabus is 100% completed by Day -7, you utilize these final 7 days like a top ranker:
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #38BDF8;">
-                <strong style="color: #38BDF8;">Day -7 (7 Days Out):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Full-Length GS Simulation Mock 1 (09:30 - 11:30 AM). Negative marking audit by evening.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #0284C7;">
+                <strong style="color: #0284C7;">Day -7 (7 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Full-Length GS Simulation Mock 1 (09:30 - 11:30 AM). Negative marking audit by evening.</span>
             </div>
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #34D399;">
-                <strong style="color: #34D399;">Day -6 (6 Days Out):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Full-Length CSAT Simulation Mock (02:30 - 04:30 PM). Comprehension rules & Speed Math review.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #059669;">
+                <strong style="color: #059669;">Day -6 (6 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Full-Length CSAT Simulation Mock (02:30 - 04:30 PM). Comprehension rules & Speed Math review.</span>
             </div>
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #F59E0B;">
-                <strong style="color: #F59E0B;">Day -5 (5 Days Out):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Rapid Sheet Revision GS1 & GS2: Articles 1-51A, Landmark Cases, Modern History Chronology.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #D97706;">
+                <strong style="color: #D97706;">Day -5 (5 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Rapid Sheet Revision GS1 & GS2: Articles 1-51A, Landmark Cases, Modern History Chronology.</span>
             </div>
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #C084FC;">
-                <strong style="color: #C084FC;">Day -4 (4 Days Out):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Rapid Sheet Revision GS3 & GS4: Budget Key Ratios, Environment Conventions, Thinkers & Quotes.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #7C3AED;">
+                <strong style="color: #7C3AED;">Day -4 (4 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Rapid Sheet Revision GS3 & GS4: Budget Key Ratios, Environment Conventions, Thinkers & Quotes.</span>
             </div>
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #38BDF8;">
-                <strong style="color: #38BDF8;">Day -3 (3 Days Out):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Final Light Mock (50 MCQs). Light review of recurring traps. Mental confidence building.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #0284C7;">
+                <strong style="color: #0284C7;">Day -3 (3 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Final Light Mock (50 MCQs). Light review of recurring traps. Mental confidence building.</span>
             </div>
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #34D399;">
-                <strong style="color: #34D399;">Day -2 (2 Days Out):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Personal Error Log review only. Zero new concepts. 4-7-8 box breathing, evening walk, early sleep.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #059669;">
+                <strong style="color: #059669;">Day -2 (2 Days Out):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Personal Error Log review only. Zero new concepts. 4-7-8 box breathing, evening walk, early sleep.</span>
             </div>
-            <div style="background: #1E293B; padding: 12px 16px; border-radius: 10px; border-left: 3px solid #EF4444;">
-                <strong style="color: #EF4444;">Day -1 (Exam Eve):</strong><br>
-                <span style="font-size: 0.88rem; color: #CBD5E1;">Books closed at 05:00 PM. Admit card & photo ID kit check. Sleep by 21:30 for 8+ hours restorative rest.</span>
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px 16px; border-radius: 12px; border-left: 4px solid #DC2626;">
+                <strong style="color: #DC2626;">Day -1 (Exam Eve):</strong><br>
+                <span style="font-size: 0.88rem; color: #334155;">Books closed at 05:00 PM. Admit card & photo ID kit check. Sleep by 21:30 for 8+ hours restorative rest.</span>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     # 6. DAILY 24-HOUR TIME-TABLE BLUEPRINT
-    st.markdown("<h4 style='color: #38BDF8;'>⏰ 5. Daily 24-Hour Time-Table Blueprint (Calibrated for " + str(daily_hours_input) + " Hours)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>⏰ 5. Daily 24-Hour Time-Table Blueprint (Calibrated for " + str(daily_hours_input) + " Hours)</h4>", unsafe_allow_html=True)
     st.caption("Structured schedule designed to maintain velocity while preventing cognitive burnout:")
 
     tt_col1, tt_col2 = st.columns(2)
     with tt_col1:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div style="font-weight:700; color:#34D399;">🌅 Morning Deep Work Session (06:30 - 09:30 AM) · 3.0 Hrs</div>
-            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+            <div style="font-weight:700; color:#059669;">🌅 Morning Deep Work Session (06:30 - 09:30 AM) · 3.0 Hrs</div>
+            <div style="color:#334155; font-size:0.88rem; margin-top:4px;">
                 • Peak cortisol & focus window: Master 1-2 new heavy microtopics (GS2 Polity or GS3 Economy).<br>
                 • Prepare 1-page bullet summary. No phone notifications.
             </div>
         </div>
         <div class="pwskills-card" style="margin-top:10px;">
-            <div style="font-weight:700; color:#38BDF8;">☀️ Midday Study Session (10:30 AM - 01:00 PM) · 2.5 Hrs</div>
-            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+            <div style="font-weight:700; color:#0284C7;">☀️ Midday Study Session (10:30 AM - 01:00 PM) · 2.5 Hrs</div>
+            <div style="color:#334155; font-size:0.88rem; margin-top:4px;">
                 • Second microtopic coverage (GS1 History or GS4 Ethics).<br>
                 • Read key source / class lecture notes and summarize definitions.
             </div>
@@ -1827,15 +1827,15 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     with tt_col2:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div style="font-weight:700; color:#F59E0B;">🌤️ Afternoon Testing & Application (02:30 - 05:00 PM) · 2.5 Hrs</div>
-            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+            <div style="font-weight:700; color:#D97706;">🌤️ Afternoon Testing & Application (02:30 - 05:00 PM) · 2.5 Hrs</div>
+            <div style="color:#334155; font-size:0.88rem; margin-top:4px;">
                 • Solve 20 Prelims MCQs on today's topics (exam timing simulation).<br>
                 • Write 1 Mains 10-marker answer draft. Analyze errors and update error log.
             </div>
         </div>
         <div class="pwskills-card" style="margin-top:10px;">
-            <div style="font-weight:700; color:#C084FC;">🌙 Evening Active Recall & Revision (06:00 - 08:30 PM) · 2.0 Hrs</div>
-            <div style="color:#CBD5E1; font-size:0.88rem; margin-top:4px;">
+            <div style="font-weight:700; color:#7C3AED;">🌙 Evening Active Recall & Revision (06:00 - 08:30 PM) · 2.0 Hrs</div>
+            <div style="color:#334155; font-size:0.88rem; margin-top:4px;">
                 • Review today's 1-page notes using active recall / flashcards.<br>
                 • Review yesterday's topics to seal synaptic retention. Sleep by 10:30 PM.
             </div>
@@ -1845,7 +1845,7 @@ elif nav_mode == "🗓️ Exam Countdown & Study Planner":
     st.markdown("---")
 
     # 7. ONE-CLICK ACTION HUB & INTEGRATIONS
-    st.markdown("<h4 style='color: #38BDF8;'>🚀 6. Action Hub: 1-Click Plan Integrations</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🚀 6. Action Hub: 1-Click Plan Integrations</h4>", unsafe_allow_html=True)
     st.caption("Apply this plan directly into your active dashboard targets or consult the AI Copilot:")
 
     act_col1, act_col2, act_col3 = st.columns(3)
@@ -1958,7 +1958,7 @@ Generated on: {today.strftime('%B %d, %Y')}
 
     # 8. INTERACTIVE REMAINING TOPICS EXPLORER
     with st.expander(f"🔍 Browse Unfinished Topics Left to Study ({left_cnt} Remaining Modules)", expanded=False):
-        st.markdown("<p style='color: #CBD5E1;'>Directly inspect which microtopics are still pending per paper, mark them completed as you study, or click '💡 AI Explainer' to study them with your AI Copilot:</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Directly inspect which microtopics are still pending per paper, mark them completed as you study, or click '💡 AI Explainer' to study them with your AI Copilot:</p>", unsafe_allow_html=True)
         
         sel_paper_browse = st.selectbox("Select GS Paper to Inspect:", ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4"], key="planner_browse_paper_select")
         if sel_paper_browse in syllabus_data:
@@ -1991,8 +1991,8 @@ Generated on: {today.strftime('%B %d, %Y')}
 # VIEW: ⚡ PRODUCTIVITY & TARGETS
 # ==========================================
 elif nav_mode == "⚡ Productivity & Targets":
-    st.markdown("<h3 style='color: #FFFFFF;'>⚡ Daily, Weekly & Monthly Productivity Matrix</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Plan study targets mapped to GS Syllabus microtopics, monitor daily velocity graphics, and track target completion.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>⚡ Daily, Weekly & Monthly Productivity Matrix</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Plan study targets mapped to GS Syllabus microtopics, monitor daily velocity graphics, and track target completion.</p>", unsafe_allow_html=True)
     
     import datetime
     today_str = datetime.date.today().isoformat()
@@ -2027,7 +2027,7 @@ elif nav_mode == "⚡ Productivity & Targets":
         <div class="metric-card">
             <div class="metric-label">📅 Daily Productivity</div>
             <div class="metric-value">{daily_done}/{daily_total}</div>
-            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{daily_pct:.0f}% Completed Today</div>
+            <div style="color: #0284C7; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{daily_pct:.0f}% Completed Today</div>
         </div>
         """, unsafe_allow_html=True)
     with p_col2:
@@ -2035,7 +2035,7 @@ elif nav_mode == "⚡ Productivity & Targets":
         <div class="metric-card">
             <div class="metric-label">🗓️ Weekly Target Rate</div>
             <div class="metric-value">{weekly_done}/{weekly_total}</div>
-            <div style="color: #34D399; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{weekly_pct:.0f}% Week Progress</div>
+            <div style="color: #059669; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{weekly_pct:.0f}% Week Progress</div>
         </div>
         """, unsafe_allow_html=True)
     with p_col3:
@@ -2043,7 +2043,7 @@ elif nav_mode == "⚡ Productivity & Targets":
         <div class="metric-card">
             <div class="metric-label">📆 Monthly Milestones</div>
             <div class="metric-value">{monthly_done}/{monthly_total}</div>
-            <div style="color: #C084FC; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{monthly_pct:.0f}% Month Goal</div>
+            <div style="color: #7C3AED; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">{monthly_pct:.0f}% Month Goal</div>
         </div>
         """, unsafe_allow_html=True)
     with p_col4:
@@ -2051,14 +2051,14 @@ elif nav_mode == "⚡ Productivity & Targets":
         <div class="metric-card">
             <div class="metric-label">🔥 Productivity Velocity</div>
             <div class="metric-value">{daily_done + 3 if daily_done > 0 else 3} Days</div>
-            <div style="color: #F59E0B; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Active Flow Streak</div>
+            <div style="color: #D97706; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Active Flow Streak</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 2. Real-Time Productivity Graphics
-    st.markdown("<h4 style='color: #38BDF8;'>📊 Real-Time Productivity Graphics & Target Analytics</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📊 Real-Time Productivity Graphics & Target Analytics</h4>", unsafe_allow_html=True)
     
     g_col1, g_col2 = st.columns([1.2, 0.8])
     
@@ -2091,18 +2091,18 @@ elif nav_mode == "⚡ Productivity & Targets":
         <div class="pwskills-card" style="border-color: rgba(56, 189, 248, 0.5) !important;">
             <div class="pwskills-title">🎯 Today's Productivity Index</div>
             <div style="text-align: center; margin: 14px 0;">
-                <div style="font-family: 'Outfit'; font-size: 3.2rem; font-weight: 800; color: #38BDF8; line-height: 1;">
+                <div style="font-family: 'Outfit', sans-serif; font-size: 3.2rem; font-weight: 800; color: #0284C7; line-height: 1;">
                     {daily_pct:.0f}%
                 </div>
-                <div style="color: #34D399; font-weight: 700; font-size: 0.88rem; margin-top: 6px; letter-spacing: 0.5px;">
+                <div style="color: #059669; font-weight: 700; font-size: 0.88rem; margin-top: 6px; letter-spacing: 0.5px;">
                     {perf_status}
                 </div>
             </div>
-            <div style="background: #0F172A; border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.08);">
-                <div style="font-size: 0.82rem; color: #CBD5E1;">
+            <div style="background: #F8FAFC; border-radius: 12px; padding: 12px 14px; border: 1px solid #E2E8F0;">
+                <div style="font-size: 0.82rem; color: #334155;">
                     📌 <strong>Syllabus Microtopics Mapped:</strong> {sum(1 for t in targets if t.get('microtopic_id'))} linked
                 </div>
-                <div style="font-size: 0.82rem; color: #CBD5E1; margin-top: 4px;">
+                <div style="font-size: 0.82rem; color: #334155; margin-top: 4px;">
                     ⏱️ <strong>Est. Hours Logged Today:</strong> {sum(float(t.get('hours_est', 1.0)) for t in targets if t.get('completed')):.1f} hrs
                 </div>
             </div>
@@ -2112,7 +2112,7 @@ elif nav_mode == "⚡ Productivity & Targets":
     st.markdown("---")
 
     # 3. Create Target Mapped to Syllabus
-    st.markdown("<h4 style='color: #38BDF8;'>➕ Create New Target (Mapped to Syllabus Navigator)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>➕ Create New Target (Mapped to Syllabus Navigator)</h4>", unsafe_allow_html=True)
     
     syllabus = load_syllabus_data()
     paper_options = ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4", "CSAT & Optional"]
@@ -2190,7 +2190,7 @@ elif nav_mode == "⚡ Productivity & Targets":
     st.markdown("---")
 
     # 4. View & Manage Planned Targets
-    st.markdown("<h4 style='color: #FFFFFF;'>📋 Active Study Targets & Execution Matrix</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📋 Active Study Targets & Execution Matrix</h4>", unsafe_allow_html=True)
     
     tgt_tab1, tgt_tab2, tgt_tab3 = st.tabs(["📅 Daily Targets", "🗓️ Weekly Targets", "📆 Monthly Targets"])
     
@@ -2236,7 +2236,7 @@ elif nav_mode == "⚡ Productivity & Targets":
                         st.session_state.progress["targets"].remove(tgt)
                         save_user_progress(st.session_state.progress)
                         st.rerun()
-            st.markdown("<hr style='margin: 8px 0; border-color: rgba(255,255,255,0.05);'>", unsafe_allow_html=True)
+            st.markdown("<hr style='margin: 8px 0; border-color: #E2E8F0;'>", unsafe_allow_html=True)
 
     with tgt_tab1:
         render_target_list(daily_targets, "Daily")
@@ -2249,8 +2249,8 @@ elif nav_mode == "⚡ Productivity & Targets":
 # VIEW: 💞 RELATIONSHIP MANAGEMENT
 # ==========================================
 elif nav_mode == "💞 Relationship Management":
-    st.markdown("<h3 style='color: #FFFFFF;'>💞 Aspirant Relationship & Preparation Ecosystem</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Manage emotional dynamics (ghosting, one-sided love, breakups), map emotional stress to UPSC syllabus progress, and protect your study targets.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>💞 Aspirant Relationship & Preparation Ecosystem</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Manage emotional dynamics (ghosting, one-sided love, breakups), map emotional stress to UPSC syllabus progress, and protect your study targets.</p>", unsafe_allow_html=True)
     
     # Initialize relationship state in user progress if not present
     rel_state = st.session_state.progress.setdefault("relationship_state", {
@@ -2326,7 +2326,7 @@ elif nav_mode == "💞 Relationship Management":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 2. Syllabus Mapping & Emotional Impact Analytics Dashboard
-    st.markdown("<h4 style='color: #38BDF8;'>📊 Relationship Stress vs. Syllabus Completion Matrix</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📊 Relationship Stress vs. Syllabus Completion Matrix</h4>", unsafe_allow_html=True)
     
     m_col1, m_col2, m_col3, m_col4 = st.columns(4)
     with m_col1:
@@ -2359,7 +2359,7 @@ elif nav_mode == "💞 Relationship Management":
         <div class="metric-card">
             <div class="metric-label">🛡️ Prep Protection Index</div>
             <div class="metric-value">{prep_security}%</div>
-            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Study Continuity Score</div>
+            <div style="color: #0284C7; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Study Continuity Score</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2409,17 +2409,17 @@ elif nav_mode == "💞 Relationship Management":
             adv_title = "⚡ Mixed Signals Boundary Shield"
             adv_msg = "Inconsistency in relationships sabotages UPSC consistency. Implement strict 9 AM - 9 PM study dark-outs. Communicate only during scheduled evening windows."
         else:
-            adv_color = "#34D399"
+            adv_color = "#059669"
             adv_title = "🟢 High Focus Equilibrium"
             adv_msg = f"Your emotional state is stable. Capitalize on this clarity to crush the remaining **{left_cnt} microtopics** in GS Paper 1, 2, 3, and 4!"
 
         st.markdown(f"""
         <div class="pwskills-card" style="border-color: {adv_color} !important;">
             <div class="pwskills-title" style="color: {adv_color} !important;">{adv_title}</div>
-            <div style="color: #F8FAFC; font-size: 0.92rem; margin-top: 8px; line-height: 1.55;">
+            <div style="color: #1E293B; font-size: 0.92rem; margin-top: 8px; line-height: 1.55;">
                 {adv_msg}
             </div>
-            <div style="margin-top: 12px; font-family: 'JetBrains Mono'; font-size: 0.8rem; color: #CBD5E1;">
+            <div style="margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #475569;">
                 STATUS: <span style="color: {adv_color}; font-weight: 700;">{curr_status}</span>
             </div>
         </div>
@@ -2428,7 +2428,7 @@ elif nav_mode == "💞 Relationship Management":
     st.markdown("---")
 
     # 3. DYNAMIC CORRELATION ENGINE: SYLLABUS NAVIGATOR X RELATIONSHIP PROFILE
-    st.markdown("<h4 style='color: #38BDF8;'>🔗 Dynamic Correlation: Syllabus Navigator Completion x Relationship Profile</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🔗 Dynamic Correlation: Syllabus Navigator Completion x Relationship Profile</h4>", unsafe_allow_html=True)
     st.caption("Deep analytical cross-mapping between your active microtopics in Syllabus Navigator and your current relationship inputs:")
 
     est_days_lost = round(drain * 1.8, 1)
@@ -2437,15 +2437,15 @@ elif nav_mode == "💞 Relationship Management":
     c_matrix_col1, c_matrix_col2 = st.columns([1, 1])
     with c_matrix_col1:
         st.markdown(f"""
-        <div class="pwskills-card" style="border-color: rgba(56, 189, 248, 0.4) !important;">
-            <div class="pwskills-title" style="color: #38BDF8 !important;">📊 GS Paper Microtopic Breakdown</div>
-            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
-                • <strong>GS Paper 1 (History, Geography, Society):</strong> <span style="color: #34D399; font-weight: 700;">{gs1_done}/386</span> completed ({ (gs1_done/386*100) if 386>0 else 0:.1f}%)<br>
-                • <strong>GS Paper 2 (Polity, Governance, IR):</strong> <span style="color: #34D399; font-weight: 700;">{gs2_done}/89</span> completed ({ (gs2_done/89*100) if 89>0 else 0:.1f}%)<br>
-                • <strong>GS Paper 3 (Economy, Environment, Sci-Tech):</strong> <span style="color: #34D399; font-weight: 700;">{gs3_done}/73</span> completed ({ (gs3_done/73*100) if 73>0 else 0:.1f}%)<br>
-                • <strong>GS Paper 4 (Ethics, Integrity, Aptitude):</strong> <span style="color: #34D399; font-weight: 700;">{gs4_done}/69</span> completed ({ (gs4_done/69*100) if 69>0 else 0:.1f}%)
+        <div class="pwskills-card" style="border-color: #BAE6FD !important;">
+            <div class="pwskills-title" style="color: #0284C7 !important;">📊 GS Paper Microtopic Breakdown</div>
+            <div style="color: #334155; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>GS Paper 1 (History, Geography, Society):</strong> <span style="color: #059669; font-weight: 700;">{gs1_done}/386</span> completed ({ (gs1_done/386*100) if 386>0 else 0:.1f}%)<br>
+                • <strong>GS Paper 2 (Polity, Governance, IR):</strong> <span style="color: #059669; font-weight: 700;">{gs2_done}/89</span> completed ({ (gs2_done/89*100) if 89>0 else 0:.1f}%)<br>
+                • <strong>GS Paper 3 (Economy, Environment, Sci-Tech):</strong> <span style="color: #059669; font-weight: 700;">{gs3_done}/73</span> completed ({ (gs3_done/73*100) if 73>0 else 0:.1f}%)<br>
+                • <strong>GS Paper 4 (Ethics, Integrity, Aptitude):</strong> <span style="color: #059669; font-weight: 700;">{gs4_done}/69</span> completed ({ (gs4_done/69*100) if 69>0 else 0:.1f}%)
             </div>
-            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+            <div style="margin-top: 12px; padding: 10px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; font-size: 0.85rem; color: #1E293B;">
                 🎯 <strong>Syllabus Navigator Status:</strong> {completed_cnt} of 623 microtopics checked ({covered_pct:.1f}% finished).
             </div>
         </div>
@@ -2453,15 +2453,15 @@ elif nav_mode == "💞 Relationship Management":
 
     with c_matrix_col2:
         st.markdown(f"""
-        <div class="pwskills-card" style="border-color: rgba(245, 158, 11, 0.4) !important;">
-            <div class="pwskills-title" style="color: #F59E0B !important;">⚠️ Emotional Drag & Rumination Impact</div>
-            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
-                • <strong>Current Emotional Toll:</strong> <span style="color: #F59E0B; font-weight: 700;">{drain}/10 Drain Index</span><br>
-                • <strong>Cognitive Retention Capacity:</strong> <span style="color: #38BDF8; font-weight: 700;">{cognitive_capacity}%</span> effective bandwidth<br>
-                • <strong>Estimated Productivity Loss:</strong> <span style="color: #EF4444; font-weight: 700;">~{est_days_lost} days/month</span> lost to rumination & anxiety<br>
-                • <strong>Vulnerable Syllabus Area:</strong> <span style="color: #C084FC; font-weight: 700;">{"GS4 Ethics & GS2 Polity" if drain>=6 else "GS1 & GS3 Core Subjects"}</span>
+        <div class="pwskills-card" style="border-color: #FDE68A !important;">
+            <div class="pwskills-title" style="color: #D97706 !important;">⚠️ Emotional Drag & Rumination Impact</div>
+            <div style="color: #334155; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>Current Emotional Toll:</strong> <span style="color: #D97706; font-weight: 700;">{drain}/10 Drain Index</span><br>
+                • <strong>Cognitive Retention Capacity:</strong> <span style="color: #0284C7; font-weight: 700;">{cognitive_capacity}%</span> effective bandwidth<br>
+                • <strong>Estimated Productivity Loss:</strong> <span style="color: #DC2626; font-weight: 700;">~{est_days_lost} days/month</span> lost to rumination & anxiety<br>
+                • <strong>Vulnerable Syllabus Area:</strong> <span style="color: #7C3AED; font-weight: 700;">{"GS4 Ethics & GS2 Polity" if drain>=6 else "GS1 & GS3 Core Subjects"}</span>
             </div>
-            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+            <div style="margin-top: 12px; padding: 10px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; font-size: 0.85rem; color: #1E293B;">
                 💡 <strong>Corelation Finding:</strong> Relationship stress level ({drain}/10) directly threatens the remaining {left_cnt} microtopics if left unmanaged.
             </div>
         </div>
@@ -2470,7 +2470,7 @@ elif nav_mode == "💞 Relationship Management":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 4. ACTIONABLE & IMPLEMENTABLE SUGGESTIONS SUITE
-    st.markdown("<h4 style='color: #38BDF8;'>💡 Tailored Implementable Suggestions for Prep & Relationship Management</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>💡 Tailored Implementable Suggestions for Prep & Relationship Management</h4>", unsafe_allow_html=True)
     st.caption("Concrete, actionable protocols designed for immediate daily implementation based on your correlation profile:")
 
     # Determine dynamic suggestion content based on profile
@@ -2496,8 +2496,8 @@ elif nav_mode == "💞 Relationship Management":
     with sug_col1:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #34D399 !important;">🎯 1. Microtopic Execution Plan (Syllabus Navigator)</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #059669 !important;">🎯 1. Microtopic Execution Plan (Syllabus Navigator)</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 {quota_recommendation}
             </div>
         </div>
@@ -2505,8 +2505,8 @@ elif nav_mode == "💞 Relationship Management":
 
         st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #F59E0B !important;">⚡ 2. The "5-PYQ Circuit Breaker" Rule</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #D97706 !important;">⚡ 2. The "5-PYQ Circuit Breaker" Rule</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 <strong>Implementation Protocol:</strong> Whenever you feel an overwhelming urge to check message timestamps, stalk social media, or overthink <em>"{curr_status}"</em>:<br>
                 1. <strong>Enforce a 10-minute pause:</strong> Step away from your phone.<br>
                 2. <strong>Solve 5 PYQs:</strong> Open Syllabus Navigator or PYQ section and solve 5 MCQs or write 1 Mains answer outline.<br>
@@ -2518,8 +2518,8 @@ elif nav_mode == "💞 Relationship Management":
     with sug_col2:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #C084FC !important;">📖 3. GS4 Ethics Syllabus Integration (Study Your Situation)</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #7C3AED !important;">📖 3. GS4 Ethics Syllabus Integration (Study Your Situation)</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 <strong>Syllabus Synergy:</strong> Convert your personal relationship dynamics into GS4 Ethics study material!<br>
                 • <strong>Current Inputs:</strong> <em>{curr_status}</em> ({curr_emo})<br>
                 • <strong>GS4 Syllabus Topic:</strong> <em>Emotional Intelligence (EI), Moral Fortitude & Attitude</em><br>
@@ -2530,8 +2530,8 @@ elif nav_mode == "💞 Relationship Management":
 
         st.markdown("""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #38BDF8 !important;">⏰ 4. Strict Time-Fence & Digital Boundary Schedule</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #0284C7 !important;">⏰ 4. Strict Time-Fence & Digital Boundary Schedule</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 • <strong>08:30 AM - 07:30 PM (UPSC Darkout):</strong> Phone on DND/Focus Mode. Zero checking of relationship chats. Focus 100% on Syllabus Navigator microtopics.<br>
                 • <strong>07:30 PM - 08:15 PM (Personal Window):</strong> Fixed 45-min window for personal communication, calls, or reflection logging.<br>
                 • <strong>10:15 PM Onwards (Digital Shutdown):</strong> No screen time or overthinking before sleep to ensure cognitive recovery.
@@ -2542,7 +2542,7 @@ elif nav_mode == "💞 Relationship Management":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 5. 1-CLICK AI COUNSELOR CONSULTATION GENERATOR
-    st.markdown("<h4 style='color: #38BDF8;'>🤖 1-Click AI Counselor Consultation (Pre-Filled Profile & Syllabus Data)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🤖 1-Click AI Counselor Consultation (Pre-Filled Profile & Syllabus Data)</h4>", unsafe_allow_html=True)
     st.caption("Click the button below to launch an AI Consultation tailored to your exact relationship profile and remaining microtopics:")
 
     consult_prompt = (
@@ -2557,7 +2557,7 @@ elif nav_mode == "💞 Relationship Management":
     st.markdown("---")
 
     # 6. Private Emotional Venting & Reflection Journal
-    st.markdown("<h4 style='color: #FFFFFF;'>✍️ Aspirant Emotional Venting & Mindset Reflection Log</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>✍️ Aspirant Emotional Venting & Mindset Reflection Log</h4>", unsafe_allow_html=True)
     st.caption("Vent your thoughts here to clear cognitive clutter before starting your study session. Kept strictly private in local session state.")
     
     journal_text = st.text_area(
@@ -2577,8 +2577,8 @@ elif nav_mode == "💞 Relationship Management":
 # VIEW 3: 🧘 MENTAL HEALTH & WELLNESS
 # ==========================================
 elif nav_mode == "🧘 Mental Health & Wellness":
-    st.markdown("<h3 style='color: #FFFFFF;'>🧘 Aspirant Mental Health & Mindset Wellness Hub</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Empathetic psychological guidance, stress management, anti-burnout strategies, and daily mindset building correlated with your Syllabus Navigator progress.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>🧘 Aspirant Mental Health & Mindset Wellness Hub</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Empathetic psychological guidance, stress management, anti-burnout strategies, and daily mindset building correlated with your Syllabus Navigator progress.</p>", unsafe_allow_html=True)
     
     # Initialize mental health state in user progress if not present
     mh_state = st.session_state.progress.setdefault("mental_health_state", {
@@ -2656,7 +2656,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 2. Dynamic Correlation Dashboard (Mental Health x Syllabus Navigator)
-    st.markdown("<h4 style='color: #38BDF8;'>📊 Mental Health vs. Syllabus Completion Matrix</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📊 Mental Health vs. Syllabus Completion Matrix</h4>", unsafe_allow_html=True)
     
     # Calculate Cognitive Capacity and Absorption Score
     if "🔴 Severe Burnout" in curr_mood:
@@ -2707,27 +2707,27 @@ elif nav_mode == "🧘 Mental Health & Wellness":
         <div class="metric-card">
             <div class="metric-label">⚡ Daily Microtopic Quota</div>
             <div class="metric-value">{daily_absorption} / day</div>
-            <div style="color: #38BDF8; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Calibrated Target</div>
+            <div style="color: #0284C7; font-size: 0.85rem; font-weight: 700; margin-top: 4px;">Calibrated Target</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Cross-Mapping Analysis Section
-    st.markdown("<h4 style='color: #38BDF8;'>🔗 Dynamic Correlation: Mindset State x Syllabus Navigator Progress</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🔗 Dynamic Correlation: Mindset State x Syllabus Navigator Progress</h4>", unsafe_allow_html=True)
     
     corr_col1, corr_col2 = st.columns([1, 1])
     with corr_col1:
         st.markdown(f"""
-        <div class="pwskills-card" style="border-color: rgba(56, 189, 248, 0.4) !important;">
-            <div class="pwskills-title" style="color: #38BDF8 !important;">📖 Syllabus Progress Status</div>
-            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
-                • <strong>GS Paper 1 (History, Geography, Society):</strong> <span style="color: #34D399; font-weight: 700;">{gs1_done}/386</span> microtopics<br>
-                • <strong>GS Paper 2 (Polity, Governance, IR):</strong> <span style="color: #34D399; font-weight: 700;">{gs2_done}/89</span> microtopics<br>
-                • <strong>GS Paper 3 (Economy, Environment, Sci-Tech):</strong> <span style="color: #34D399; font-weight: 700;">{gs3_done}/73</span> microtopics<br>
-                • <strong>GS Paper 4 (Ethics, Integrity, Aptitude):</strong> <span style="color: #34D399; font-weight: 700;">{gs4_done}/69</span> microtopics
+        <div class="pwskills-card" style="border-color: #BAE6FD !important;">
+            <div class="pwskills-title" style="color: #0284C7 !important;">📖 Syllabus Progress Status</div>
+            <div style="color: #334155; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+                • <strong>GS Paper 1 (History, Geography, Society):</strong> <span style="color: #059669; font-weight: 700;">{gs1_done}/386</span> microtopics<br>
+                • <strong>GS Paper 2 (Polity, Governance, IR):</strong> <span style="color: #059669; font-weight: 700;">{gs2_done}/89</span> microtopics<br>
+                • <strong>GS Paper 3 (Economy, Environment, Sci-Tech):</strong> <span style="color: #059669; font-weight: 700;">{gs3_done}/73</span> microtopics<br>
+                • <strong>GS Paper 4 (Ethics, Integrity, Aptitude):</strong> <span style="color: #059669; font-weight: 700;">{gs4_done}/69</span> microtopics
             </div>
-            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+            <div style="margin-top: 12px; padding: 10px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; font-size: 0.85rem; color: #1E293B;">
                 🎯 <strong>Master Status:</strong> {completed_cnt} of 623 microtopics checked ({covered_pct:.1f}% covered).
             </div>
         </div>
@@ -2737,13 +2737,13 @@ elif nav_mode == "🧘 Mental Health & Wellness":
         st.markdown(f"""
         <div class="pwskills-card" style="border-color: {badge_color} !important;">
             <div class="pwskills-title" style="color: {badge_color} !important;">🧘 Mindset Drag & Academic Vulnerability</div>
-            <div style="color: #CBD5E1; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div style="color: #334155; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 • <strong>Active Mindset State:</strong> <span style="color: {badge_color}; font-weight: 700;">{curr_mood}</span><br>
-                • <strong>Primary Stress Trigger:</strong> <span style="color: #F59E0B; font-weight: 700;">{curr_trigger}</span><br>
-                • <strong>Daily Focus Energy Level:</strong> <span style="color: #38BDF8; font-weight: 700;">{energy_lvl}/10</span><br>
-                • <strong>Vulnerable Syllabus Area:</strong> <span style="color: #C084FC; font-weight: 700;">{"GS3 Economy & GS1 History (High Fatigue)" if cognitive_capacity < 50 else "GS2 Polity & GS4 Ethics"}</span>
+                • <strong>Primary Stress Trigger:</strong> <span style="color: #D97706; font-weight: 700;">{curr_trigger}</span><br>
+                • <strong>Daily Focus Energy Level:</strong> <span style="color: #0284C7; font-weight: 700;">{energy_lvl}/10</span><br>
+                • <strong>Vulnerable Syllabus Area:</strong> <span style="color: #7C3AED; font-weight: 700;">{"GS3 Economy & GS1 History (High Fatigue)" if cognitive_capacity < 50 else "GS2 Polity & GS4 Ethics"}</span>
             </div>
-            <div style="margin-top: 12px; padding: 10px; background: #0F172A; border-radius: 8px; font-size: 0.85rem; color: #F8FAFC;">
+            <div style="margin-top: 12px; padding: 10px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; font-size: 0.85rem; color: #1E293B;">
                 💡 <strong>Corelation Finding:</strong> Current focus capacity ({cognitive_capacity}%) requires matching daily microtopic targets to your energy level to prevent burnout.
             </div>
         </div>
@@ -2752,7 +2752,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 3. TAILORED IMPLEMENTABLE SUGGESTIONS SUITE
-    st.markdown("<h4 style='color: #38BDF8;'>💡 Tailored Suggestions for Mental Health & Syllabus Handling</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>💡 Tailored Suggestions for Mental Health & Syllabus Handling</h4>", unsafe_allow_html=True)
     st.caption("Concrete, actionable steps to protect your mental health while making steady progress on Syllabus Navigator microtopics:")
 
     if "🔴 Severe Burnout" in curr_mood:
@@ -2781,8 +2781,8 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     with sug_col1:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #34D399 !important;">🎯 1. Mindset-Calibrated Microtopic Plan</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #059669 !important;">🎯 1. Mindset-Calibrated Microtopic Plan</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 {plan_suggestion}
             </div>
         </div>
@@ -2790,8 +2790,8 @@ elif nav_mode == "🧘 Mental Health & Wellness":
 
         st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #F59E0B !important;">⚡ 2. The "1-Topic Isolation" Anti-Panic Technique</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #D97706 !important;">⚡ 2. The "1-Topic Isolation" Anti-Panic Technique</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 <strong>Implementation Protocol:</strong> When anxiety strikes regarding <em>"{curr_trigger}"</em>:<br>
                 1. <strong>Close all tabs & books:</strong> Except for 1 single microtopic from Syllabus Navigator.<br>
                 2. <strong>30-Minute Execution:</strong> Read only that microtopic or watch 1 focused explainer.<br>
@@ -2803,8 +2803,8 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     with sug_col2:
         st.markdown(f"""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #C084FC !important;">📖 3. GS4 Ethics Synergy (Mindset as Syllabus Content)</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #7C3AED !important;">📖 3. GS4 Ethics Synergy (Mindset as Syllabus Content)</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 <strong>Exam Integration:</strong> Turn your current psychological stressor into GS4 Ethics study material!<br>
                 • <strong>Current Trigger:</strong> <em>{curr_trigger}</em><br>
                 • <strong>GS4 Syllabus Topic:</strong> <em>Stress Management, Emotional Intelligence & Work-Life Balance in Public Service</em><br>
@@ -2815,8 +2815,8 @@ elif nav_mode == "🧘 Mental Health & Wellness":
 
         st.markdown("""
         <div class="pwskills-card">
-            <div class="pwskills-title" style="color: #38BDF8 !important;">⏰ 4. Circadian & Sleep Hygiene Protocol</div>
-            <div style="color: #F8FAFC; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
+            <div class="pwskills-title" style="color: #0284C7 !important;">⏰ 4. Circadian & Sleep Hygiene Protocol</div>
+            <div style="color: #1E293B; font-size: 0.9rem; margin-top: 8px; line-height: 1.6;">
                 • <strong>Strict Sleep Window:</strong> Minimum 7.5 hours of sleep. Zero late-night textbook reading past 10:30 PM.<br>
                 • <strong>Somatic Cortisol Reset:</strong> Perform 4 cycles of 4-7-8 box breathing twice daily (morning & before sleep).<br>
                 • <strong>Post-Study Walk:</strong> 15-minute outdoor walk without phone after your evening study session to clear mental fatigue.
@@ -2827,7 +2827,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 4. 1-CLICK AI MENTAL HEALTH COUNSELOR LAUNCHER
-    st.markdown("<h4 style='color: #38BDF8;'>🤖 1-Click AI Counselor Consultation (Pre-Filled Mindset & Syllabus Data)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🤖 1-Click AI Counselor Consultation (Pre-Filled Mindset & Syllabus Data)</h4>", unsafe_allow_html=True)
     st.caption("Click the button below to launch an empathetic AI Consultation tailored to your exact mood, stressor, and remaining microtopics:")
 
     consult_mh_prompt = (
@@ -2844,7 +2844,7 @@ elif nav_mode == "🧘 Mental Health & Wellness":
     # 5. Interactive Mindfulness & Helpline Resources
     rec_col1, rec_col2 = st.columns([1.2, 0.8])
     with rec_col1:
-        st.markdown("<h4 style='color: #FFFFFF;'>🧘 4-7-8 Box Breathing & Relaxation Tool</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🧘 4-7-8 Box Breathing & Relaxation Tool</h4>", unsafe_allow_html=True)
         st.markdown("""
         1. **Inhale quietly** through your nose for **4 seconds**.
         2. **Hold your breath** for **7 seconds**.
@@ -2856,12 +2856,12 @@ elif nav_mode == "🧘 Mental Health & Wellness":
             st.success("✨ Mindful Reset Complete! Take a deep breath and return to study with clarity.")
 
     with rec_col2:
-        st.markdown("<h4 style='color: #38BDF8 !important;'>📞 Tele-MANAS Helplines</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📞 Tele-MANAS Helplines</h4>", unsafe_allow_html=True)
         st.markdown("""
-        <div class="pwskills-card" style="border-color: #34D399 !important;">
-            <div style="color: #34D399 !important; font-weight: 800 !important; font-size: 1.15rem !important;">Govt. Tele-MANAS Helpline</div>
-            <div style="color: #FFFFFF !important; font-size: 1.4rem !important; font-weight: 800 !important; margin-top: 6px !important;">📞 14416 / 1800-891-4416</div>
-            <div style="color: #F8FAFC !important; font-size: 0.92rem !important; margin-top: 6px !important; font-weight: 500 !important;">24x7 Free & Confidential Mental Health Counseling by Govt of India</div>
+        <div class="pwskills-card" style="border-color: #BBF7D0 !important; background: #F0FDF4 !important;">
+            <div style="color: #16A34A !important; font-weight: 800 !important; font-size: 1.15rem !important;">Govt. Tele-MANAS Helpline</div>
+            <div style="color: #0F172A !important; font-size: 1.4rem !important; font-weight: 800 !important; margin-top: 6px !important;">📞 14416 / 1800-891-4416</div>
+            <div style="color: #334155 !important; font-size: 0.92rem !important; margin-top: 6px !important; font-weight: 500 !important;">24x7 Free & Confidential Mental Health Counseling by Govt of India</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2869,8 +2869,8 @@ elif nav_mode == "🧘 Mental Health & Wellness":
 # VIEW 4: 📝 MOCK TESTS & ASSESSMENT
 # ==========================================
 elif nav_mode == "📝 Mock Tests & Assessment":
-    st.markdown("<h3 style='color: #FFFFFF;'>📝 Prelims & Mains Mock Test Arena</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Simulated Prelims MCQs with instant scoring (-0.66 negative marking) and Mains Answer Writing Evaluation.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>📝 Prelims & Mains Mock Test Arena</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Simulated Prelims MCQs with instant scoring (-0.66 negative marking) and Mains Answer Writing Evaluation.</p>", unsafe_allow_html=True)
     
     # Test Metrics Row
     t_col1, t_col2, t_col3, t_col4 = st.columns(4)
@@ -2909,7 +2909,7 @@ elif nav_mode == "📝 Mock Tests & Assessment":
     test_tab1, test_tab2, test_tab3 = st.tabs(["⚡ AI Test Generator", "🎯 Live Prelims Practice Quiz", "✍️ Mains Answer Writing Challenge"])
 
     with test_tab1:
-        st.markdown("<h4 style='color: #38BDF8;'>⚙️ Custom Test Generator</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>⚙️ Custom Test Generator</h4>", unsafe_allow_html=True)
         g_col1, g_col2, g_col3 = st.columns(3)
         with g_col1:
             subj_test = st.selectbox("Select Subject / Module:", ["Polity & Constitution", "Modern Indian History", "Indian Economy & Budget", "Environment & Ecology", "Science & Technology", "Geography & Environment", "CSAT Quantitative Aptitude"])
@@ -2924,7 +2924,7 @@ elif nav_mode == "📝 Mock Tests & Assessment":
             st.rerun()
 
     with test_tab2:
-        st.markdown("<h4 style='color: #38BDF8;'>🎯 Live Simulated Prelims Quiz (Sectional: Indian Polity & GS2)</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🎯 Live Simulated Prelims Quiz (Sectional: Indian Polity & GS2)</h4>", unsafe_allow_html=True)
         st.caption("Marks: +2.0 for correct, -0.66 for incorrect answer.")
         
         sample_questions = [
@@ -2970,10 +2970,10 @@ elif nav_mode == "📝 Mock Tests & Assessment":
                     
             final_marks = (correct_cnt * 2.0) - (wrong_cnt * 0.66)
             st.markdown(f"""
-            <div style="background: rgba(13, 17, 32, 0.9); border: 1.5px solid #38BDF8; border-radius: 16px; padding: 20px; margin-top: 16px;">
-                <h4 style="color: #38BDF8; margin: 0;">📊 Test Score Card</h4>
-                <div style="font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin-top: 8px;">Marks Obtained: <span style="color: #34D399;">{final_marks:.2f}</span> / {total_q * 2}</div>
-                <div style="color: #94A3B8; margin-top: 4px;">Correct: <strong style="color:#34D399;">{correct_cnt}</strong> | Incorrect: <strong style="color:#EF4444;">{wrong_cnt}</strong> | Unattempted: <strong>{unattempted}</strong></div>
+            <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 20px 24px; margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                <h4 style="color: #0F172A; margin: 0; font-weight: 800;">📊 Test Score Card</h4>
+                <div style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin-top: 8px;">Marks Obtained: <span style="color: #059669;">{final_marks:.2f}</span> / {total_q * 2}</div>
+                <div style="color: #475569; margin-top: 6px; font-size: 0.95rem;">Correct: <strong style="color:#059669;">{correct_cnt}</strong> | Incorrect: <strong style="color:#DC2626;">{wrong_cnt}</strong> | Unattempted: <strong style="color: #0F172A;">{unattempted}</strong></div>
             </div>
             """, unsafe_allow_html=True)
             
@@ -2982,7 +2982,7 @@ elif nav_mode == "📝 Mock Tests & Assessment":
                     st.markdown(f"**Correct Option:** {sq['ans']}\n\n**Detailed Explanation:** {sq['exp']}")
 
     with test_tab3:
-        st.markdown("<h4 style='color: #38BDF8;'>✍️ Daily Mains Answer Writing Prompt</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>✍️ Daily Mains Answer Writing Prompt</h4>", unsafe_allow_html=True)
         st.markdown("""
         **Mains Question (GS Paper 2 - Governance):**
         > *"Analyze the role of Digital Public Infrastructure (DPI) in transforming service delivery and financial inclusion in India. Discuss the key challenges that remain." (15 Marks, 250 words)*
@@ -3001,23 +3001,23 @@ elif nav_mode == "📝 Mock Tests & Assessment":
 # VIEW 5: 🎓 LIVE & RECORDED CLASSES
 # ==========================================
 elif nav_mode == "🎓 Live & Recorded Classes":
-    st.markdown("<h3 style='color: #FFFFFF;'>🎓 UPSC Live Classes & Interactive Lecture Library</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Access live batch lectures from Physics Wallah (PW Live), review subject playlists, and generate instant AI notes.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>🎓 UPSC Live Classes & Interactive Lecture Library</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Access live batch lectures from Physics Wallah (PW Live), review subject playlists, and generate instant AI notes.</p>", unsafe_allow_html=True)
     
     pw_class_url = "https://www.pw.live/watch/?batchSlug=6a0d74b1acca9706aa169063&batchSubjectId=6a1d635dcf99bcb20ab85f01&subjectSlug=6a1d635dcf99bcb20ab85f01&topicSlug=all&scheduleId=6a3949598df846a134ed1e7d&type=penpencilvdo&isPPJEnabled=true&entryPoint=BATCH_LECTURE_VIDEOS_6a3949598df846a134ed1e7d&learn2Earn=true&parentId=6a0d74b1acca9706aa169063&vType=BATCHES&childId=6a3949598df846a134ed1e7d"
 
     # Featured Live/Recorded Class Card
     st.markdown(f"""
-    <div style="background: linear-gradient(135deg, rgba(13, 17, 32, 0.95) 0%, rgba(8, 11, 23, 0.98) 100%); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+    <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 12px;">
             <div>
-                <span style="background: rgba(239, 68, 68, 0.15); color: #EF4444; font-family: 'JetBrains Mono'; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                <span style="background: #FEF2F2; color: #DC2626; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px; border: 1px solid #FECACA;">
                     🔴 LIVE BATCH LECTURE
                 </span>
-                <h4 style="color: #FFFFFF; font-size: 1.3rem; margin-top: 8px; margin-bottom: 4px;">🎓 PW Live Official Batch Class</h4>
-                <div style="color: #94A3B8; font-size: 0.92rem;">UPSC CSE Foundation Batch Lecture · PenPencil Video Portal</div>
+                <h4 style="color: #0F172A; font-size: 1.35rem; font-weight: 800; margin-top: 10px; margin-bottom: 4px;">🎓 PW Live Official Batch Class</h4>
+                <div style="color: #475569; font-size: 0.92rem;">UPSC CSE Foundation Batch Lecture · PenPencil Video Portal</div>
             </div>
-            <a href="{pw_class_url}" target="_blank" style="background: linear-gradient(135deg, #0284C7 0%, #7C3AED 100%); color: #FFFFFF; font-weight: 700; padding: 12px 22px; border-radius: 12px; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+            <a href="{pw_class_url}" target="_blank" style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); color: #FFFFFF; font-weight: 700; padding: 12px 22px; border-radius: 12px; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
                 🎥 Open Fullscreen on PW.live →
             </a>
         </div>
@@ -3025,7 +3025,7 @@ elif nav_mode == "🎓 Live & Recorded Classes":
     """, unsafe_allow_html=True)
 
     # Embedded Player Container
-    st.markdown("<h4 style='color: #38BDF8;'>📺 Interactive PW Class Portal</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📺 Interactive PW Class Portal</h4>", unsafe_allow_html=True)
     
     try:
         import streamlit.components.v1 as components
@@ -3035,7 +3035,7 @@ elif nav_mode == "🎓 Live & Recorded Classes":
 
     c_btn1, c_btn2 = st.columns([1, 1])
     with c_btn1:
-        st.markdown(f'<a href="{pw_class_url}" target="_blank" style="width:100%; display:block; text-align:center; background:rgba(56,189,248,0.15); color:#38BDF8; font-weight:700; padding:12px; border-radius:12px; border:1px solid rgba(56,189,248,0.3); text-decoration:none;">🚀 Launch Class on PW Live (Direct Link)</a>', unsafe_allow_html=True)
+        st.markdown(f'<a href="{pw_class_url}" target="_blank" style="width:100%; display:block; text-align:center; background:#EFF6FF; color:#2563EB; font-weight:700; padding:12px; border-radius:12px; border:1px solid #BFDBFE; text-decoration:none;">🚀 Launch Class on PW Live (Direct Link)</a>', unsafe_allow_html=True)
     with c_btn2:
         if st.button("🤖 Generate AI Notes for this PW Class", key="btn_pw_class_notes", use_container_width=True):
             st.session_state.pending_prompt = "Generate detailed UPSC revision notes for the active PW Live batch lecture topic. Include core concepts, definitions, key Mains analytical points, and practice Prelims MCQs."
@@ -3045,13 +3045,13 @@ elif nav_mode == "🎓 Live & Recorded Classes":
     st.markdown("---")
 
     # Today's Live Schedule Timeline
-    st.markdown("<h4 style='color: #38BDF8;'>📅 Today's Live Lecture Schedule</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📅 Today's Live Lecture Schedule</h4>", unsafe_allow_html=True)
     
     sched_col1, sched_col2, sched_col3 = st.columns(3)
     with sched_col1:
         st.markdown("""
         <div class="pwskills-card">
-            <div style="font-size:0.8rem; color:#34D399; font-weight:700;">🟢 LIVE NOW (08:00 - 10:00 AM)</div>
+            <div style="font-size:0.8rem; color:#059669; font-weight:700;">🟢 LIVE NOW (08:00 - 10:00 AM)</div>
             <div class="pwskills-title" style="margin-top:4px;">🏛️ GS2: Indian Constitution & Parliamentary Procedures</div>
             <div class="pwskills-desc">Faculty: Dr. S. Sharma · Topic: Speaker Powers & Money Bill Controversies</div>
         </div>
@@ -3064,7 +3064,7 @@ elif nav_mode == "🎓 Live & Recorded Classes":
     with sched_col2:
         st.markdown("""
         <div class="pwskills-card">
-            <div style="font-size:0.8rem; color:#38BDF8; font-weight:700;">⏰ UPCOMING (02:00 - 04:00 PM)</div>
+            <div style="font-size:0.8rem; color:#0284C7; font-weight:700;">⏰ UPCOMING (02:00 - 04:00 PM)</div>
             <div class="pwskills-title" style="margin-top:4px;">📈 GS3: Macroeconomics & Union Budget Analysis</div>
             <div class="pwskills-desc">Faculty: Prof. V. Verma · Topic: Fiscal Deficit & Capital Expenditure Trends</div>
         </div>
@@ -3075,7 +3075,7 @@ elif nav_mode == "🎓 Live & Recorded Classes":
     with sched_col3:
         st.markdown("""
         <div class="pwskills-card">
-            <div style="font-size:0.8rem; color:#C084FC; font-weight:700;">📼 RECORDED (06:00 - 08:00 PM)</div>
+            <div style="font-size:0.8rem; color:#7C3AED; font-weight:700;">📼 RECORDED (06:00 - 08:00 PM)</div>
             <div class="pwskills-title" style="margin-top:4px;">⚖️ GS4: Ethics Case Studies & Moral Philosophy</div>
             <div class="pwskills-desc">Faculty: Anand Sir · Topic: Deontology vs Utilitarianism in Civil Service</div>
         </div>
@@ -3113,7 +3113,7 @@ elif nav_mode == "🎓 Live & Recorded Classes":
                     st.rerun()
 
     with class_tab2:
-        st.markdown("<h4 style='color: #38BDF8;'>⚡ AI Lecture Note & Concept Generator</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>⚡ AI Lecture Note & Concept Generator</h4>", unsafe_allow_html=True)
         st.markdown("Paste any lecture topic, sub-topic name, or lecture transcript excerpt below to instantly generate clean UPSC structured notes:")
         
         lec_topic = st.text_input("Enter Lecture Topic or Subject Keyword:", placeholder="e.g. Inflation Targeting & RBI Monetary Policy Framework", key="input_lec_topic")
@@ -3129,11 +3129,11 @@ elif nav_mode == "🎓 Live & Recorded Classes":
 # VIEW 6: 💼 BACKUP PLANS & PW SKILLS
 # ==========================================
 elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"]:
-    st.markdown("<h3 style='color: #FFFFFF;'>💼 Career Backup Plans & PW Skills Courses</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Strategic parallel exam options and industry-aligned technical courses from <a href='https://pwskills.com' target='_blank' style='color:#38BDF8; font-weight:700;'>PW Skills</a> to guarantee long-term career security.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>💼 Career Backup Plans & PW Skills Courses</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Strategic parallel exam options and industry-aligned technical courses from <a href='https://pwskills.com' target='_blank' style='color:#4F46E5; font-weight:700;'>PW Skills</a> to guarantee long-term career security.</p>", unsafe_allow_html=True)
     
     # Section 1: Parallel Exam Backups
-    st.markdown("<h4 style='color: #38BDF8;'>🏛️ Option 1: High Syllabus-Overlap Government Exams</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🏛️ Option 1: High Syllabus-Overlap Government Exams</h4>", unsafe_allow_html=True)
     ex_col1, ex_col2, ex_col3 = st.columns(3)
     
     with ex_col1:
@@ -3141,7 +3141,7 @@ elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"
         <div class="pwskills-card">
             <div class="pwskills-title">🏦 RBI Grade B Officer</div>
             <div class="pwskills-desc">High overlap in Economic & Social Issues (ESI), General Awareness, and Finance. Ideal for UPSC aspirants with strong GS3 background.</div>
-            <div style="margin-top:10px;"><span style="color:#38BDF8; font-weight:700;">Overlap: ~70%</span></div>
+            <div style="margin-top:10px;"><span style="color:#0284C7; font-weight:700;">Overlap: ~70%</span></div>
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Consult AI on RBI Prep", key="btn_rbi_plan_fs", use_container_width=True):
@@ -3154,7 +3154,7 @@ elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"
         <div class="pwskills-card">
             <div class="pwskills-title">🏛️ State PSC Services (UPPCS/BPSC)</div>
             <div class="pwskills-desc">Maximum syllabus match in History, Polity, Economy, and Geography. State-specific GS can be prepared in 4-6 weeks.</div>
-            <div style="margin-top:10px;"><span style="color:#38BDF8; font-weight:700;">Overlap: ~85%</span></div>
+            <div style="margin-top:10px;"><span style="color:#0284C7; font-weight:700;">Overlap: ~85%</span></div>
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Consult AI on State PSC", key="btn_psc_plan_fs", use_container_width=True):
@@ -3167,7 +3167,7 @@ elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"
         <div class="pwskills-card">
             <div class="pwskills-title">🌾 NABARD Grade A Officer</div>
             <div class="pwskills-desc">Focuses on Agriculture & Rural Development (ARD) and Economic Issues. Direct alignment with UPSC GS3 Agriculture topics.</div>
-            <div style="margin-top:10px;"><span style="color:#38BDF8; font-weight:700;">Overlap: ~65%</span></div>
+            <div style="margin-top:10px;"><span style="color:#0284C7; font-weight:700;">Overlap: ~65%</span></div>
         </div>
         """, unsafe_allow_html=True)
         if st.button("🤖 Consult AI on NABARD", key="btn_nabard_plan_fs", use_container_width=True):
@@ -3178,7 +3178,7 @@ elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"
     st.markdown("---")
 
     # Section 2: PW Skills Course Catalog
-    st.markdown("<h4 style='color: #38BDF8;'>🎓 Option 2: PW Skills Career Tech Courses (<a href='https://pwskills.com' target='_blank' style='color:#38BDF8;'>pwskills.com</a>)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🎓 Option 2: PW Skills Career Tech Courses (<a href='https://pwskills.com' target='_blank' style='color:#4F46E5;'>pwskills.com</a>)</h4>", unsafe_allow_html=True)
     st.caption("Build high-paying tech and analytics skills in parallel to ensure 100% job readiness.")
     
     pw_courses = [
@@ -3267,13 +3267,13 @@ elif nav_mode in ["🚀 PW Skills Career Track", "💼 Backup Plans & PW Skills"
 # VIEW 4: ➕ CUSTOM MODULES
 # ==========================================
 elif nav_mode == "➕ Custom Modules":
-    st.markdown("<h3 style='color: #FFFFFF;'>➕ Add Custom Microtopics & Syllabus Files</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #94A3B8;'>Expand your UPSC curriculum dashboard with custom topics or upload syllabus PDF files.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>➕ Add Custom Microtopics & Syllabus Files</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Expand your UPSC curriculum dashboard with custom topics or upload syllabus PDF files.</p>", unsafe_allow_html=True)
     
     col_add1, col_add2 = st.columns(2)
     
     with col_add1:
-        st.markdown("<h4 style='color: #FFFFFF;'>📝 Add New Microtopic</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📝 Add New Microtopic</h4>", unsafe_allow_html=True)
         with st.form("add_microtopic_form_fs"):
             paper_choice = st.selectbox("Select GS Paper:", ["GS Paper 1", "GS Paper 2", "GS Paper 3", "GS Paper 4", "Optional / Essay"])
             subject_input = st.text_input("Subject Name (e.g. Modern History, Governance):")
@@ -3297,7 +3297,7 @@ elif nav_mode == "➕ Custom Modules":
                 st.success(f"✅ Added microtopic: '{micro_input}'")
 
     with col_add2:
-        st.markdown("<h4 style='color: #FFFFFF;'>📄 Upload Curriculum Document</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📄 Upload Curriculum Document</h4>", unsafe_allow_html=True)
         uploaded_pdf = st.file_uploader("Upload custom UPSC Syllabus PDF file", type=["pdf", "txt"], key="pdf_up_fs")
         if uploaded_pdf is not None:
             if st.button("🚀 Process & Index File", key="proc_btn_fs"):

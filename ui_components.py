@@ -30,18 +30,18 @@ def inject_custom_css():
     }
 
     section[data-testid="stSidebar"] * {
-        color: #334155 !important;
+        color: #1E293B !important;
     }
 
     section[data-testid="stSidebar"] .stSelectbox label,
     section[data-testid="stSidebar"] .stRadio label {
-        color: #475569 !important;
+        color: #1E293B !important;
         font-weight: 600 !important;
     }
 
     /* Typography Defaults */
     html, body, p, span, div, li, label, td, th {
-        color: #334155;
+        color: #1E293B;
         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
     }
 
@@ -81,7 +81,7 @@ def inject_custom_css():
 
     .topbar-logo-sub {
         font-size: 0.72rem;
-        color: #64748B;
+        color: #475569;
         font-weight: 600;
         letter-spacing: 0.04em;
     }
@@ -112,13 +112,13 @@ def inject_custom_css():
     .greeting-tagline {
         font-size: 1.05rem;
         font-weight: 600;
-        color: #334155;
+        color: #1E293B;
         margin: 0 0 4px 0;
     }
 
     .greeting-desc {
         font-size: 0.92rem;
-        color: #64748B;
+        color: #475569;
         margin: 0;
         line-height: 1.5;
     }
@@ -197,16 +197,16 @@ def inject_custom_css():
         font-weight: 700 !important;
         padding: 6px 14px !important;
         margin-top: 4px !important;
-        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
         background: #FFFFFF !important;
-        color: #334155 !important;
+        color: #1E293B !important;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
     }
 
     div[data-testid="stColumn"]:has(.feature-card) .stButton > button:hover {
-        background: #0F172A !important;
+        background: #4F46E5 !important;
         color: #FFFFFF !important;
-        border-color: #0F172A !important;
+        border-color: #4F46E5 !important;
         transform: translateY(-1px) !important;
     }
 
@@ -271,7 +271,7 @@ def inject_custom_css():
 
     .card-desc {
         font-size: 0.83rem;
-        color: #64748B;
+        color: #475569;
         margin: 0 0 12px 0;
         line-height: 1.45;
         flex-grow: 1;
@@ -291,14 +291,14 @@ def inject_custom_css():
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #64748B;
+        color: #475569;
         font-size: 0.85rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.08);
         transition: all 0.2s ease;
     }
 
     .feature-card:hover .card-arrow {
-        background: #0F172A;
+        background: #4F46E5;
         color: #FFFFFF;
         transform: translateX(2px);
     }
@@ -321,7 +321,7 @@ def inject_custom_css():
         font-size: 0.76rem;
         font-weight: 700;
         letter-spacing: 0.08em;
-        color: #64748B;
+        color: #475569;
         text-transform: uppercase;
         margin-bottom: 6px;
     }
@@ -401,7 +401,7 @@ def inject_custom_css():
         gap: 10px;
         padding: 8px 0;
         font-size: 0.88rem;
-        color: #334155;
+        color: #1E293B;
         border-bottom: 1px solid #F1F5F9;
     }
 
@@ -417,15 +417,15 @@ def inject_custom_css():
         font-size: 0.92rem !important;
         padding: 8px 18px !important;
         transition: all 0.2s ease !important;
-        border: 1px solid #E2E8F0 !important;
+        border: 1px solid #CBD5E1 !important;
         background: #FFFFFF !important;
-        color: #334155 !important;
+        color: #1E293B !important;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
     }
 
     .stButton>button:hover {
         background: #F8FAFC !important;
-        border-color: #CBD5E1 !important;
+        border-color: #94A3B8 !important;
         color: #0F172A !important;
         transform: translateY(-1px) !important;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04) !important;
@@ -469,9 +469,30 @@ def inject_custom_css():
         font-family: 'Plus Jakarta Sans', sans-serif !important;
     }
 
+    div[data-baseweb="select"] * {
+        color: #0F172A !important;
+    }
+
     input:focus, textarea:focus {
         border-color: #6366F1 !important;
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    }
+
+    input::placeholder, textarea::placeholder {
+        color: #64748B !important;
+        opacity: 1 !important;
+    }
+
+    /* Chat Input */
+    div[data-testid="stChatInput"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 14px !important;
+    }
+
+    div[data-testid="stChatInput"] textarea {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
     }
 
     /* Clean Chat Messages */
@@ -499,6 +520,48 @@ def inject_custom_css():
         line-height: 1.65 !important;
     }
 
+    /* Clean Tabs */
+    button[data-testid="stTab"] {
+        color: #334155 !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
+
+    button[data-testid="stTab"][aria-selected="true"] {
+        color: #4F46E5 !important;
+        font-weight: 700 !important;
+        border-bottom-color: #4F46E5 !important;
+    }
+
+    /* Streamlit Captions & Secondary Text */
+    .stCaption, [data-testid="stCaptionContainer"] p, [data-testid="stCaptionContainer"] {
+        color: #475569 !important;
+        font-size: 0.88rem !important;
+        font-weight: 500 !important;
+    }
+
+    /* Checkboxes & Radios */
+    div[data-testid="stCheckbox"] label p,
+    div[data-testid="stCheckbox"] label span,
+    div[data-testid="stRadio"] label p,
+    div[data-testid="stRadio"] label span {
+        color: #1E293B !important;
+        font-size: 0.92rem !important;
+        font-weight: 500 !important;
+    }
+
+    /* Alerts */
+    div[data-testid="stAlert"] * {
+        color: #0F172A !important;
+    }
+
+    /* Code Blocks */
+    pre, code {
+        background-color: #F1F5F9 !important;
+        color: #0F172A !important;
+        border: 1px solid #E2E8F0 !important;
+    }
+
     /* Clean Expanders */
     div[data-testid="stExpander"] {
         background-color: #FFFFFF !important;
@@ -510,8 +573,18 @@ def inject_custom_css():
 
     div[data-testid="stExpander"] summary {
         color: #0F172A !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         padding: 12px 16px !important;
+    }
+
+    div[data-testid="stExpander"] summary span,
+    div[data-testid="stExpander"] summary p {
+        color: #0F172A !important;
+        font-weight: 700 !important;
+    }
+
+    div[data-testid="stExpander"] div[data-testid="stExpanderDetails"] * {
+        color: #1E293B;
     }
 
     /* Clean Metric Cards */
@@ -532,8 +605,8 @@ def inject_custom_css():
 
     .metric-label {
         font-size: 0.8rem !important;
-        color: #64748B !important;
-        font-weight: 600 !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.04em !important;
         margin-bottom: 4px !important;
@@ -565,25 +638,25 @@ def inject_custom_css():
 
     .badge-primary {
         background: #EFF6FF !important;
-        color: #2563EB !important;
+        color: #1D4ED8 !important;
         border: 1px solid #BFDBFE !important;
     }
 
     .badge-success {
         background: #F0FDF4 !important;
-        color: #16A34A !important;
+        color: #15803D !important;
         border: 1px solid #BBF7D0 !important;
     }
 
     .badge-purple {
         background: #FAF5FF !important;
-        color: #9333EA !important;
+        color: #7E22CE !important;
         border: 1px solid #E9D5FF !important;
     }
 
     .badge-amber {
         background: #FFFBEB !important;
-        color: #D97706 !important;
+        color: #B45309 !important;
         border: 1px solid #FDE68A !important;
     }
 
@@ -612,7 +685,7 @@ def inject_custom_css():
 
     .minimal-page-desc {
         font-size: 0.88rem;
-        color: #64748B;
+        color: #475569;
         margin: 4px 0 0 0;
     }
 
@@ -667,6 +740,10 @@ def inject_custom_css():
         transition: all 0.2s ease !important;
     }
 
+    .pwskills-card * {
+        color: #1E293B;
+    }
+
     .pwskills-card:hover {
         border-color: #CBD5E1 !important;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04) !important;
@@ -680,7 +757,7 @@ def inject_custom_css():
 
     .pwskills-desc {
         font-size: 0.88rem !important;
-        color: #64748B !important;
+        color: #475569 !important;
         margin-top: 6px !important;
         line-height: 1.5 !important;
     }
