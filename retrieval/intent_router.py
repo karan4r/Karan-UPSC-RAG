@@ -220,6 +220,17 @@ def classify_intent(query: str) -> IntentResult:
     if any(k in text for k in exam_plan_keywords) or (("study plan" in text or "syllabus plan" in text or "preparation plan" in text) and ("exam" in text or "date" in text or "week" in text)):
         return IntentResult("exam_date_study_plan", 0.98, signals + ["exam_date_plan"])
 
+    # High Priority: Mock Test / Practice Quiz requests
+    mock_test_patterns = [
+        r"\b(?:generate|create|give\s+me|make|conduct|take|start)\b.*?\b(?:mock|test|quiz|mcqs?|questions?)\b",
+        r"\b(?:mock\s+test|practice\s+quiz|prelims\s+quiz|prelims\s+mock|test\s+series)\b",
+        r"\b(?:quiz|mock|mcqs?)\s+(?:on|for|about)\b",
+        r"\b\d+\s*(?:questions?|mcqs?)\b",
+        r"\bmcqs?\s+practice\b"
+    ]
+    if _matches(mock_test_patterns, text):
+        return IntentResult("mock_test_generation", 0.98, signals + ["mock_test"])
+
     # Priority: mental health > fresh grad course > backup > academic
     # Note: If academic signal is present and no personal distress indicators (e.g. 'i', 'me', 'my', 'feeling', 'am') exist, prioritize academic.
     has_personal_distress = any(w in text.split() for w in ("i", "me", "my", "feeling", "am", "feel", "i'm"))

@@ -771,6 +771,62 @@ def inject_custom_css():
     .pwskills-link:hover {
         text-decoration: underline !important;
     }
+
+    /* Mock Test Arena & Diagnostic Styling */
+    .mock-q-card {
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 16px !important;
+        padding: 22px 26px !important;
+        margin-bottom: 22px !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+    }
+    .mock-q-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 12px !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .mock-tag-subj {
+        background: #EEF2FF !important;
+        color: #4F46E5 !important;
+        font-size: 0.76rem !important;
+        font-weight: 700 !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        border: 1px solid #E0E7FF !important;
+    }
+    .mock-tag-topic {
+        background: #F1F5F9 !important;
+        color: #475569 !important;
+        font-size: 0.76rem !important;
+        font-weight: 600 !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+    }
+    .diagnostic-card-strong {
+        background: #F0FDF4 !important;
+        border: 1.5px solid #BBF7D0 !important;
+        border-radius: 14px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 12px !important;
+    }
+    .diagnostic-card-moderate {
+        background: #FFFBEB !important;
+        border: 1.5px solid #FDE68A !important;
+        border-radius: 14px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 12px !important;
+    }
+    .diagnostic-card-weak {
+        background: #FEF2F2 !important;
+        border: 1.5px solid #FECACA !important;
+        border-radius: 14px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 12px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 

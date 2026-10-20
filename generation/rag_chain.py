@@ -896,6 +896,64 @@ class RAGChatbot:
             "signals": intent_result.signals,
         }
 
+    def _handle_mock_test_generation(
+        self, query: str, intent_result: IntentResult, exam_vertical: str = "UPSC"
+    ) -> dict[str, Any]:
+        q_lower = query.lower()
+        subject = "Full-Length Simulation (Multi-Subject Diagnostic)"
+        if "polity" in q_lower or "constitution" in q_lower:
+            subject = "Indian Polity & Constitution"
+        elif "history" in q_lower or "culture" in q_lower:
+            subject = "Modern Indian History"
+        elif "economy" in q_lower or "budget" in q_lower:
+            subject = "Indian Economy & Budget"
+        elif "environment" in q_lower or "ecology" in q_lower or "biodiversity" in q_lower:
+            subject = "Environment & Ecology"
+        elif "geography" in q_lower or "monsoon" in q_lower:
+            subject = "Geography & Mapping"
+        elif "science" in q_lower or "tech" in q_lower:
+            subject = "Science & Technology"
+        elif "csat" in q_lower or "aptitude" in q_lower:
+            subject = "CSAT (Aptitude & Reasoning)"
+
+        num_q = 5
+        m_num = re.search(r"\b(\d+)\s*(?:questions?|mcqs?)\b", q_lower)
+        if m_num:
+            try:
+                num_q = max(3, min(15, int(m_num.group(1))))
+            except Exception:
+                num_q = 5
+
+        from generation.mock_test_engine import generate_mock_test
+        test_data = generate_mock_test(subject=subject, num_questions=num_q, difficulty="UPSC Prelims Standard", use_ai=True)
+        questions = test_data.get("questions", [])
+
+        out = [
+            f"### 📝 {test_data.get('title', 'UPSC Prelims Mock Practice')}\n",
+            f"**Exam Pattern:** Simulated UPSC Prelims GS Paper 1 · **Marking Scheme:** +2.00 for Correct | -0.66 for Incorrect\n",
+            "> 🎯 **Interactive Exam Arena Ready:** Want to take this mock test with live radio options, negative marking, and an instant **Weak Subjects vs. Strong Subjects Diagnostic Report**? Head over to the **[📝 Mock Tests & Assessment]** tab in the left sidebar!\n\n---"
+        ]
+
+        for q in questions:
+            out.append(f"\n#### **Q{q['id']}:** {q['question']}\n")
+            for opt in q['options']:
+                out.append(f"- **{opt}**")
+            out.append(f"\n<details><summary>🔍 <b>View Official Answer & Detailed Faculty Explanation</b></summary>\n")
+            out.append(f"<b>Correct Answer: Option {q.get('correct_opt', 'A')}</b><br><br>")
+            out.append(f"{q.get('explanation', '')}\n</details>\n")
+            out.append("\n---")
+
+        return {
+            "answer": "\n".join(out),
+            "intent": "mock_test_generation",
+            "category": "academic",
+            "confidence": "high",
+            "sources": [],
+            "mode": "mock_test_engine",
+            "signals": intent_result.signals,
+            "exam_vertical": exam_vertical
+        }
+
     def chat(self, query: str, mh_count: int = 0, exam_vertical: str = "UPSC", student_profile: Optional[dict] = None, **kwargs) -> dict[str, Any]:
         mh_count = kwargs.get("mh_count", mh_count)
         exam_vertical = kwargs.get("exam_vertical", exam_vertical)
@@ -941,6 +999,15 @@ class RAGChatbot:
 
             if is_exam_date_plan_query:
                 return self._handle_exam_date_study_plan(query, intent_result, exam_vertical=exam_vertical)
+
+            is_mock_test_query = (
+                intent == "mock_test_generation"
+                or any(k in query.lower() for k in ("mock test", "practice quiz", "prelims quiz", "generate test", "generate quiz", "mcq test"))
+                or (re.search(r"\b(?:quiz|mock|mcqs?)\s+(?:on|for)\b", query, re.I) and not is_rel_plan_query and not is_exam_date_plan_query)
+            )
+
+            if is_mock_test_query:
+                return self._handle_mock_test_generation(query, intent_result, exam_vertical=exam_vertical)
 
             is_mh_query = intent == "mental_health_upsc_distress" or "mental state" in query.lower() or "stress trigger" in query.lower()
 

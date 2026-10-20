@@ -3,6 +3,7 @@ import json
 import re
 from pathlib import Path
 from generation.rag_chain import RAGChatbot, generate_academic_fallback, generate_exam_fallback
+from generation.mock_test_engine import generate_mock_test, evaluate_mock_test, CORE_SUBJECTS
 from ui_components import inject_custom_css, render_exam_header, render_futuristic_header, EXAM_META_CONFIG
 
 EXAM_VERTICALS = ["UPSC", "IIT-JEE", "NEET", "GATE", "CAT", "Banking", "SSC"]
@@ -82,6 +83,39 @@ if "nav_mode" not in st.session_state:
 
 if "ai_persona" not in st.session_state:
     st.session_state.ai_persona = "Personal Mentor"
+
+if "active_mock_test" not in st.session_state:
+    st.session_state.active_mock_test = None
+
+if "mock_user_answers" not in st.session_state:
+    st.session_state.mock_user_answers = {}
+
+if "mock_test_report" not in st.session_state:
+    st.session_state.mock_test_report = None
+
+if "mock_test_history" not in st.session_state:
+    st.session_state.mock_test_history = [
+        {
+            "id": "mock_hist_1",
+            "title": "Full-Length Multi-Subject Diagnostic Mock #1",
+            "date": "18 Oct 2026",
+            "score": 14.68,
+            "max_marks": 20.0,
+            "accuracy": 78.5,
+            "strong": ["Indian Polity & Constitution", "Geography & Mapping"],
+            "weak": ["Indian Economy & Budget"]
+        },
+        {
+            "id": "mock_hist_2",
+            "title": "Sectional Mock: Indian Polity & Governance",
+            "date": "19 Oct 2026",
+            "score": 16.0,
+            "max_marks": 20.0,
+            "accuracy": 82.0,
+            "strong": ["Indian Polity & Constitution"],
+            "weak": []
+        }
+    ]
 
 
 def redirect_to_copilot(prompt: str):
@@ -2870,117 +2904,467 @@ elif nav_mode == "🧘 Mental Health & Wellness":
 # ==========================================
 elif nav_mode == "📝 Mock Tests & Assessment":
     st.markdown("<h3 style='color: #0F172A; font-weight: 800;'>📝 Prelims & Mains Mock Test Arena</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Simulated Prelims MCQs with instant scoring (-0.66 negative marking) and Mains Answer Writing Evaluation.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #475569; font-size: 0.95rem;'>Simulated Prelims MCQs with instant scoring (-0.66 negative marking), automated Weak vs Strong Subjects diagnostics, and Mains Answer Writing Evaluation.</p>", unsafe_allow_html=True)
     
-    # Test Metrics Row
+    # Dynamic Test Metrics Row from history
+    hist = st.session_state.get("mock_test_history", [])
+    tests_attempted = len(hist)
+    avg_accuracy = (sum(h.get("accuracy", 0.0) for h in hist) / tests_attempted) if tests_attempted > 0 else 74.5
+    latest_score = hist[-1].get("score", 14.68) if hist else 14.68
+    total_weak_identified = sum(len(h.get("weak", [])) for h in hist)
+
     t_col1, t_col2, t_col3, t_col4 = st.columns(4)
     with t_col1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
             <div class="metric-label">Tests Attempted</div>
-            <div class="metric-value">12</div>
+            <div class="metric-value">{tests_attempted}</div>
         </div>
         """, unsafe_allow_html=True)
     with t_col2:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
             <div class="metric-label">Average Accuracy</div>
-            <div class="metric-value">74.5%</div>
+            <div class="metric-value">{avg_accuracy:.1f}%</div>
         </div>
         """, unsafe_allow_html=True)
     with t_col3:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">Prelims Est. Score</div>
-            <div class="metric-value">108.6</div>
+            <div class="metric-label">Latest Test Score</div>
+            <div class="metric-value">{latest_score:.2f}</div>
         </div>
         """, unsafe_allow_html=True)
     with t_col4:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">Mains Answers Evaluated</div>
-            <div class="metric-value">28</div>
+            <div class="metric-label">Weak Subject Areas</div>
+            <div class="metric-value" style="color: {'#DC2626' if total_weak_identified > 0 else '#059669'};">{total_weak_identified} Focus Areas</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Sub-tabs for Test Generator vs Interactive Sample Test vs Mains Practice
-    test_tab1, test_tab2, test_tab3 = st.tabs(["⚡ AI Test Generator", "🎯 Live Prelims Practice Quiz", "✍️ Mains Answer Writing Challenge"])
+    # Sub-tabs
+    test_tab1, test_tab2, test_tab3, test_tab4 = st.tabs([
+        "🎯 Prelims Mock Arena (Interactive Test & Report)",
+        "⚡ Custom Topic Generator",
+        "✍️ Mains Answer Writing Challenge",
+        "📊 Test History & Diagnostics"
+    ])
 
+    # --------------------------------------------------------------------------
+    # TAB 1: PRELIMS MOCK ARENA
+    # --------------------------------------------------------------------------
     with test_tab1:
-        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>⚙️ Custom Test Generator</h4>", unsafe_allow_html=True)
-        g_col1, g_col2, g_col3 = st.columns(3)
-        with g_col1:
-            subj_test = st.selectbox("Select Subject / Module:", ["Polity & Constitution", "Modern Indian History", "Indian Economy & Budget", "Environment & Ecology", "Science & Technology", "Geography & Environment", "CSAT Quantitative Aptitude"])
-        with g_col2:
-            num_qs = st.selectbox("Number of Questions:", ["5 Questions", "10 Questions", "15 Questions"])
-        with g_col3:
-            diff_lvl = st.selectbox("Difficulty Level:", ["UPSC Prelims Standard", "High-Yield Statement-based", "PYQ Trend Pattern"])
-            
-        if st.button("🚀 Generate AI Practice Quiz in Copilot", use_container_width=True, key="btn_gen_test"):
-            st.session_state.pending_prompt = f"Generate a {num_qs} UPSC Prelims MCQ Practice Quiz on '{subj_test}' at '{diff_lvl}' level. Provide 4 options (A, B, C, D) for each, followed by correct answers and detailed explanations."
-            st.session_state.nav_mode = "🤖 Neural AI Copilot"
-            st.rerun()
-
-    with test_tab2:
-        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>🎯 Live Simulated Prelims Quiz (Sectional: Indian Polity & GS2)</h4>", unsafe_allow_html=True)
-        st.caption("Marks: +2.0 for correct, -0.66 for incorrect answer.")
-        
-        sample_questions = [
-            {
-                "id": 1,
-                "q": "With reference to the Preamble of the Indian Constitution, consider the following statements:\n1. It is non-justiciable in nature.\n2. It can be amended under Article 368 without altering basic structure.\n3. It was amended only once by the 44th Constitutional Amendment Act.",
-                "opts": ["1 and 2 only", "2 and 3 only", "1 and 3 only", "1, 2 and 3"],
-                "ans": "1 and 2 only",
-                "exp": "Statement 1 is correct (non-justiciable). Statement 2 is correct (can be amended under Art 368 as held in Kesavananda Bharati case). Statement 3 is INCORRECT because it was amended by the 42nd Amendment Act (1976), not 44th."
-            },
-            {
-                "id": 2,
-                "q": "Which of the following bodies is/are Constitutional Bodies under the Constitution of India?\n1. National Human Rights Commission (NHRC)\n2. Finance Commission\n3. NITI Aayog",
-                "opts": ["2 only", "1 and 2 only", "2 and 3 only", "1, 2 and 3"],
-                "ans": "2 only",
-                "exp": "Finance Commission is created under Article 280 (Constitutional Body). NHRC is a Statutory Body (Protection of Human Rights Act 1993). NITI Aayog is an Executive Body created by Cabinet resolution."
-            }
-        ]
-        
-        score = 0
-        total_q = len(sample_questions)
-        with st.form("interactive_mock_quiz_form"):
-            user_answers = {}
-            for sq in sample_questions:
-                st.markdown(f"**Q{sq['id']}:** {sq['q']}")
-                user_answers[sq['id']] = st.radio(f"Select Answer for Q{sq['id']}:", sq["opts"], index=None, key=f"mock_q_{sq['id']}")
-                st.write("")
-                
-            quiz_submitted = st.form_submit_button("🏁 Submit Test & Calculate Score")
-            
-        if quiz_submitted:
-            correct_cnt = 0
-            wrong_cnt = 0
-            unattempted = 0
-            for sq in sample_questions:
-                user_ans = user_answers.get(sq['id'])
-                if user_ans is None:
-                    unattempted += 1
-                elif user_ans == sq['ans']:
-                    correct_cnt += 1
-                else:
-                    wrong_cnt += 1
-                    
-            final_marks = (correct_cnt * 2.0) - (wrong_cnt * 0.66)
+        # State 1: A report exists -> Show Comprehensive Diagnostic Report
+        if st.session_state.get("mock_test_report") is not None:
+            rep = st.session_state.mock_test_report
             st.markdown(f"""
-            <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 20px 24px; margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-                <h4 style="color: #0F172A; margin: 0; font-weight: 800;">📊 Test Score Card</h4>
-                <div style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin-top: 8px;">Marks Obtained: <span style="color: #059669;">{final_marks:.2f}</span> / {total_q * 2}</div>
-                <div style="color: #475569; margin-top: 6px; font-size: 0.95rem;">Correct: <strong style="color:#059669;">{correct_cnt}</strong> | Incorrect: <strong style="color:#DC2626;">{wrong_cnt}</strong> | Unattempted: <strong style="color: #0F172A;">{unattempted}</strong></div>
+            <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <span style="background: {rep['tier_color']}15; color: {rep['tier_color']}; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 9999px; border: 1px solid {rep['tier_color']}40;">
+                            {rep['tier_title']}
+                        </span>
+                        <h3 style="color: #0F172A; font-size: 1.45rem; font-weight: 800; margin: 10px 0 4px 0;">📊 Test Performance & Diagnostic Report</h3>
+                        <div style="color: #475569; font-size: 0.92rem;">{rep['title']} · Standard UPSC Prelims Negative Marking (-0.66)</div>
+                    </div>
+                </div>
+                <div style="margin-top: 14px; padding: 12px 16px; background: #F8FAFC; border-radius: 12px; border: 1px solid #E2E8F0; font-size: 0.92rem; color: #334155;">
+                    💡 <b>Cutoff Projection:</b> {rep['tier_desc']}
+                </div>
             </div>
             """, unsafe_allow_html=True)
-            
-            for sq in sample_questions:
-                with st.expander(f"💡 Explanation for Q{sq['id']}"):
-                    st.markdown(f"**Correct Option:** {sq['ans']}\n\n**Detailed Explanation:** {sq['exp']}")
 
+            # Scorecard 4-box metrics
+            s_c1, s_c2, s_c3, s_c4 = st.columns(4)
+            with s_c1:
+                st.markdown(f"""
+                <div class="metric-card" style="border-color: #BBF7D0;">
+                    <div class="metric-label">Net Score Obtained</div>
+                    <div class="metric-value" style="color: #059669;">{rep['net_marks']:.2f} <span style="font-size: 1rem; color: #64748B;">/ {rep['max_marks']:.0f}</span></div>
+                </div>
+                """, unsafe_allow_html=True)
+            with s_c2:
+                st.markdown(f"""
+                <div class="metric-card" style="border-color: #C7D2FE;">
+                    <div class="metric-label">Overall Accuracy</div>
+                    <div class="metric-value" style="color: #4F46E5;">{rep['accuracy_pct']:.1f}%</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with s_c3:
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-label">Attempts Breakdown</div>
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #0F172A; margin-top: 8px;">
+                        <span style="color: #059669;">✔ {rep['correct']} Correct</span> · <span style="color: #DC2626;">✖ {rep['incorrect']} Wrong</span> · <span style="color: #64748B;">⚪ {rep['skipped']} Skip</span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            with s_c4:
+                st.markdown(f"""
+                <div class="metric-card" style="border-color: #FECACA;">
+                    <div class="metric-label">Negative Penalty</div>
+                    <div class="metric-value" style="color: #DC2626;">-{rep['negative_marks']:.2f} <span style="font-size: 0.82rem; color: #64748B;">Marks</span></div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            # ------------------------------------------------------------------
+            # WEAK SUBJECTS vs STRONG SUBJECTS DIAGNOSTIC REPORT
+            # ------------------------------------------------------------------
+            st.markdown("<h4 style='color: #0F172A; font-weight: 800; margin-bottom: 6px;'>🎯 Subject-Wise Diagnostic Breakdown: Strong vs. Weak Areas</h4>", unsafe_allow_html=True)
+            st.markdown("<p style='color: #64748B; font-size: 0.9rem;'>Cross-subject accuracy analysis categorized into mastery tiers to guide your revision schedule.</p>", unsafe_allow_html=True)
+
+            col_strong, col_weak = st.columns(2)
+            with col_strong:
+                st.markdown("<h5 style='color: #065F46; font-weight: 700;'>🟢 Strong Subjects (Accuracy ≥ 70%)</h5>", unsafe_allow_html=True)
+                if rep["strong_subjects"]:
+                    for s in rep["strong_subjects"]:
+                        st.markdown(f"""
+                        <div class="diagnostic-card-strong">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="font-size: 1.05rem; color: #065F46;">{s['subject']}</strong>
+                                <span style="background: #DCFCE7; color: #15803D; font-weight: 700; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem;">
+                                    {s['accuracy']}% Acc · {s['marks']:.2f} M
+                                </span>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #166534; margin-top: 6px;">
+                                {s['assessment']}
+                            </div>
+                            <div style="font-size: 0.78rem; color: #15803D; margin-top: 4px;">
+                                Score: {s['correct']}/{s['attempted']} Correct ({s['skipped']} Skipped)
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                else:
+                    st.info("No subjects reached the ≥ 70% strong mastery tier on this test attempt. Focus on closing conceptual gaps below.")
+
+            with col_weak:
+                st.markdown("<h5 style='color: #991B1B; font-weight: 700;'>🔴 Weak Subjects (Priority Intervention < 50%)</h5>", unsafe_allow_html=True)
+                if rep["weak_subjects"]:
+                    for w in rep["weak_subjects"]:
+                        missed_topics = ", ".join(w["topics_missed"][:3]) if w["topics_missed"] else "Foundational concepts"
+                        st.markdown(f"""
+                        <div class="diagnostic-card-weak">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="font-size: 1.05rem; color: #991B1B;">{w['subject']}</strong>
+                                <span style="background: #FEE2E2; color: #B91C1C; font-weight: 700; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem;">
+                                    {w['accuracy']}% Acc · {w['marks']:.2f} M
+                                </span>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #7F1D1D; margin-top: 6px;">
+                                {w['assessment']}
+                            </div>
+                            <div style="font-size: 0.8rem; color: #991B1B; margin-top: 6px; padding-top: 4px; border-top: 1px dashed #FECACA;">
+                                ⚠️ <b>Missed Microtopics:</b> {missed_topics}
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                else:
+                    st.success("🎉 Outstanding! No critical weak subjects (< 50%) identified on this test.")
+
+            if rep["moderate_subjects"]:
+                st.markdown("<h5 style='color: #92400E; font-weight: 700; margin-top: 12px;'>🟡 Moderate Subjects (Needs Polish: 50% - 69%)</h5>", unsafe_allow_html=True)
+                for m in rep["moderate_subjects"]:
+                    st.markdown(f"""
+                    <div class="diagnostic-card-moderate">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="font-size: 1.02rem; color: #92400E;">{m['subject']}</strong>
+                            <span style="background: #FEF3C7; color: #B45309; font-weight: 700; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem;">
+                                {m['accuracy']}% Acc · {m['marks']:.2f} M
+                            </span>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #78350F; margin-top: 4px;">{m['assessment']}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+            # ------------------------------------------------------------------
+            # ACTIONABLE STUDY PRESCRIPTION & SYLLABUS NAVIGATOR BRIDGE
+            # ------------------------------------------------------------------
+            if rep["study_recommendations"]:
+                st.markdown("---")
+                st.markdown("<h4 style='color: #0F172A; font-weight: 800;'>📋 Recommended Study Actions & Syllabus Navigator Bridge</h4>", unsafe_allow_html=True)
+                st.markdown("<p style='color: #64748B; font-size: 0.9rem;'>Direct remedial actions tailored to the subjects and microtopics you struggled with on this test.</p>", unsafe_allow_html=True)
+                
+                for idx, rec in enumerate(rep["study_recommendations"]):
+                    r_col1, r_col2 = st.columns([3, 1])
+                    with r_col1:
+                        st.markdown(f"""
+                        <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 18px; margin-bottom: 8px;">
+                            <span style="background: {'#FEF2F2' if rec['priority'] == 'HIGH' else '#FFFBEB'}; color: {'#DC2626' if rec['priority'] == 'HIGH' else '#D97706'}; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
+                                {rec['priority']} PRIORITY · {rec['subject']}
+                            </span>
+                            <div style="color: #1E293B; font-size: 0.92rem; font-weight: 600; margin-top: 6px;">
+                                {rec['action']}
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    with r_col2:
+                        if st.button(f"📖 Study {rec['subject'][:15]} in Navigator", key=f"btn_nav_bridge_{idx}", use_container_width=True):
+                            st.session_state.nav_mode = "📋 Syllabus Navigator"
+                            st.rerun()
+                        if st.button(f"🤖 Ask AI Mentor", key=f"btn_ask_bridge_{idx}", use_container_width=True):
+                            st.session_state.pending_prompt = rec.get("prompt_for_copilot", f"Explain core concepts and elimination techniques for {rec['subject']}.")
+                            st.session_state.nav_mode = "🤖 Neural AI Copilot"
+                            st.rerun()
+
+            # ------------------------------------------------------------------
+            # QUESTION-BY-QUESTION REVIEW
+            # ------------------------------------------------------------------
+            st.markdown("---")
+            st.markdown("<h4 style='color: #0F172A; font-weight: 800;'>🔍 Question-by-Question Solution & Detailed Explanations</h4>", unsafe_allow_html=True)
+            
+            for eq in rep["evaluated_questions"]:
+                border_color = "#BBF7D0" if eq["status"] == "correct" else ("#FECACA" if eq["status"] == "incorrect" else "#E2E8F0")
+                badge_bg = "#DCFCE7" if eq["status"] == "correct" else ("#FEE2E2" if eq["status"] == "incorrect" else "#F1F5F9")
+                badge_color = "#15803D" if eq["status"] == "correct" else ("#B91C1C" if eq["status"] == "incorrect" else "#475569")
+                status_text = "✅ Correct (+2.00)" if eq["status"] == "correct" else ("❌ Incorrect (-0.66)" if eq["status"] == "incorrect" else "⚪ Unattempted (0.00)")
+
+                st.markdown(f"""
+                <div style="background: #FFFFFF; border: 1.5px solid {border_color}; border-radius: 14px; padding: 20px 24px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <span style="font-weight: 800; color: #0F172A; font-size: 1.05rem;">Q{eq['id']}.</span>
+                            <span class="mock-tag-subj" style="margin-left: 6px;">{eq['subject']}</span>
+                            <span class="mock-tag-topic" style="margin-left: 4px;">{eq['topic']}</span>
+                        </div>
+                        <span style="background: {badge_bg}; color: {badge_color}; font-weight: 700; font-size: 0.8rem; padding: 4px 10px; border-radius: 999px;">
+                            {status_text}
+                        </span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+                st.markdown(eq["question"])
+                
+                # Options listing
+                for opt in eq["options"]:
+                    is_correct_opt = opt.strip().upper().startswith(eq["correct_opt"])
+                    is_user_choice = eq["user_choice"] and opt.strip().upper().startswith(str(eq["user_choice"]).strip().upper()[:2])
+                    
+                    if is_correct_opt and is_user_choice:
+                        st.markdown(f"✔ **{opt}** *(Your Correct Answer)*")
+                    elif is_correct_opt:
+                        st.markdown(f"✔ <span style='color: #059669; font-weight: 700;'>{opt}</span> *(Official Answer)*", unsafe_allow_html=True)
+                    elif is_user_choice:
+                        st.markdown(f"✖ <span style='color: #DC2626; font-weight: 700;'>{opt}</span> *(Your Answer - Incorrect)*", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"- {opt}")
+
+                with st.expander(f"💡 View Faculty Explanation for Q{eq['id']}"):
+                    st.markdown(f"**Correct Option:** Option {eq['correct_opt']}\n\n**Detailed Faculty Explanation:**\n{eq['explanation']}")
+
+            # Post-report actions
+            st.markdown("<br>", unsafe_allow_html=True)
+            act_col1, act_col2 = st.columns(2)
+            with act_col1:
+                if st.button("🔄 Retake This Test", key="btn_retake_test", use_container_width=True, type="secondary"):
+                    st.session_state.mock_user_answers = {}
+                    st.session_state.mock_test_report = None
+                    st.rerun()
+            with act_col2:
+                if st.button("⚡ Generate Another Test", key="btn_gen_another_test", use_container_width=True, type="primary"):
+                    st.session_state.active_mock_test = None
+                    st.session_state.mock_user_answers = {}
+                    st.session_state.mock_test_report = None
+                    st.rerun()
+
+        # State 2: Active test is loaded and taking is in progress -> Show Test Screen
+        elif st.session_state.get("active_mock_test") is not None:
+            active_test = st.session_state.active_mock_test
+            q_list = active_test.get("questions", [])
+            total_qs = len(q_list)
+
+            # Compute current answered count
+            curr_answers = st.session_state.get("mock_user_answers", {})
+            answered_count = sum(1 for q in q_list if curr_answers.get(q["id"]) is not None and str(curr_answers.get(q["id"])).strip() != "")
+
+            st.markdown(f"""
+            <div style="background: #FFFFFF; border: 1.5px solid #4F46E5; border-radius: 18px; padding: 22px 26px; margin-bottom: 22px; box-shadow: 0 4px 16px rgba(79, 70, 229, 0.08);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <span style="background: #EEF2FF; color: #4F46E5; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
+                            ⏱️ SIMULATED EXAM IN PROGRESS
+                        </span>
+                        <h4 style="color: #0F172A; font-size: 1.35rem; font-weight: 800; margin: 8px 0 2px 0;">{active_test.get('title', 'Prelims Mock Test')}</h4>
+                        <div style="color: #475569; font-size: 0.88rem;">Marking Scheme: <b>+2.00 for Correct</b> | <b>-0.66 for Incorrect</b> | <b>0.00 for Unattempted</b></div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #4F46E5;">{answered_count} / {total_qs}</div>
+                        <div style="font-size: 0.8rem; color: #64748B; font-weight: 600;">Questions Answered</div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.progress(answered_count / total_qs if total_qs > 0 else 0.0)
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            # Test Questions form
+            with st.form("active_mock_exam_form"):
+                user_selected = {}
+                for q in q_list:
+                    qid = q["id"]
+                    st.markdown(f"""
+                    <div class="mock-q-header">
+                        <div>
+                            <span style="font-size: 1.1rem; font-weight: 800; color: #0F172A;">Question {qid} of {total_qs}</span>
+                            <span class="mock-tag-subj" style="margin-left: 8px;">{q.get('subject', 'GS Paper')}</span>
+                            <span class="mock-tag-topic" style="margin-left: 4px;">{q.get('topic', 'Microtopic')}</span>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                    st.markdown(q["question"])
+                    
+                    prev_ans = curr_answers.get(qid)
+                    # Options
+                    user_selected[qid] = st.radio(
+                        f"Select your option for Q{qid}:",
+                        q["options"],
+                        index=q["options"].index(prev_ans) if prev_ans in q["options"] else None,
+                        key=f"mock_opt_radio_{qid}"
+                    )
+                    st.markdown("---")
+
+                f_c1, f_c2 = st.columns([2, 1])
+                with f_c1:
+                    test_submitted = st.form_submit_button("🏁 Submit Test & Calculate Diagnostic Report", use_container_width=True, type="primary")
+                with f_c2:
+                    test_cancelled = st.form_submit_button("🔄 Discard / Reset Test", use_container_width=True)
+
+            if test_submitted:
+                st.session_state.mock_user_answers = user_selected
+                report = evaluate_mock_test(active_test, user_selected)
+                st.session_state.mock_test_report = report
+                
+                # Append to history
+                st.session_state.mock_test_history.append({
+                    "id": f"mock_attempt_{len(st.session_state.mock_test_history) + 1}",
+                    "title": active_test.get("title", "Prelims Mock"),
+                    "date": "Today",
+                    "score": report["net_marks"],
+                    "max_marks": report["max_marks"],
+                    "accuracy": report["accuracy_pct"],
+                    "strong": [s["subject"] for s in report["strong_subjects"]],
+                    "weak": [w["subject"] for w in report["weak_subjects"]]
+                })
+                st.rerun()
+
+            if test_cancelled:
+                st.session_state.active_mock_test = None
+                st.session_state.mock_user_answers = {}
+                st.session_state.mock_test_report = None
+                st.rerun()
+
+        # State 3: No active test -> Show Test Generator Setup Panel
+        else:
+            st.markdown("""
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 18px; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);">
+                <span style="background: #EEF2FF; color: #4F46E5; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
+                    🎯 UPSC PRELIMS SIMULATION ENGINE
+                </span>
+                <h4 style="color: #0F172A; font-size: 1.35rem; font-weight: 800; margin: 8px 0 4px 0;">Configure & Launch Simulated Practice Mock</h4>
+                <div style="color: #475569; font-size: 0.92rem;">
+                    Generate authentic UPSC statement-based MCQs. Take the test in the interactive arena to receive instant negative marking evaluation and an automated <b>Weak vs Strong Subjects Diagnostic Report</b>!
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            g_col1, g_col2, g_col3 = st.columns(3)
+            with g_col1:
+                subj_test = st.selectbox(
+                    "Select Test Module / Subject:",
+                    [
+                        "Full-Length Simulation (Multi-Subject Diagnostic)",
+                        "Indian Polity & Constitution",
+                        "Modern Indian History",
+                        "Indian Economy & Budget",
+                        "Environment & Ecology",
+                        "Geography & Mapping",
+                        "Science & Technology",
+                        "CSAT (Aptitude & Reasoning)"
+                    ],
+                    key="arena_subj_select"
+                )
+            with g_col2:
+                num_qs = st.selectbox(
+                    "Number of Questions:",
+                    ["5 Questions (Quick Diagnostic Drill - 5 mins)", "10 Questions (Standard Sectional Mock - 10 mins)", "15 Questions (Intensive Module - 15 mins)", "20 Questions (Mini Prelims Paper - 20 mins)"],
+                    key="arena_num_select"
+                )
+            with g_col3:
+                diff_lvl = st.selectbox(
+                    "Difficulty & Question Pattern:",
+                    ["UPSC Prelims Standard (Statement-based 1 & 2 only)", "High-Yield Statement-based", "PYQ Trend Pattern"],
+                    key="arena_diff_select"
+                )
+
+            engine_mode = st.radio(
+                "Select Question Generation Source:",
+                ["🤖 Dynamic AI Generator (Groq LLM with Curated Fallback)", "⚡ Instant Curated Exam Bank (Fastest, Zero Latency)"],
+                horizontal=True,
+                key="arena_engine_mode"
+            )
+
+            num_int = 5
+            if "10" in num_qs:
+                num_int = 10
+            elif "15" in num_qs:
+                num_int = 15
+            elif "20" in num_qs:
+                num_int = 20
+
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("🚀 Launch Simulated Mock Test in Arena", key="btn_launch_arena_mock", use_container_width=True, type="primary"):
+                with st.spinner(f"⚡ Generating authentic UPSC questions for '{subj_test}'..."):
+                    use_ai_flag = "AI" in engine_mode
+                    test_data = generate_mock_test(
+                        subject=subj_test,
+                        num_questions=num_int,
+                        difficulty=diff_lvl,
+                        use_ai=use_ai_flag
+                    )
+                    st.session_state.active_mock_test = test_data
+                    st.session_state.mock_user_answers = {}
+                    st.session_state.mock_test_report = None
+                    st.rerun()
+
+    # --------------------------------------------------------------------------
+    # TAB 2: CUSTOM TOPIC GENERATOR
+    # --------------------------------------------------------------------------
+    with test_tab2:
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>⚡ Custom Topic & Microtopic Generator</h4>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #64748B; font-size: 0.9rem;'>Test yourself on any specific syllabus microtopic or recent current affair topic.</p>", unsafe_allow_html=True)
+        
+        c_topic = st.text_input("Enter Specific Microtopic / Syllabus Theme:", value="Fundamental Rights & Basic Structure", key="custom_topic_input")
+        c_col1, c_col2 = st.columns(2)
+        with c_col1:
+            c_subj = st.selectbox("Assign to GS Subject Category:", ["Indian Polity & Constitution", "Modern Indian History", "Indian Economy & Budget", "Environment & Ecology", "Geography & Mapping", "Science & Technology", "CSAT (Aptitude & Reasoning)"], key="custom_topic_subj")
+        with c_col2:
+            c_num = st.selectbox("Number of Questions:", [5, 10, 15], key="custom_topic_num")
+
+        if st.button("🚀 Generate & Launch Custom Test in Arena", key="btn_launch_custom_arena", use_container_width=True, type="primary"):
+            with st.spinner(f"Generating custom test on '{c_topic}'..."):
+                test_data = generate_mock_test(
+                    subject=c_subj,
+                    num_questions=c_num,
+                    difficulty="UPSC Prelims Standard",
+                    custom_topic=c_topic,
+                    use_ai=True
+                )
+                test_data["title"] = f"Custom Test: {c_topic} ({c_num} Qs)"
+                st.session_state.active_mock_test = test_data
+                st.session_state.mock_user_answers = {}
+                st.session_state.mock_test_report = None
+                st.rerun()
+
+    # --------------------------------------------------------------------------
+    # TAB 3: MAINS ANSWER WRITING CHALLENGE
+    # --------------------------------------------------------------------------
     with test_tab3:
         st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>✍️ Daily Mains Answer Writing Prompt</h4>", unsafe_allow_html=True)
         st.markdown("""
@@ -2996,6 +3380,39 @@ elif nav_mode == "📝 Mock Tests & Assessment":
                 st.rerun()
             else:
                 st.warning("Please type your answer draft above before submitting for AI evaluation.")
+
+    # --------------------------------------------------------------------------
+    # TAB 4: TEST HISTORY & DIAGNOSTICS
+    # --------------------------------------------------------------------------
+    with test_tab4:
+        st.markdown("<h4 style='color: #0F172A; font-weight: 700;'>📊 Mock Test Performance History</h4>", unsafe_allow_html=True)
+        st.markdown("<p style='color: #64748B; font-size: 0.9rem;'>Track your accuracy trends and see how weak subjects turn into strong subjects over time.</p>", unsafe_allow_html=True)
+        
+        past_tests = st.session_state.get("mock_test_history", [])
+        if past_tests:
+            for idx, pt in enumerate(reversed(past_tests)):
+                strong_str = ", ".join(pt.get("strong", [])) if pt.get("strong") else "None"
+                weak_str = ", ".join(pt.get("weak", [])) if pt.get("weak") else "None"
+                st.markdown(f"""
+                <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 18px 22px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <strong style="font-size: 1.05rem; color: #0F172A;">{pt.get('title', 'Prelims Mock Test')}</strong>
+                            <div style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">Attempted on {pt.get('date', 'Recent')}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 1.25rem; font-weight: 800; color: #059669;">{pt.get('score', 0):.2f} / {pt.get('max_marks', 20):.0f}</span>
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #4F46E5;">{pt.get('accuracy', 0):.1f}% Accuracy</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 16px; margin-top: 10px; font-size: 0.85rem; flex-wrap: wrap; border-top: 1px solid #F1F5F9; padding-top: 8px;">
+                        <div>🟢 <b>Strong:</b> <span style="color: #15803D;">{strong_str}</span></div>
+                        <div>🔴 <b>Weak Focus:</b> <span style="color: #B91C1C;">{weak_str}</span></div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("No mock test history found. Take a test in the Prelims Mock Arena to start recording analytics!")
 
 # ==========================================
 # VIEW 5: 🎓 LIVE & RECORDED CLASSES
